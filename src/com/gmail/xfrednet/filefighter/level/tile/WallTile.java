@@ -1,0 +1,28 @@
+package com.gmail.xfrednet.filefighter.level.tile;
+
+import com.gmail.xfrednet.filefighter.graphics.Screen;
+import com.gmail.xfrednet.filefighter.graphics.Sprite;
+import com.gmail.xfrednet.filefighter.level.Level;
+import com.gmail.xfrednet.filefighter.level.Tile;
+
+/**
+ * Created by xFrednet on 06.02.2016.
+ */
+public class WallTile extends Tile {
+	
+	@Override
+	public void render(int x, int y, Screen screen, Level level) {
+		screen.drawTile(x << 5, y << 5, Sprite.wall_tile_sprite[getSpriteArrayIndex(x, y, level)]);
+	}
+	
+	@Override
+	public int getID() {
+		return List.WALL_ID;
+	}
+	
+	@Override
+	public boolean isSolid() {
+		return true;
+	}
+	
+}
