@@ -9,17 +9,25 @@ public class Sprite {
 	public static final int ENTITY_SPRITE_SIZE = 32;
 	
 	/*
+	* Test Code
+	* */
+	public final static int TEST_ENTITY_ANIMATED_SPRITE_COUNT = 16;
+	public final static int TEST_ENTITY_ANIMATION_SPEED = 16;
+	public static Sprite[] testEntity_entity_sprite = loadEntityAnimation(0/*xPixel*/, 0/*yPixel*/, SpriteSheet.entities, ENTITY_SPRITE_SIZE, TEST_ENTITY_ANIMATED_SPRITE_COUNT);
+	
+	/*
 	* Static Sprites
 	* */
 	public static Sprite null_tile_sprite = new Sprite(0, 0, SpriteSheet.tiles, TILE_SPRITE_SIZE);
 	public static Sprite space_tile_sprite = new Sprite(TILE_SPRITE_SIZE, 0, SpriteSheet.tiles, TILE_SPRITE_SIZE);
-	public static Sprite[] wall_tile_sprite = loadConnectedTileSprites(0, TILE_SPRITE_SIZE * 4, SpriteSheet.tiles, TILE_SPRITE_SIZE);
 	
+	public static Sprite[] wall_tile_sprite = loadConnectedTileSprites(0, TILE_SPRITE_SIZE * 4, SpriteSheet.tiles, TILE_SPRITE_SIZE);
 	/*
 	* Entity Sprites
 	* */
 	public static Sprite[] slime_entity_sprite = loadEntityAnimation(0, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 16);
 	public static Sprite[] player_entity_sprite = loadEntityAnimation(ENTITY_SPRITE_SIZE * 4, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 16);
+	public static Sprite[] textFile_entity_sprite = loadEntityAnimation(0, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 16);
 	
 	/*
 	* Class
