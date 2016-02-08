@@ -23,8 +23,8 @@ public abstract class LivingEntity extends Entity {
 	/*
 	* Constructor
 	* */
-	protected LivingEntity(int x, int y, int width, int height, int spriteXOffset, int spriteYOffset, Behavior behavior) {
-		super(x, y, width, height, spriteXOffset, spriteYOffset, null);
+	protected LivingEntity(int x, int y, int width, int height, int spriteXOffset, int spriteYOffset, Behavior behavior, String name) {
+		super(x, y, width, height, spriteXOffset, spriteYOffset, null, name);
 		updateCurrentSprite();
 		this.behavior = behavior;
 	}

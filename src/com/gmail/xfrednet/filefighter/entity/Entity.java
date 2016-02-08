@@ -19,18 +19,20 @@ public abstract class Entity {
 	protected EntityInfo info;
 	protected Sprite currentSprite;
 	protected final int entityID;
+	protected String name;
 	
 	public final static Random random = new Random();
 	
 	/*
 	* Constructor
 	* */
-	protected Entity(int x, int y, int width, int height, int spriteXOffset, int spriteYOffset, Sprite sprite) {
+	protected Entity(int x, int y, int width, int height, int spriteXOffset, int spriteYOffset, Sprite sprite, String name) {
 		info = new EntityInfo(x, y, width, height, spriteXOffset, spriteYOffset);
 		currentSprite = sprite;
 		entityID = currentID++;
+		this.name = name;
 		
-		System.out.println("[INFO] New Entity with ID: " + currentID);
+		System.out.println("[INFO] New Entity with ID: " + currentID + ", Name: " + name);
 		
 	}
 	

@@ -6,6 +6,7 @@ import com.gmail.xfrednet.filefighter.graphics.Camera;
 import com.gmail.xfrednet.filefighter.graphics.Screen;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
 import com.gmail.xfrednet.filefighter.graphics.cameras.ControllableCamera;
+import com.gmail.xfrednet.filefighter.level.FileLevel;
 import com.gmail.xfrednet.filefighter.level.Level;
 import com.gmail.xfrednet.filefighter.util.Input;
 
@@ -14,6 +15,7 @@ import java.awt.*;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.File;
 
 public class Main extends Canvas implements Runnable {
     
@@ -53,7 +55,7 @@ public class Main extends Canvas implements Runnable {
         input = new Input();
         addKeyListener(input);
     
-        level = new Level(25, 25, input, screen);
+        level = new FileLevel(input, screen, new File(System.clearProperty("user.home") + "\\Desktop"));
         camera = level.getCamera();
         player = level.getPlayer();
     }

@@ -14,19 +14,19 @@ public class TestEntity extends LivingEntity {
 	public static final int ANIMATION_SPRITES = 16;
 	int targetID;
 	
-	public TestEntity(int x, int y) {
-		super(x, y, 16, 30, 8, 1, new RandomMovement(1));
+	public TestEntity(int x, int y, String name) {
+		super(x, y, 16, 30, 8, 1, new RandomMovement(1), name);
 	}
-	public TestEntity(int x, int y, Entity target) {
-		super(x, y, 16, 30, 8, 1, new MoveToTarget(target.getID(), 1, 30));
+	public TestEntity(int x, int y, Entity target, String name) {
+		super(x, y, 16, 30, 8, 1, new MoveToTarget(target.getID(), 1, 30), name);
 	}
 	
 	@Override
 	protected void updateCurrentSprite() {
 		if (isStanding) {
-			currentSprite = Sprite.slime_entity_sprite[STILL_STANDING_SPRITE_INDEX];
+			currentSprite = Sprite.testEntity_entity_sprite[STILL_STANDING_SPRITE_INDEX];
 		} else {
-			currentSprite = Sprite.slime_entity_sprite[(direction * ANIMATION_SPRITES) + ((int)(animation / ANIMATION_SPEED) % ANIMATION_SPRITES)];
+			currentSprite = Sprite.testEntity_entity_sprite[(direction * Sprite.TEST_ENTITY_ANIMATED_SPRITE_COUNT) + ((int)(animation / Sprite.TEST_ENTITY_ANIMATION_SPEED) % Sprite.TEST_ENTITY_ANIMATED_SPRITE_COUNT)];
 		}
 	}
 	

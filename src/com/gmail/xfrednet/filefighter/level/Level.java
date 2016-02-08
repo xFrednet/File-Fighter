@@ -9,6 +9,7 @@ import com.gmail.xfrednet.filefighter.graphics.Screen;
 import com.gmail.xfrednet.filefighter.graphics.cameras.ControllableCamera;
 import com.gmail.xfrednet.filefighter.util.Input;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +18,9 @@ import java.util.List;
  */
 public class Level {
 	
-	public final int WIDTH;
-	public final int HEIGHT;
+	public static final int TILE_SIZE = 32;
+	public int WIDTH;
+	public int HEIGHT;
 	public int[] tileIDs;
 	
 	public List<Entity> entityList = new ArrayList<>();
@@ -33,9 +35,13 @@ public class Level {
 		tileIDs = new int[WIDTH * HEIGHT];
 		
 		camera = new ControllableCamera(this, screen, input);
-		this.player = new Player(60, 60, input, camera);
+		this.player = new Player(60, 60, input, camera, "xFrednet");
 		
 		generate();
+	}
+	public Level(Input input, Screen screen) {
+		camera = new ControllableCamera(this, screen, input);
+		this.player = new Player(60, 60, input, camera, "xFrednet");
 	}
 	private void generate() {
 		for (int i = 0; i < tileIDs.length; i++) {
@@ -52,12 +58,12 @@ public class Level {
 			tileIDs[x + (HEIGHT - 1) * WIDTH] = Tile.List.WALL_ID;
 		}
 		
-		entityList.add(new Slime(32 * 4, 32 * 4, player));
+		entityList.add(new Slime(32 * 4, 32 * 4, player, "xFrednet"));
 		
-		entityList.add(new TestEntity(32 * 10, 32 * 10));
-		entityList.add(new TestEntity(32 * 20, 32 * 10));
-		entityList.add(new TestEntity(32 * 10, 32 * 20));
-		entityList.add(new TestEntity(32 * 20, 32 * 20));
+		entityList.add(new TestEntity(32 * 10, 32 * 10, "TestEntity"));
+		entityList.add(new TestEntity(32 * 20, 32 * 10, "TestEntity"));
+		entityList.add(new TestEntity(32 * 10, 32 * 20, "TestEntity"));
+		entityList.add(new TestEntity(32 * 20, 32 * 20, "TestEntity"));
 		
 	}
 	
