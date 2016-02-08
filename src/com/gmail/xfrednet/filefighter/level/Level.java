@@ -3,7 +3,11 @@ package com.gmail.xfrednet.filefighter.level;
 import com.gmail.xfrednet.filefighter.entity.Entity;
 import com.gmail.xfrednet.filefighter.entity.Player;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.TestEntity;
+import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.Slime;
+import com.gmail.xfrednet.filefighter.graphics.Camera;
 import com.gmail.xfrednet.filefighter.graphics.Screen;
+import com.gmail.xfrednet.filefighter.graphics.cameras.ControllableCamera;
+import com.gmail.xfrednet.filefighter.util.Input;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,15 +23,17 @@ public class Level {
 	
 	public List<Entity> entityList = new ArrayList<>();
 	
-	public Player player;
+	private Player player;
+	private Camera camera;
 	
-	public Level(int width, int height, Player player) {
+	public Level(int width, int height, Input input, Screen screen) {
 		WIDTH = width;
 		HEIGHT = height;
 		
 		tileIDs = new int[WIDTH * HEIGHT];
 		
-		this.player = player;
+		camera = new ControllableCamera(this, screen, input);
+		this.player = new Player(60, 60, input, camera);
 		
 		generate();
 	}
@@ -46,7 +52,7 @@ public class Level {
 			tileIDs[x + (HEIGHT - 1) * WIDTH] = Tile.List.WALL_ID;
 		}
 		
-		entityList.add(new TestEntity(32 * 4, 32 * 4, player));
+		entityList.add(new Slime(32 * 4, 32 * 4, player));
 		
 		entityList.add(new TestEntity(32 * 10, 32 * 10));
 		entityList.add(new TestEntity(32 * 20, 32 * 10));
@@ -82,10 +88,19 @@ public class Level {
 		return null;
 	}
 	
+	public Player getPlayer() {
+		return player;
+	}
+	public Camera getCamera() {
+		return camera;
+	}
+	
 	/*
-	* Game loop util 
-	* */
-	public void render(int xScroll, int yScroll, Screen screen) {
+		* Game loop util 
+		* */
+	public void render(Screen screen) {
+		int xScroll = camera.getXOffset();
+		int yScroll = camera.getYOffset();
 		screen.setOffset(xScroll, yScroll);
 		
 		int x0 = xScroll >> 5;

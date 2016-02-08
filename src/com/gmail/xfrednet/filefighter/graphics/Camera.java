@@ -38,8 +38,8 @@ public abstract class Camera {
 	* Util
 	* */
 	protected void moveCamera(int x, int y) {
-		setXOffset(x);
-		setYOffset(y);
+		setX(x);
+		setY(y);
 	}
 	
 	/*
@@ -55,7 +55,7 @@ public abstract class Camera {
 	/*
 	* setters
 	* */
-	public void setXOffset(int xOffset) {
+	public void setX(int xOffset) {
 		if (xOffset < 0) {
 			x = 0;
 			return;
@@ -67,7 +67,7 @@ public abstract class Camera {
 		
 		x = xOffset;
 	}
-	public void setYOffset(int yOffset) {
+	public void setY(int yOffset) {
 		if (yOffset < 0) {
 			y = 0;
 			return;
@@ -78,6 +78,12 @@ public abstract class Camera {
 		}
 		
 		y = yOffset;
+	}
+	public void centerXOn(int x) {
+		setX(x - screen.WIDTH / 2);
+	}
+	public void centerYOn(int y) {
+		setY(y - screen.HEIGHT / 2);
 	}
 	public void setLevel(Level level) {
 		this.level = level;

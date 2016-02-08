@@ -53,9 +53,9 @@ public class Main extends Canvas implements Runnable {
         input = new Input();
         addKeyListener(input);
     
-        player = new Player(60, 60, input);
-        level = new Level(25, 25, player);
-        camera = new ControllableCamera(level, screen, input);
+        level = new Level(25, 25, input, screen);
+        camera = level.getCamera();
+        player = level.getPlayer();
     }
     
     /*
@@ -153,8 +153,9 @@ public class Main extends Canvas implements Runnable {
         }
         
         screen.clear();
-        level.render(camera.getXOffset(), camera.getYOffset(), screen);
+        level.render(screen);
         player.render(screen);
+        
         for (int i = 0; i < screen.pixels.length; i++) {
             pixels[i] = screen.pixels[i];
         }
