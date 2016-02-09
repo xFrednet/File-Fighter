@@ -95,6 +95,14 @@ public abstract class Entity {
 		return entityID;
 	}
 	
+	/*
+	* Setters
+	* */
+	public void setPosition(int x, int y) {
+		info.x = x;
+		info.y = y;
+	}
+	
 	public static class EntityInfo {
 		
 		private EntityInfo(int x, int y, int width, int height, int spriteXOffset, int spriteYOffset) {

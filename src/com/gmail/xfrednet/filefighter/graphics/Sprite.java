@@ -8,12 +8,15 @@ public class Sprite {
 	public static final int TILE_SPRITE_SIZE = 32;
 	public static final int ENTITY_SPRITE_SIZE = 32;
 	
+	public static final int SPRITE_INVISIBLE_COLOR_1 = 0xffffbb0f;
+	public static final int SPRITE_INVISIBLE_COLOR_2 = 0xffff0000;
+	
 	/*
 	* Test Code
 	* */
 	public final static int TEST_ENTITY_ANIMATED_SPRITE_COUNT = 16;
 	public final static int TEST_ENTITY_ANIMATION_SPEED = 16;
-	public static Sprite[] testEntity_entity_sprite = loadEntityAnimation(0/*xPixel*/, 0/*yPixel*/, SpriteSheet.entities, ENTITY_SPRITE_SIZE, TEST_ENTITY_ANIMATED_SPRITE_COUNT);
+	public static Sprite[] testEntity_entity_sprite = loadEntityAnimation(ENTITY_SPRITE_SIZE * 8/*xPixel*/, 0/*yPixel*/, SpriteSheet.entities, ENTITY_SPRITE_SIZE, TEST_ENTITY_ANIMATED_SPRITE_COUNT);
 	
 	/*
 	* Static Sprites
@@ -27,7 +30,7 @@ public class Sprite {
 	* */
 	public static Sprite[] slime_entity_sprite = loadEntityAnimation(0, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 16);
 	public static Sprite[] player_entity_sprite = loadEntityAnimation(ENTITY_SPRITE_SIZE * 4, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 16);
-	public static Sprite[] textFile_entity_sprite = loadEntityAnimation(0, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 16);
+	public static Sprite[] textFile_entity_sprite = loadEntityAnimation(ENTITY_SPRITE_SIZE * 8, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 16);
 	
 	/*
 	* Class
@@ -65,11 +68,16 @@ public class Sprite {
 			return;
 		}
 		int ya, xa;
+		int color;
 		for (int yp = 0; yp < HEIGHT; yp++) {
 			ya = yp + yOffset;
 			for (int xp = 0; xp < WIDTH; xp++) {
 				xa = xp + xOffset;
-				pixels[xp + yp * WIDTH] = spriteSheet.pixels[xa + ya * spriteSheet.WIDTH];
+				color = spriteSheet.pixels[xa + ya * spriteSheet.WIDTH];
+				
+				if (color == SPRITE_INVISIBLE_COLOR_1) color = Screen.INVISIBLE_COLOR;
+				if (color == SPRITE_INVISIBLE_COLOR_2) color = Screen.INVISIBLE_COLOR;
+				pixels[xp + yp * WIDTH] = color;
 			}
 		}
 	}
