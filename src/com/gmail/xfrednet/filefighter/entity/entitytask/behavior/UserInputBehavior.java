@@ -68,5 +68,8 @@ public class UserInputBehavior extends Behavior {
 	public Camera getCamera() {
 		return camera;
 	}
+	public void setCamera(Camera camera) {
+		this.camera = camera;
+	}
 	
 }

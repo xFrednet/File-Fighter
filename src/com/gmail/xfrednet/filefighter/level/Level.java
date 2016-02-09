@@ -28,21 +28,30 @@ public class Level {
 	private Player player;
 	private Camera camera;
 	
-	public Level(int width, int height, Input input, Screen screen) {
+	public Level(int width, int height, Player player, Input input, Screen screen) {
 		WIDTH = width;
 		HEIGHT = height;
 		
 		tileIDs = new int[WIDTH * HEIGHT];
 		
 		camera = new ControllableCamera(this, screen, input);
-		this.player = new Player(60, 60, input, camera, "xFrednet");
+		
+		//player
+		this.player = player;
+		player.setCamera(camera);
 		
 		generate();
 	}
-	public Level(Input input, Screen screen) {
+	public Level(Player player, Input input, Screen screen) {
 		camera = new ControllableCamera(this, screen, input);
-		this.player = new Player(60, 60, input, camera, "xFrednet");
+		
+		//player
+		this.player = player;
+		player.setCamera(camera);
+		player.setPosition(60, 60);
+
 	}
+	
 	private void generate() {
 		for (int i = 0; i < tileIDs.length; i++) {
 			tileIDs[i] = Tile.List.SPACE_TILE_ID;
@@ -102,8 +111,8 @@ public class Level {
 	}
 	
 	/*
-		* Game loop util 
-		* */
+	* Game loop util 
+	* */
 	public void render(Screen screen) {
 		int xScroll = camera.getXOffset();
 		int yScroll = camera.getYOffset();
