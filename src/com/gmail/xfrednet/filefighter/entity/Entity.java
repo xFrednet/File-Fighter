@@ -32,7 +32,7 @@ public abstract class Entity {
 		entityID = currentID++;
 		this.name = name;
 		
-		System.out.println("[INFO] New Entity with ID: " + currentID + ", Name: " + name);
+		//System.out.println("[INFO] New Entity with ID: " + currentID + ", Name: " + name);
 		
 	}
 	

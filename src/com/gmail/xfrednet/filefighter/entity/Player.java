@@ -21,6 +21,9 @@ public class Player extends LivingEntity {
 		super(x, y, 28, 26, 2, 5, null, name);
 		behavior = new UserInputBehavior(input, speed, camera);
 	}
+	public Player(int x, int y, Input input, String name) {
+		this(x, y, input, null, name);
+	}
 	
 	
 	@Override
@@ -33,11 +36,21 @@ public class Player extends LivingEntity {
 	}
 	
 	public Camera getCamera() {
-		if (behavior.getClass().getName() == UserInputBehavior.class.getClass().getName()) {
+		if (behavior.getClass().getName() == UserInputBehavior.class.getName()) {
 			return ((UserInputBehavior) behavior).getCamera();
 		} else {
-			System.out.println("[ERROR] Player: Player has a different behavior getCamera returns null");
+			System.out.println("[ERROR] Player: Player has a different behavior getCamera returns null, Current behavior: " + behavior.getClass().getName());
 			return null;
 		}
 	}
+	
+	public void setCamera(Camera camera) {
+		if (behavior.getClass().getName() == UserInputBehavior.class.getName()) {
+			((UserInputBehavior) behavior).setCamera(camera);
+		} else {
+			System.out.println("[ERROR] Player: Player has a different behavior can not set Camera, Current behavior: " + behavior.getClass().getName());
+			return;
+		}
+	}
+	
 }
