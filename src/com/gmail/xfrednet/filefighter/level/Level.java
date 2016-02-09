@@ -28,20 +28,26 @@ public class Level {
 	private Player player;
 	private Camera camera;
 	
-	public Level(int width, int height, Input input, Screen screen) {
+	public Level(int width, int height, Player player, Input input, Screen screen) {
 		WIDTH = width;
 		HEIGHT = height;
 		
 		tileIDs = new int[WIDTH * HEIGHT];
 		
 		camera = new ControllableCamera(this, screen, input);
-		this.player = new Player(60, 60, input, camera, "xFrednet");
+		
+		//player
+		this.player = player;
+		player.setCamera(camera);
 		
 		generate();
 	}
-	public Level(Input input, Screen screen) {
+	public Level(Player player, Input input, Screen screen) {
 		camera = new ControllableCamera(this, screen, input);
-		this.player = new Player(60, 60, input, camera, "xFrednet");
+		
+		//player
+		this.player = player;
+		player.setCamera(camera);
 	}
 	private void generate() {
 		for (int i = 0; i < tileIDs.length; i++) {
