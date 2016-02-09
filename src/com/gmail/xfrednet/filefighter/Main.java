@@ -1,12 +1,11 @@
 package com.gmail.xfrednet.filefighter;
 
+import com.gmail.xfrednet.filefighter.entity.Entity;
 import com.gmail.xfrednet.filefighter.entity.Player;
 import com.gmail.xfrednet.filefighter.graphics.Camera;
-import com.gmail.xfrednet.filefighter.graphics.GUIManager;
 import com.gmail.xfrednet.filefighter.graphics.Screen;
-import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponent;
-import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponentGroup;
-import com.gmail.xfrednet.filefighter.graphics.gui.components.*;
+import com.gmail.xfrednet.filefighter.graphics.Sprite;
+import com.gmail.xfrednet.filefighter.graphics.cameras.ControllableCamera;
 import com.gmail.xfrednet.filefighter.level.FileLevel;
 import com.gmail.xfrednet.filefighter.level.Level;
 import com.gmail.xfrednet.filefighter.util.Input;
@@ -21,23 +20,16 @@ import java.io.File;
 public class Main extends Canvas implements Runnable {
     
     public static final String NAME = "File Fighter";
-    public static final String PLAYER_NAME = "xFrednet";
     public static final int WIDTH = 480;
     public static final int HEIGHT = WIDTH * 9 / 16;
     public static final int scale = 3;
     public static final int UPS = 30;
-	
-	public static final Font gameFont = new Font("Jokerman", Font.PLAIN, 35);
     
-    Thread thread;
+    Thread t;
     JFrame jframe;
     Input input;
-    
-    //Graphics
     Screen screen;
     Camera camera;
-    GUIManager guiManager;
-	GameHud hud;
     
     Level level;
     Player player;
@@ -63,10 +55,9 @@ public class Main extends Canvas implements Runnable {
         input = new Input();
         addKeyListener(input);
     
-        player = new Player(60, 60, input, PLAYER_NAME);
-        level = new FileLevel(player, input, screen, new File(System.clearProperty("user.home") + "\\Desktop"));
+        level = new FileLevel(input, screen, new File(System.clearProperty("user.home") + "\\Desktop"));
         camera = level.getCamera();
-        
+        player = level.getPlayer();
     }
     
     /*
@@ -92,19 +83,13 @@ public class Main extends Canvas implements Runnable {
 	* Util
 	* */
     public void start() {
-        guiManager = new GUIManager(getWidth(), getHeight());
-	    hud = new GameHud(guiManager);
-	    guiManager.addComponent(hud);
-	    
-        thread = new Thread(this);
-        thread.setName("Game Loop");
-        thread.start();
-    
+        t = new Thread(this);
+        t.start();
     }
     
     public synchronized void stop() {
         try {
-            thread.join();
+            t.join();
         } catch (InterruptedException e) {
             System.exit(0);
         }
@@ -160,7 +145,6 @@ public class Main extends Canvas implements Runnable {
         camera.update();
         player.update(level);
         level.update();
-        guiManager.update();
     }
     
     public void render() {
@@ -169,36 +153,23 @@ public class Main extends Canvas implements Runnable {
             createBufferStrategy(3);
             return;
         }
-        Graphics g = bs.getDrawGraphics();
         
         screen.clear();
         level.render(screen);
         player.render(screen);
-    
+        
         for (int i = 0; i < screen.pixels.length; i++) {
             pixels[i] = screen.pixels[i];
         }
-    
+        
+        Graphics g = bs.getDrawGraphics();
         g.setColor(Color.RED);
         g.fillRect(0, 0, getWidth(), getHeight());
         g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
-        guiManager.render(g);
         
         g.dispose();
         bs.show();
         
     }
     
-	public static class GameHud extends GUIComponentGroup {
-		
-		private GUIText FPSInfo;
-		
-		public GameHud(GUIComponent parent) {
-			super(parent, 0, 0);
-			
-			FPSInfo = new GUIText(this, 10, 10, "-dwadwaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa").addBackground();
-			addComponent(FPSInfo);
-		}
-	}
-	
 }
