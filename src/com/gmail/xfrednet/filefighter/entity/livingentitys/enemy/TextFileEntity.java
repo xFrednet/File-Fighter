@@ -14,7 +14,7 @@ public class TextFileEntity extends EnemyEntity {
 	public static final int ANIMATION_SPRITES = 16;
 	
 	public TextFileEntity(int x, int y, Entity target, String name) {
-		super(x, y, 27/*width*/, 17/*height*/, 3/*spriteXOffset*/, 15/*spriteXOffset*/, new MoveToTarget(target.getID(), 1, 30)/*behavior*/, name);
+		super(x, y, 26/*width*/, 27/*height*/, 3/*spriteXOffset*/, 4/*spriteXOffset*/, new MoveToTarget(target.getID(), 1, 30)/*behavior*/, name);
 	}
 	
 	@Override

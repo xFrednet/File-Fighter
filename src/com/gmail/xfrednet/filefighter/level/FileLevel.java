@@ -19,8 +19,8 @@ public class FileLevel extends Level {
 	public File file;
 	public Random random;
 	
-	public FileLevel(Input input, Screen screen, File file) {
-		super(input, screen);
+	public FileLevel(Player player, Input input, Screen screen, File file) {
+		super(player, input, screen);
 		
 		random = new Random();
 		
@@ -76,8 +76,8 @@ public class FileLevel extends Level {
 			fileEnding = fileName.substring(i+1);
 		}
 		
-		int x = (random.nextInt(WIDTH - 2) + 2) * TILE_SIZE;
-		int y = (random.nextInt(HEIGHT - 2) + 2) * TILE_SIZE;
+		int x = (random.nextInt(WIDTH - 2) + 1) * TILE_SIZE;
+		int y = (random.nextInt(HEIGHT - 2) + 1) * TILE_SIZE;
 		
 		switch (fileEnding) {
 			case "txt": return new TextFileEntity(x, y, getPlayer(), fileName);
