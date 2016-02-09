@@ -29,7 +29,7 @@ public class Main extends Canvas implements Runnable {
     public static final int scale = 3;
     public static final int UPS = 30;
 	
-	public static final Font gameFont = new Font("Jokerman", Font.PLAIN, 35);
+	public static final Font gameFont = new Font("Lucida Console", Font.PLAIN, 16);
     
     Thread thread;
     JFrame jframe;
@@ -144,7 +144,7 @@ public class Main extends Canvas implements Runnable {
             
             if ((System.currentTimeMillis() - timer) >= 1000) {
                 
-                System.out.println("[INFO] UPS: " + updates + ", FPS: " + frames);
+                hud.FPSInfo.setText("UPS: " + updates + ", FPS: " + frames);
                 
                 timer += 1000;
                 frames = 0;
@@ -173,18 +173,19 @@ public class Main extends Canvas implements Runnable {
             createBufferStrategy(3);
             return;
         }
-        Graphics g = bs.getDrawGraphics();
-        
-        screen.clear();
-        level.render(screen);
-        player.render(screen);
-    
-        for (int i = 0; i < screen.pixels.length; i++) {
-            pixels[i] = screen.pixels[i];
-        }
-    
-        g.setColor(Color.RED);
-        g.fillRect(0, 0, getWidth(), getHeight());
+	
+	    screen.clear();
+	    level.render(screen);
+	    player.render(screen);
+	
+	    for (int i = 0; i < screen.pixels.length; i++) {
+		    pixels[i] = screen.pixels[i];
+	    }
+	
+	    Graphics g = bs.getDrawGraphics();
+	    g.setColor(Color.RED);
+	    g.setFont(gameFont);
+	    g.fillRect(0, 0, getWidth(), getHeight());
         g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
         guiManager.render(g);
         
@@ -195,12 +196,13 @@ public class Main extends Canvas implements Runnable {
     
 	public static class GameHud extends GUIComponentGroup {
 		
-		private GUIText FPSInfo;
+		public GUIText FPSInfo;
 		
 		public GameHud(GUIComponent parent) {
 			super(parent, 0, 0);
 			
-			FPSInfo = new GUIText(this, 10, 10, "-dwadwaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa").addBackground();
+			FPSInfo = new GUIText(this, 0, 0, "FPS: %, UPS: %", true, new Font(gameFont.getName(), Font.PLAIN, 8));
+			FPSInfo.setColor(new Color(0xff00ff21, true), new Color(0xaa000000, true));
 			addComponent(FPSInfo);
 		}
 	}
