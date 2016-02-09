@@ -13,7 +13,7 @@ public abstract class Entity {
 	
 	public static final int BOUNDING_BOX_COLOR = 0xffff00ff;
 	public static final int POSITION_COLOR = 0xffff0000;
-	public static boolean showBoundingBoxes = true;
+	public static boolean showBoundingBoxes = false;
 	protected static int currentID = Integer.MIN_VALUE;
 	
 	protected EntityInfo info;

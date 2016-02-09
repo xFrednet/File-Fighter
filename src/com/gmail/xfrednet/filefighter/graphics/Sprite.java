@@ -16,7 +16,7 @@ public class Sprite {
 	* */
 	public final static int TEST_ENTITY_ANIMATED_SPRITE_COUNT = 16;
 	public final static int TEST_ENTITY_ANIMATION_SPEED = 16;
-	public static Sprite[] testEntity_entity_sprite = loadEntityAnimation(ENTITY_SPRITE_SIZE * 8/*xPixel*/, 0/*yPixel*/, SpriteSheet.entities, ENTITY_SPRITE_SIZE, TEST_ENTITY_ANIMATED_SPRITE_COUNT);
+	public static Sprite[] testEntity_entity_sprite = loadEntityAnimation(0/*xPixel*/, 0/*yPixel*/, SpriteSheet.entities, ENTITY_SPRITE_SIZE, TEST_ENTITY_ANIMATED_SPRITE_COUNT);
 	
 	/*
 	* Static Sprites
