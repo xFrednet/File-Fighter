@@ -29,8 +29,8 @@ public class Sprite {
 	* Entity Sprites
 	* */
 	public static Sprite[] slime_entity_sprite = loadEntityAnimation(0, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 16);
-	public static Sprite[] player_entity_sprite = loadEntityAnimation(ENTITY_SPRITE_SIZE * 4, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 16);
-	public static Sprite[] textFile_entity_sprite = loadEntityAnimation(ENTITY_SPRITE_SIZE * 8, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 6);
+	public static Sprite[] player_entity_sprite = loadEntityAnimation(ENTITY_SPRITE_SIZE * 2, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 16);
+	public static Sprite[] textFile_entity_sprite = loadEntityAnimation(ENTITY_SPRITE_SIZE * 4, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 6);
 	
 	/*
 	* Class
@@ -121,7 +121,7 @@ public class Sprite {
 		
 		
 		int i = 0;
-		for (int xp = 0; xp < 4; xp++) {
+		for (int xp = 0; xp < 2; xp++) {
 			for (int yp = 0; yp < animationSprites; yp++) {
 				sprites[i++] = new Sprite(size * xp + x, size * yp + y, sheet, size);
 			}
