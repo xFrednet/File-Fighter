@@ -39,9 +39,7 @@ public abstract class LivingEntity extends Entity {
 		move(xm, ym, level);
 	}
 	private void move(double xm, double ym, Level level) {
-		if (xm > 0) direction = 1;
-		if (xm < 0) direction = 3;
-		if (ym < 0) direction = 2;
+		if (ym < 0) direction = 1;
 		if (ym > 0) direction = 0;
 		
 		if (xm != 0)
