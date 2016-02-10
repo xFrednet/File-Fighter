@@ -7,8 +7,6 @@ import com.gmail.xfrednet.filefighter.graphics.Screen;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponent;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponentGroup;
 import com.gmail.xfrednet.filefighter.graphics.gui.components.*;
-import com.gmail.xfrednet.filefighter.graphics.Sprite;
-import com.gmail.xfrednet.filefighter.graphics.cameras.ControllableCamera;
 import com.gmail.xfrednet.filefighter.level.FileLevel;
 import com.gmail.xfrednet.filefighter.level.Level;
 import com.gmail.xfrednet.filefighter.util.Input;
@@ -66,10 +64,7 @@ public class Main extends Canvas implements Runnable {
         addKeyListener(input);
     
 
-        player = new Player(60, 60, input, PLAYER_NAME);
-        level = new FileLevel(player, input, screen, new File(System.clearProperty("user.home") + "\\Desktop"));
-
-        camera = level.getCamera();
+        player = new Player(60, 60, input, PLAYER_NAME, null);
         
     }
     
@@ -99,7 +94,10 @@ public class Main extends Canvas implements Runnable {
         guiManager = new GUIManager(getWidth(), getHeight());
 	    hud = new GameHud(guiManager);
 	    guiManager.addComponent(hud);
-	    
+    
+        level = new FileLevel(player, input, screen, new File(System.clearProperty("user.home") + "\\Desktop"), guiManager);
+        camera = level.getCamera();
+        
         thread = new Thread(this);
         thread.setName("Game Loop");
         thread.start();

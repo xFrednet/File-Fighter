@@ -5,16 +5,17 @@ import com.gmail.xfrednet.filefighter.entity.Entity;
 import com.gmail.xfrednet.filefighter.entity.entitytask.Behavior;
 import com.gmail.xfrednet.filefighter.entity.entitytask.behavior.MoveToTarget;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
+import com.gmail.xfrednet.filefighter.level.Level;
 
 /**
  * Created by xFrednet on 08.02.2016.
  */
 public class TextFileEntity extends EnemyEntity {
 	
-	public static final int ANIMATION_SPRITES = 15;
+	public static final int ANIMATION_SPRITES = 6;
 	
-	public TextFileEntity(int x, int y, Entity target, String name) {
-		super(x, y, 26/*width*/, 27/*height*/, 3/*spriteXOffset*/, 4/*spriteXOffset*/, new MoveToTarget(target.getID(), 1, 30)/*behavior*/, name);
+	public TextFileEntity(int x, int y, Level level, Entity target, String name) {
+		super(x, y, level, 26/*width*/, 27/*height*/, 3/*spriteXOffset*/, 4/*spriteXOffset*/, new MoveToTarget(target.getID(), 1, 30)/*behavior*/, name);
 	}
 	
 	@Override
