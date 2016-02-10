@@ -39,18 +39,18 @@ public class UserInputBehavior extends Behavior {
 		int xm = 0;
 		int ym = 0;
 		
-		if (input.isKeyDown(MOVEMENT_UP_KEY)) ym -= speed;
-		if (input.isKeyDown(MOVEMENT_DOWN_KEY)) ym += speed;
-		if (input.isKeyDown(MOVEMENT_LEFT_KEY)) xm -= speed;
-		if (input.isKeyDown(MOVEMENT_RIGHT_KEY)) xm += speed;
+		if (input.isKeyDown(MOVEMENT_UP_KEY)) ym -= 1;
+		if (input.isKeyDown(MOVEMENT_DOWN_KEY)) ym += 1;
+		if (input.isKeyDown(MOVEMENT_LEFT_KEY)) xm -= 1;
+		if (input.isKeyDown(MOVEMENT_RIGHT_KEY)) xm += 1;
 		
 		//System.out.println("[INFO] UserInputBehavior: xm: " + xm + ", ym " + ym);
 		
 		if (xm != 0 || ym != 0) {
-			entity.move(xm, ym, level);
+			entity.move(Math.atan2(xm, ym), level, speed);
 			
 			if (input.isKeyDown(MOVEMENT_SPEED_KEY)) {
-				entity.move(xm, ym, level);
+				entity.move(Math.atan2(xm, ym), level, speed);
 			}
 			
 			if (camera != null)

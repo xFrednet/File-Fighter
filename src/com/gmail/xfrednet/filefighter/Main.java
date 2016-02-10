@@ -7,8 +7,6 @@ import com.gmail.xfrednet.filefighter.graphics.Screen;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponent;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponentGroup;
 import com.gmail.xfrednet.filefighter.graphics.gui.components.*;
-import com.gmail.xfrednet.filefighter.graphics.Sprite;
-import com.gmail.xfrednet.filefighter.graphics.cameras.ControllableCamera;
 import com.gmail.xfrednet.filefighter.level.FileLevel;
 import com.gmail.xfrednet.filefighter.level.Level;
 import com.gmail.xfrednet.filefighter.util.Input;
@@ -29,7 +27,7 @@ public class Main extends Canvas implements Runnable {
     public static final int scale = 3;
     public static final int UPS = 30;
 	
-	public static final Font gameFont = new Font("Jokerman", Font.PLAIN, 35);
+	public static final Font gameFont = new Font("Lucida Console", Font.PLAIN, 16);
     
     Thread thread;
     JFrame jframe;
@@ -66,10 +64,7 @@ public class Main extends Canvas implements Runnable {
         addKeyListener(input);
     
 
-        player = new Player(60, 60, input, PLAYER_NAME);
-        level = new FileLevel(player, input, screen, new File(System.clearProperty("user.home") + "\\Desktop"));
-
-        camera = level.getCamera();
+        player = new Player(60, 60, input, PLAYER_NAME, null);
         
     }
     
@@ -99,7 +94,10 @@ public class Main extends Canvas implements Runnable {
         guiManager = new GUIManager(getWidth(), getHeight());
 	    hud = new GameHud(guiManager);
 	    guiManager.addComponent(hud);
-	    
+    
+        level = new FileLevel(player, input, screen, new File(System.clearProperty("user.home") + "\\Desktop"), guiManager);
+        camera = level.getCamera();
+        
         thread = new Thread(this);
         thread.setName("Game Loop");
         thread.start();
@@ -144,7 +142,7 @@ public class Main extends Canvas implements Runnable {
             
             if ((System.currentTimeMillis() - timer) >= 1000) {
                 
-                System.out.println("[INFO] UPS: " + updates + ", FPS: " + frames);
+                hud.FPSInfo.setText("UPS: " + updates + ", FPS: " + frames);
                 
                 timer += 1000;
                 frames = 0;
@@ -173,18 +171,19 @@ public class Main extends Canvas implements Runnable {
             createBufferStrategy(3);
             return;
         }
-        Graphics g = bs.getDrawGraphics();
-        
-        screen.clear();
-        level.render(screen);
-        player.render(screen);
-    
-        for (int i = 0; i < screen.pixels.length; i++) {
-            pixels[i] = screen.pixels[i];
-        }
-    
-        g.setColor(Color.RED);
-        g.fillRect(0, 0, getWidth(), getHeight());
+	
+	    screen.clear();
+	    level.render(screen);
+	    player.render(screen);
+	
+	    for (int i = 0; i < screen.pixels.length; i++) {
+		    pixels[i] = screen.pixels[i];
+	    }
+	
+	    Graphics g = bs.getDrawGraphics();
+	    g.setColor(Color.RED);
+	    g.setFont(gameFont);
+	    g.fillRect(0, 0, getWidth(), getHeight());
         g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
         guiManager.render(g);
         
@@ -195,12 +194,13 @@ public class Main extends Canvas implements Runnable {
     
 	public static class GameHud extends GUIComponentGroup {
 		
-		private GUIText FPSInfo;
+		public GUIText FPSInfo;
 		
 		public GameHud(GUIComponent parent) {
 			super(parent, 0, 0);
 			
-			FPSInfo = new GUIText(this, 10, 10, "-dwadwaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa").addBackground();
+			FPSInfo = new GUIText(this, 0, 0, "FPS: %, UPS: %", true, new Font(gameFont.getName(), Font.PLAIN, 8));
+			FPSInfo.setColor(new Color(0xff00ff21, true), new Color(0xaa000000, true));
 			addComponent(FPSInfo);
 		}
 	}

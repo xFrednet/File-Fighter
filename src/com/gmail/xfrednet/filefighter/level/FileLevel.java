@@ -4,6 +4,7 @@ import com.gmail.xfrednet.filefighter.entity.Entity;
 import com.gmail.xfrednet.filefighter.entity.Player;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.TestEntity;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.TextFileEntity;
+import com.gmail.xfrednet.filefighter.graphics.GUIManager;
 import com.gmail.xfrednet.filefighter.graphics.Screen;
 import com.gmail.xfrednet.filefighter.graphics.cameras.ControllableCamera;
 import com.gmail.xfrednet.filefighter.util.Input;
@@ -19,8 +20,8 @@ public class FileLevel extends Level {
 	public File file;
 	public Random random;
 	
-	public FileLevel(Player player, Input input, Screen screen, File file) {
-		super(player, input, screen);
+	public FileLevel(Player player, Input input, Screen screen, File file, GUIManager guiManager) {
+		super(player, input, screen, guiManager);
 		
 		random = new Random();
 		
@@ -80,10 +81,10 @@ public class FileLevel extends Level {
 		int y = (random.nextInt(HEIGHT - 2) + 1) * TILE_SIZE;
 		
 		switch (fileEnding) {
-			case "txt": return new TextFileEntity(x, y, getPlayer(), fileName);
+			case "txt": return new TextFileEntity(x, y, this, getPlayer(), fileName);
 		}
 		
-		return new TestEntity(x, y, "ERROR");
+		return new TestEntity(x, y, this, "KNOWN ERROR");
 		
 	}
 	

@@ -5,6 +5,7 @@ import com.gmail.xfrednet.filefighter.entity.LivingEntity;
 import com.gmail.xfrednet.filefighter.entity.entitytask.behavior.MoveToTarget;
 import com.gmail.xfrednet.filefighter.entity.entitytask.behavior.RandomMovement;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
+import com.gmail.xfrednet.filefighter.level.Level;
 
 /**
  * Created by xFrednet on 07.02.2016.
@@ -14,11 +15,11 @@ public class TestEntity extends LivingEntity {
 	public static final int ANIMATION_SPRITES = 16;
 	int targetID;
 	
-	public TestEntity(int x, int y, String name) {
-		super(x, y, 16, 30, 8, 1, new RandomMovement(1), name);
+	public TestEntity(int x, int y, Level level, String name) {
+		super(x, y, level, 16, 30, 8, 1, new RandomMovement(1), name);
 	}
-	public TestEntity(int x, int y, Entity target, String name) {
-		super(x, y, 16, 30, 8, 1, new MoveToTarget(target.getID(), 1, 30), name);
+	public TestEntity(int x, int y, Level level, Entity target, String name) {
+		super(x, y, level, 16, 30, 8, 1, new MoveToTarget(target.getID(), 1, 30), name);
 	}
 	
 	@Override
