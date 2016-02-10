@@ -5,11 +5,12 @@ import com.gmail.xfrednet.filefighter.entity.Player;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.TestEntity;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.Slime;
 import com.gmail.xfrednet.filefighter.graphics.Camera;
+import com.gmail.xfrednet.filefighter.graphics.GUIManager;
 import com.gmail.xfrednet.filefighter.graphics.Screen;
 import com.gmail.xfrednet.filefighter.graphics.cameras.ControllableCamera;
+import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponentGroup;
 import com.gmail.xfrednet.filefighter.util.Input;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +28,9 @@ public class Level {
 	
 	private Player player;
 	private Camera camera;
+	private GUIComponentGroup levelGUI;
 	
-	public Level(int width, int height, Player player, Input input, Screen screen) {
+	public Level(int width, int height, Player player, Input input, Screen screen, GUIManager guiManager) {
 		WIDTH = width;
 		HEIGHT = height;
 		
@@ -39,17 +41,20 @@ public class Level {
 		//player
 		this.player = player;
 		player.setCamera(camera);
+		levelGUI = new GUIComponentGroup(guiManager, 0, 0);
 		
 		generate();
 	}
-	public Level(Player player, Input input, Screen screen) {
+	public Level(Player player, Input input, Screen screen, GUIManager guiManager) {
 		camera = new ControllableCamera(this, screen, input);
 		
 		//player
 		this.player = player;
 		player.setCamera(camera);
 		player.setPosition(60, 60);
-
+		levelGUI = new GUIComponentGroup(guiManager, 0, 0);
+		guiManager.addComponent(levelGUI);
+		
 	}
 	
 	private void generate() {
@@ -67,12 +72,12 @@ public class Level {
 			tileIDs[x + (HEIGHT - 1) * WIDTH] = Tile.List.WALL_ID;
 		}
 		
-		entityList.add(new Slime(32 * 4, 32 * 4, player, "xFrednet"));
+		entityList.add(new Slime(32 * 4, 32 * 4, this, player, "xFrednet"));
 		
-		entityList.add(new TestEntity(32 * 10, 32 * 10, "TestEntity"));
-		entityList.add(new TestEntity(32 * 20, 32 * 10, "TestEntity"));
-		entityList.add(new TestEntity(32 * 10, 32 * 20, "TestEntity"));
-		entityList.add(new TestEntity(32 * 20, 32 * 20, "TestEntity"));
+		entityList.add(new TestEntity(32 * 10, 32 * 10, this, "TestEntity"));
+		entityList.add(new TestEntity(32 * 20, 32 * 10, this, "TestEntity"));
+		entityList.add(new TestEntity(32 * 10, 32 * 20, this, "TestEntity"));
+		entityList.add(new TestEntity(32 * 20, 32 * 20, this, "TestEntity"));
 		
 	}
 	
@@ -110,6 +115,11 @@ public class Level {
 		return camera;
 	}
 	
+	//else
+	public GUIComponentGroup getLevelGUI() {
+		return levelGUI;
+	}
+	
 	/*
 	* Game loop util 
 	* */
@@ -141,6 +151,7 @@ public class Level {
 	public void update() {
 		for (int i = 0; i < entityList.size(); i++) {
 			entityList.get(i).update(this);
+			entityList.get(i).endUpdate(this);
 		}
 	}
 	

@@ -1,9 +1,12 @@
 package com.gmail.xfrednet.filefighter.entity;
 
+import com.gmail.xfrednet.filefighter.Main;
 import com.gmail.xfrednet.filefighter.graphics.Screen;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
+import com.gmail.xfrednet.filefighter.graphics.gui.components.GUIEntityNameTag;
 import com.gmail.xfrednet.filefighter.level.Level;
 
+import java.awt.*;
 import java.util.Random;
 
 /**
@@ -16,33 +19,48 @@ public abstract class Entity {
 	public static boolean showBoundingBoxes = false;
 	protected static int currentID = Integer.MIN_VALUE;
 	
+	protected final int entityID;
 	protected EntityInfo info;
 	protected Sprite currentSprite;
-	protected final int entityID;
 	protected String name;
+	protected GUIEntityNameTag nameTag;
+	protected boolean showNameTag = true;
 	
 	public final static Random random = new Random();
 	
 	/*
 	* Constructor
 	* */
-	protected Entity(int x, int y, int width, int height, int spriteXOffset, int spriteYOffset, Sprite sprite, String name) {
+	protected Entity(int x, int y, Level level, int width, int height, int spriteXOffset, int spriteYOffset, Sprite sprite, String name) {
 		info = new EntityInfo(x, y, width, height, spriteXOffset, spriteYOffset);
 		currentSprite = sprite;
 		entityID = currentID++;
 		this.name = name;
 		
+		if (level != null) {
+			nameTag = new GUIEntityNameTag(level.getLevelGUI(), (int)(info.getCenterX() * Main.scale), y * Main.scale, name);
+			level.getLevelGUI().addComponent(nameTag);
+		}
 		System.out.println("[INFO] New Entity with ID: " + currentID + ", Name: " + name);
-		
 	}
 	
 	/*
 	* Abstract Methods
 	* */
 	abstract public void update(Level level);
+	public void endUpdate(Level level) {
+		if (nameTag != null) {
+			nameTag.setMapPosition((int)( info.getCenterX() - level.getCamera().getXOffset()), (int)(info.getMaxY() - level.getCamera().getYOffset()));
+		}
+	}
 	public void render(Screen screen) {
 		screen.drawSprite(info.getSpriteX(), info.getSpriteY(), currentSprite, false);
 		if (showBoundingBoxes) drawBoundingBox(screen);
+	}
+	public void render(Graphics g) {
+		if (showNameTag) {
+			nameTag.render(g);
+		}
 	}
 	
 	/*
@@ -103,6 +121,9 @@ public abstract class Entity {
 		info.y = y;
 	}
 	
+	/*
+	* Class
+	* */
 	public static class EntityInfo {
 		
 		private EntityInfo(int x, int y, int width, int height, int spriteXOffset, int spriteYOffset) {

@@ -51,7 +51,7 @@ public class GUIText extends GUIComponent {
 		
 		if (updateBounds) {
 			Rectangle2D bounds = fm.getStringBounds(text, g);
-			setBounds(x , y,(int)bounds.getWidth() + 2 * PADDING, (int)bounds.getHeight() + 2 * PADDING);
+			setBounds(x, y,(int)bounds.getWidth() + 2 * PADDING, (int)bounds.getHeight() + 2 * PADDING);
 			
 			updateBounds = false;
 		}
