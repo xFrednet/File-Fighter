@@ -14,7 +14,7 @@ public abstract class Behavior extends EntityTask {
 	abstract public void update(LivingEntity entity, Level level);
 	
 	@Override
-	public void update(Entity entity) {
+	public void update(Entity entity, Level level) {
 		System.out.println("[ERROR] Behavior: wrong method call: update(Entity enitity)");
 	}
 }
