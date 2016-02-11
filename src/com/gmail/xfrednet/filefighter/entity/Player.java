@@ -19,7 +19,8 @@ public class Player extends LivingEntity {
 	double speed = 1.5;
 	
 	public Player(int x, int y, Input input, Camera camera, String name, Level level) {
-		super(x, y, level, 28, 26, 2, 5, null, name);
+		super(level, name);
+		super.setInfo(x, y, 28, 26, 2, 5);
 		behavior = new UserInputBehavior(input, speed, camera);
 	}
 	public Player(int x, int y, Input input, String name, Level level) {

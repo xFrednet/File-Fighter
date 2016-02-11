@@ -2,6 +2,7 @@ package com.gmail.xfrednet.filefighter.level;
 
 import com.gmail.xfrednet.filefighter.entity.Entity;
 import com.gmail.xfrednet.filefighter.entity.Player;
+import com.gmail.xfrednet.filefighter.entity.Projectile;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.TestEntity;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.Slime;
 import com.gmail.xfrednet.filefighter.graphics.Camera;
@@ -20,6 +21,7 @@ import java.util.List;
 public class Level {
 	
 	public static final int TILE_SIZE = 32;
+	
 	public int WIDTH;
 	public int HEIGHT;
 	public int[] tileIDs;
@@ -107,17 +109,46 @@ public class Level {
 		
 		return null;
 	}
-	
 	public Player getPlayer() {
 		return player;
 	}
-	public Camera getCamera() {
-		return camera;
+	
+	public List<Entity> getEntities() {
+		return entityList;
+	}
+	public List<Entity> getEntities(double x, double y, double maxDistance) {
+		List<Entity> returnEntities = new ArrayList<>();
+		
+		for (int i = 0; i < entityList.size(); i++) {
+			if (entityList.get(i).getDistance(x, y) < maxDistance) {
+				returnEntities.add(entityList.get(i));
+			}
+		}
+		
+		return returnEntities;
+	}
+	public List<Entity> entityMotionCollision(double xm, double ym, Entity entity) {
+		List<Entity> collidingEntities = new ArrayList<>();
+		
+		if (player.isColliding(entity)) {
+			collidingEntities.add(player);
+		}
+		
+		for (int i = 0; i < entityList.size(); i++) {
+			if (entityList.get(i).isColliding(entity)) {
+				collidingEntities.add(entityList.get(i));
+			}
+		}
+		
+		return collidingEntities;
 	}
 	
 	//else
 	public GUIComponentGroup getLevelGUI() {
 		return levelGUI;
+	}
+	public Camera getCamera() {
+		return camera;
 	}
 	
 	/*
@@ -149,10 +180,20 @@ public class Level {
 		
 	}
 	public void update() {
+		for (Entity entity : entityList) {
+			entity.update(this);
+			entity.endUpdate(this);
+		}
 		for (int i = 0; i < entityList.size(); i++) {
-			entityList.get(i).update(this);
-			entityList.get(i).endUpdate(this);
+			if (entityList.get(i).isRemoved()) {
+				levelGUI.removeComponent(entityList.get(i).getNameTag());
+				entityList.remove(i);
+			}
 		}
 	}
 	
+	
+	public void add(Entity entity) {
+		entityList.add(entity);
+	}
 }

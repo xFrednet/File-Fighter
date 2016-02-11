@@ -62,6 +62,8 @@ public class Main extends Canvas implements Runnable {
         requestFocus();
         input = new Input();
         addKeyListener(input);
+        addMouseListener(input);
+        addMouseMotionListener(input);
     
 
         player = new Player(60, 60, input, PLAYER_NAME, null);
