@@ -75,8 +75,8 @@ public class UserInputBehavior extends Behavior {
 	}
 	private void attack(LivingEntity entity, Level level) {
 		if (input.isMouseButtonDown(MOUSE_ATTACK_BUTTON)) {
-			double angle = entity.getAngleTo(input.getMouseLevelX(level) + 480 / 2, input.getMouseLevelY(level));
-			Projectile p = new PaperProjectile(entity.getInfo().getX(), entity.getInfo().getY(), level, "NAME", angle, entity);
+			double angle = entity.getAngleTo(input.getMouseLevelX(level), input.getMouseLevelY(level));
+			Projectile p = new PaperProjectile(level, "NAME", angle, entity);
 			level.add(p);	
 		}
 	}

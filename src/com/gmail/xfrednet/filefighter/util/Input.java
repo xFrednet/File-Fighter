@@ -37,7 +37,7 @@ public class Input implements KeyListener, MouseMotionListener, MouseListener {
 		return mouseY;
 	}
 	public int getMouseLevelX(Level level) {
-		return level.getCamera().getXOffset() + mouseX / Main.scale;
+		return level.getCamera().getXOffset() + (mouseX / Main.scale);
 	}
 	public int getMouseLevelY(Level level) {
 		return level.getCamera().getYOffset() + mouseY / Main.scale;
@@ -91,14 +91,14 @@ public class Input implements KeyListener, MouseMotionListener, MouseListener {
 	* */
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		mouseX = e.getXOnScreen();
-		mouseY = e.getYOnScreen();
+		mouseX = e.getX();
+		mouseY = e.getY();
 	}
 	
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		mouseX = e.getXOnScreen();
-		mouseY = e.getYOnScreen();
+		mouseX = e.getX();
+		mouseY = e.getY();
 	}
 }
 

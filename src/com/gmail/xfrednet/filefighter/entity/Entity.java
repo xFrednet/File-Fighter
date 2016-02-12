@@ -16,10 +16,10 @@ public abstract class Entity {
 	
 	public static final int BOUNDING_BOX_COLOR = 0xffff00ff;
 	public static final int POSITION_COLOR = 0xffff0000;
-	public static boolean showBoundingBoxes = false;
-	protected static int currentID = Integer.MIN_VALUE;
 	public static final int NAME_TAG_SPAWN_X = -100;
 	public static final int NAME_TAG_SPAWN_Y = -100;
+	public static boolean showBoundingBoxes = true;
+	protected static int currentID = Integer.MIN_VALUE;
 	
 	protected final int entityID;
 	protected EntityInfo info;
@@ -34,21 +34,13 @@ public abstract class Entity {
 	/*
 	* Constructor
 	* */
-	protected Entity(int x, int y, Level level, int width, int height, int spriteXOffset, int spriteYOffset, Sprite sprite, String name) {
-		info = new EntityInfo(x, y, width, height, spriteXOffset, spriteYOffset);
-		currentSprite = sprite;
-		entityID = currentID++;
-		this.name = name;
-		
-		if (level != null) {
-			nameTag = new GUIEntityNameTag(level.getLevelGUI(), NAME_TAG_SPAWN_X, NAME_TAG_SPAWN_Y, name);
-			level.getLevelGUI().addComponent(nameTag);
-		}
-		System.out.println("[INFO] New Entity with ID: " + currentID + ", Name: " + name);
-	}
 	protected Entity(Level level, String name) {
+		this(level, name, true);
+	}
+	protected Entity(Level level, String name, boolean showNameTag) {
 		entityID = currentID++;
 		this.name = name;
+		this.showNameTag = showNameTag;
 		
 		if (level != null) {
 			nameTag = new GUIEntityNameTag(level.getLevelGUI(), NAME_TAG_SPAWN_X, NAME_TAG_SPAWN_Y, name);
@@ -65,7 +57,7 @@ public abstract class Entity {
 	* */
 	abstract public void update(Level level);
 	public void endUpdate(Level level) {
-		if (nameTag != null) {
+		if (nameTag != null && showNameTag) {
 			nameTag.setMapPosition((int)( info.getCenterX() - level.getCamera().getXOffset()), (int)(info.getMaxY() - level.getCamera().getYOffset()));
 		}
 	}
@@ -170,8 +162,8 @@ public abstract class Entity {
 	public static class EntityInfo {
 		
 		private EntityInfo(double x, double y, int width, int height, int spriteXOffset, int spriteYOffset) {
-			this.x = x;
-			this.y = y;
+			this.x = x - width / 2; //centers entity on x
+			this.y = y - height / 2; //centers entity on x
 			this.width = width;
 			this.height = height;
 			this.spriteXOffset = spriteXOffset;

@@ -17,7 +17,7 @@ public abstract class Projectile extends Entity {
 	* Constructor
 	* */
 	protected Projectile(Level level, String name, double direction, double speed, double damage, Entity shootingEntity, Sprite sprite) {
-		super(level, name);
+		super(level, name, false);
 		this.direction = direction;
 		this.speed = speed;
 		this.damage = damage;
