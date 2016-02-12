@@ -46,7 +46,7 @@ public abstract class Entity {
 			nameTag = new GUIEntityNameTag(level.getLevelGUI(), NAME_TAG_SPAWN_X, NAME_TAG_SPAWN_Y, name);
 			level.getLevelGUI().addComponent(nameTag);
 		}
-		System.out.println("[INFO] New Entity with ID: " + currentID + ", Name: " + name);
+		//System.out.println("[INFO] New Entity with ID: " + currentID + ", Name: " + name);
 	}
 	protected void setInfo(double x, double y, int width, int height, int spriteXOffset, int spriteYOffset) {
 		info = new EntityInfo(x, y, width, height, spriteXOffset, spriteYOffset);
