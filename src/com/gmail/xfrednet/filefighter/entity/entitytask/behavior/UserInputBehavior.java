@@ -5,6 +5,7 @@ import com.gmail.xfrednet.filefighter.entity.Projectile;
 import com.gmail.xfrednet.filefighter.entity.entitytask.Behavior;
 import com.gmail.xfrednet.filefighter.entity.projectiles.PaperProjectile;
 import com.gmail.xfrednet.filefighter.graphics.Camera;
+import com.gmail.xfrednet.filefighter.graphics.Sprite;
 import com.gmail.xfrednet.filefighter.level.Level;
 import com.gmail.xfrednet.filefighter.util.Input;
 import com.sun.glass.events.KeyEvent;
@@ -43,6 +44,10 @@ public class UserInputBehavior extends Behavior {
 	public void update(LivingEntity entity, Level level) {
 		movement(entity, level);
 		attack(entity, level);
+		
+		if (input.isKeyDown(KeyEvent.VK_F)) {
+			level.spawnParticles(entity.getInfo().getCenterX(), entity.getInfo().getCenterY(), 10, Sprite.smoke_particles);
+		}
 	}
 	private void movement(LivingEntity entity, Level level) {
 		int xm = 0;

@@ -13,7 +13,7 @@ import com.gmail.xfrednet.filefighter.util.Input;
 public class Player extends LivingEntity {
 	
 	public static final int ANIMATION_SPRITES = 16;
-	public static final int ANIMATION_SPEED = (int) (Main.UPS * 0.1);
+	public static final int ANIMATION_SPEED = ((int) (Main.UPS * 0.1) == 0) ? 1 : (int) (Main.UPS * 0.1);
 	
 	Input input;
 	double speed = 1.5;

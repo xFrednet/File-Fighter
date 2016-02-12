@@ -8,6 +8,8 @@ import com.gmail.xfrednet.filefighter.level.Level;
  */
 public abstract class Projectile extends Entity {
 	
+	public static final int PARTICLES_ON_DESTROY = 10;
+	
 	double direction;
 	double speed;
 	double damage;
@@ -37,6 +39,14 @@ public abstract class Projectile extends Entity {
 		double xm = speed * Math.sin(angle);
 		double ym = speed * Math.cos(angle);
 		
+		while (xm > 1) {
+			move(1, 0, level);
+			xm--;
+		}
+		while (ym > 1) {
+			move(0, 1, level);
+			ym--;
+		}
 		move(xm, ym, level);
 	}
 	private void move(double xm, double ym, Level level) {
@@ -51,6 +61,12 @@ public abstract class Projectile extends Entity {
 	
 	public void destroy(Level level) {
 		removed = true;
+		level.spawnParticles(info.getCenterX(), info.getCenterY(), PARTICLES_ON_DESTROY, getParticleSprites());
 	}
+	
+	/*
+	* abstract
+	* */
+	abstract protected Sprite[] getParticleSprites();
 	
 }

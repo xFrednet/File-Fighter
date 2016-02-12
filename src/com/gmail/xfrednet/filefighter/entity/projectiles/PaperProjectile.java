@@ -15,4 +15,8 @@ public class PaperProjectile extends Projectile {
 		super.setInfo(shootingEntity.getInfo().getCenterX(), shootingEntity.getInfo().getCenterY(), 14, 14, 1, 1);
 	}
 	
+	@Override
+	protected Sprite[] getParticleSprites() {
+		return Sprite.paper_projectile_particles;
+	}
 }

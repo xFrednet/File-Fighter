@@ -61,7 +61,7 @@ public class FileLevel extends Level {
 		File[] files = file.listFiles();
 		for (int i = 0; i < files.length; i++) {
 			if (files[i].isFile()) 
-				entityList.add(getFileEntity(files[i]));
+				add(getFileEntity(files[i]));
 		}
 		
 		

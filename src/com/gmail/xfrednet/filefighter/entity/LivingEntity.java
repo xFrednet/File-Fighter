@@ -10,7 +10,7 @@ import com.gmail.xfrednet.filefighter.level.Level;
 public abstract class LivingEntity extends Entity {
 	
 	public static final int MAX_ANIMATION_VALUE = 10000;
-	public static final int ANIMATION_SPEED = (int) (Main.UPS * 0.2);
+	public static final int ANIMATION_SPEED =  ((int) (Main.UPS * 0.2) == 0) ? 1 : (int) (Main.UPS * 0.2);
 	public static final int STILL_STANDING_SPRITE_INDEX = 0;
 	
 	public Behavior behavior;
