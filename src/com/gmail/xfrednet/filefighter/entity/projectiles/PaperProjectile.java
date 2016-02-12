@@ -10,9 +10,9 @@ import com.gmail.xfrednet.filefighter.level.Level;
  */
 public class PaperProjectile extends Projectile {
 	
-	public PaperProjectile(double x, double y, Level level, String name, double direction, Entity shootingEntity) {
-		super(level, name, direction, 1, 1, shootingEntity, Sprite.paper_projectile_sprite);
-		super.setInfo(x, y, 14, 14, 1, 1);
+	public PaperProjectile(Level level, String name, double direction, Entity shootingEntity) {
+		super(level, name, direction, 10, 1, shootingEntity, Sprite.paper_projectile_sprite);
+		super.setInfo(shootingEntity.getInfo().getCenterX(), shootingEntity.getInfo().getCenterY(), 14, 14, 1, 1);
 	}
 	
 }

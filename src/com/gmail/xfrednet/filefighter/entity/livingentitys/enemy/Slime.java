@@ -1,5 +1,6 @@
 package com.gmail.xfrednet.filefighter.entity.livingentitys.enemy;
 
+import com.gmail.xfrednet.filefighter.Main;
 import com.gmail.xfrednet.filefighter.entity.EnemyEntity;
 import com.gmail.xfrednet.filefighter.entity.Entity;
 import com.gmail.xfrednet.filefighter.entity.entitytask.behavior.MoveToTarget;
@@ -12,6 +13,7 @@ import com.gmail.xfrednet.filefighter.level.Level;
 public class Slime extends EnemyEntity {
 	
 	public static final int ANIMATION_SPRITES = 16;
+	public static final int ANIMATION_SPEED = 1;
 	
 	public Slime(int x, int y, Level level, Entity target, String name) {
 		super(level, name, new MoveToTarget(target.getID(), 1, 30)/*behavior*/);
