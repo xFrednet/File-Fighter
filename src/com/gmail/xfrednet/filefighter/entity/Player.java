@@ -31,9 +31,9 @@ public class Player extends LivingEntity {
 	@Override
 	protected void updateCurrentSprite() {
 		if (isStanding) {
-			currentSprite = Sprite.player_entity_sprite[STILL_STANDING_SPRITE_INDEX];
+			currentSprite = Sprite.player_entity_sprites[STILL_STANDING_SPRITE_INDEX];
 		} else {
-			currentSprite = Sprite.player_entity_sprite[(direction * ANIMATION_SPRITES) + ((int)(animation / ANIMATION_SPEED) % ANIMATION_SPRITES)];
+			currentSprite = Sprite.player_entity_sprites[(direction * ANIMATION_SPRITES) + ((int)(animation / ANIMATION_SPEED) % ANIMATION_SPRITES)];
 		}
 	}
 	

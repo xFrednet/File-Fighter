@@ -29,9 +29,12 @@ public class Sprite {
 	/*
 	* Entity Sprites
 	* */
-	public static Sprite[] slime_entity_sprite = loadEntityAnimation(0, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 16);
-	public static Sprite[] player_entity_sprite = loadEntityAnimation(ENTITY_SPRITE_SIZE * 2, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 16);
-	public static Sprite[] textFile_entity_sprite = loadEntityAnimation(ENTITY_SPRITE_SIZE * 4, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 6);
+	public static Sprite[] slime_entity_sprites = loadEntityAnimation(0, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 16);
+	public static Sprite[] player_entity_sprites = loadEntityAnimation(ENTITY_SPRITE_SIZE * 2, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 16);
+	
+	//File Sprites
+	public static Sprite[] textFile_entity_sprites = loadEntityAnimation(ENTITY_SPRITE_SIZE * 4, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 6);
+	public static Sprite[] jpgFile_entity_sprites = loadEntityAnimation(ENTITY_SPRITE_SIZE * 6, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 16);
 	
 	/*
 	* Projectiles

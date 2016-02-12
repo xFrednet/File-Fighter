@@ -2,7 +2,6 @@ package com.gmail.xfrednet.filefighter.entity.livingentitys.enemy;
 
 import com.gmail.xfrednet.filefighter.entity.EnemyEntity;
 import com.gmail.xfrednet.filefighter.entity.Entity;
-import com.gmail.xfrednet.filefighter.entity.entitytask.Behavior;
 import com.gmail.xfrednet.filefighter.entity.entitytask.behavior.MoveToTarget;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
 import com.gmail.xfrednet.filefighter.level.Level;
@@ -22,9 +21,9 @@ public class TextFileEntity extends EnemyEntity {
 	@Override
 	protected void updateCurrentSprite() {
 		if (isStanding) {
-			currentSprite = Sprite.textFile_entity_sprite[STILL_STANDING_SPRITE_INDEX];
+			currentSprite = Sprite.textFile_entity_sprites[STILL_STANDING_SPRITE_INDEX];
 		} else {
-			currentSprite = Sprite.textFile_entity_sprite[(direction * ANIMATION_SPRITES) + ((int)(animation / ANIMATION_SPEED) % ANIMATION_SPRITES)];
+			currentSprite = Sprite.textFile_entity_sprites[(direction * ANIMATION_SPRITES) + ((int)(animation / ANIMATION_SPEED) % ANIMATION_SPRITES)];
 		}
 	}
 	
