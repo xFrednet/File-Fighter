@@ -16,10 +16,12 @@ public class TestEntity extends LivingEntity {
 	int targetID;
 	
 	public TestEntity(int x, int y, Level level, String name) {
-		super(x, y, level, 16, 30, 8, 1, new RandomMovement(1), name);
+		super(level, name, new RandomMovement(1));
+		super.setInfo(x, y, 16, 30, 8, 1);
 	}
 	public TestEntity(int x, int y, Level level, Entity target, String name) {
-		super(x, y, level, 16, 30, 8, 1, new MoveToTarget(target.getID(), 1, 30), name);
+		super(level, name, new MoveToTarget(target.getID(), 1, 30));
+		super.setInfo(x, y, 16, 30, 8, 1);
 	}
 	
 	@Override

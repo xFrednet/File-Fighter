@@ -1,12 +1,12 @@
 package com.gmail.xfrednet.filefighter.entity;
 
-import com.gmail.xfrednet.filefighter.Main;
 import com.gmail.xfrednet.filefighter.graphics.Screen;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
 import com.gmail.xfrednet.filefighter.graphics.gui.components.GUIEntityNameTag;
 import com.gmail.xfrednet.filefighter.level.Level;
 
-import java.awt.*;
+import java.awt.Graphics;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -16,7 +16,9 @@ public abstract class Entity {
 	
 	public static final int BOUNDING_BOX_COLOR = 0xffff00ff;
 	public static final int POSITION_COLOR = 0xffff0000;
-	public static boolean showBoundingBoxes = false;
+	public static final int NAME_TAG_SPAWN_X = -100;
+	public static final int NAME_TAG_SPAWN_Y = -100;
+	public static boolean showBoundingBoxes = true;
 	protected static int currentID = Integer.MIN_VALUE;
 	
 	protected final int entityID;
@@ -25,23 +27,29 @@ public abstract class Entity {
 	protected String name;
 	protected GUIEntityNameTag nameTag;
 	protected boolean showNameTag = true;
+	protected boolean removed = false;
 	
 	public final static Random random = new Random();
 	
 	/*
 	* Constructor
 	* */
-	protected Entity(int x, int y, Level level, int width, int height, int spriteXOffset, int spriteYOffset, Sprite sprite, String name) {
-		info = new EntityInfo(x, y, width, height, spriteXOffset, spriteYOffset);
-		currentSprite = sprite;
+	protected Entity(Level level, String name) {
+		this(level, name, true);
+	}
+	protected Entity(Level level, String name, boolean showNameTag) {
 		entityID = currentID++;
 		this.name = name;
+		this.showNameTag = showNameTag;
 		
 		if (level != null) {
-			nameTag = new GUIEntityNameTag(level.getLevelGUI(), (int)(info.getCenterX() * Main.scale), y * Main.scale, name);
+			nameTag = new GUIEntityNameTag(level.getLevelGUI(), NAME_TAG_SPAWN_X, NAME_TAG_SPAWN_Y, name);
 			level.getLevelGUI().addComponent(nameTag);
 		}
-		System.out.println("[INFO] New Entity with ID: " + currentID + ", Name: " + name);
+		//System.out.println("[INFO] New Entity with ID: " + currentID + ", Name: " + name);
+	}
+	protected void setInfo(double x, double y, int width, int height, int spriteXOffset, int spriteYOffset) {
+		info = new EntityInfo(x, y, width, height, spriteXOffset, spriteYOffset);
 	}
 	
 	/*
@@ -49,7 +57,7 @@ public abstract class Entity {
 	* */
 	abstract public void update(Level level);
 	public void endUpdate(Level level) {
-		if (nameTag != null) {
+		if (nameTag != null && showNameTag) {
 			nameTag.setMapPosition((int)( info.getCenterX() - level.getCamera().getXOffset()), (int)(info.getMaxY() - level.getCamera().getYOffset()));
 		}
 	}
@@ -59,7 +67,8 @@ public abstract class Entity {
 	}
 	public void render(Graphics g) {
 		if (showNameTag) {
-			nameTag.render(g);
+			if (nameTag != null)
+				nameTag.render(g);
 		}
 	}
 	
@@ -71,7 +80,7 @@ public abstract class Entity {
 		screen.drawPixel(info.getIntX(), info.getIntY(), POSITION_COLOR, false);
 		screen.drawPixel((int) info.getCenterX(), (int) info.getCenterY(), POSITION_COLOR, false);
 	}
-	public boolean collision(double xm, double ym, Level level) {
+	public boolean levelCollision(double xm, double ym, Level level) {
 		
 		// + -
 		// - -
@@ -99,10 +108,15 @@ public abstract class Entity {
 		
 		return false;
 	}
+	public List<Entity> entityCollision(double xm, double ym, Level level) {
+		return level.entityMotionCollision(xm, ym, this);
+	}
 	public double getAngleTo(Entity entity) {
 		return info.getAngle(entity.getInfo());
 	}
-	
+	public double getAngleTo(double x, double y) {
+		return info.getAngle(x, y);
+	}
 	/*
 	* getters
 	* */
@@ -121,14 +135,35 @@ public abstract class Entity {
 		info.y = y;
 	}
 	
+	public double getDistance(double x, double y) {
+		return info.getDistance(x, y);
+	}
+	
+	public boolean isColliding(Entity entity) {
+		if (entity.getID() == entityID) {
+			return false;
+		} else {
+			return info.contains(entity.getInfo());
+		}
+	}
+	
+	public boolean isRemoved() {
+		return removed;
+	}
+	
+	public GUIEntityNameTag getNameTag() {
+		return nameTag;
+	}
+	
+	
 	/*
 	* Class
 	* */
 	public static class EntityInfo {
 		
-		private EntityInfo(int x, int y, int width, int height, int spriteXOffset, int spriteYOffset) {
-			this.x = x;
-			this.y = y;
+		private EntityInfo(double x, double y, int width, int height, int spriteXOffset, int spriteYOffset) {
+			this.x = x - width / 2; //centers entity on x
+			this.y = y - height / 2; //centers entity on x
 			this.width = width;
 			this.height = height;
 			this.spriteXOffset = spriteXOffset;
@@ -196,6 +231,23 @@ public abstract class Entity {
 		
 		public double getAngle(EntityInfo info) {
 			return Math.atan2(info.x - x, info.y - y);
+		}
+		public double getAngle(double x, double y) {
+			return Math.atan2(x - this.x, y - this.y);
+		}
+		
+		public boolean contains(EntityInfo info) {
+			return contains(info.x, info.y)
+					|| contains(info.getMaxX(), info.y)
+					|| contains(info.x, info.getMaxY())
+					|| contains(info.getMaxX(), info.getMaxY());
+		}
+		
+		private boolean contains(double x, double y) {
+			return (x >= this.x &&
+					y >= this.y &&
+					x < getMaxX() &&
+					y < getMaxY());
 		}
 	}
 	

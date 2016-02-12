@@ -62,6 +62,8 @@ public class Main extends Canvas implements Runnable {
         requestFocus();
         input = new Input();
         addKeyListener(input);
+        addMouseListener(input);
+        addMouseMotionListener(input);
     
 
         player = new Player(60, 60, input, PLAYER_NAME, null);
@@ -174,8 +176,8 @@ public class Main extends Canvas implements Runnable {
 	
 	    screen.clear();
 	    level.render(screen);
-	    player.render(screen);
-	
+        
+        screen.drawPixel(input.getMouseLevelX(level), input.getMouseLevelY(level), 0xff00ff, false);
 	    for (int i = 0; i < screen.pixels.length; i++) {
 		    pixels[i] = screen.pixels[i];
 	    }
@@ -185,6 +187,7 @@ public class Main extends Canvas implements Runnable {
 	    g.setFont(gameFont);
 	    g.fillRect(0, 0, getWidth(), getHeight());
         g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
+        g.fillRect(input.getMouseX() - 1, input.getMouseY() - 1, scale, scale);
         guiManager.render(g);
         
         g.dispose();

@@ -8,7 +8,8 @@ import com.gmail.xfrednet.filefighter.level.Level;
  */
 public abstract class EnemyEntity extends LivingEntity {
 	
-	protected EnemyEntity(int x, int y, Level level, int width, int height, int spriteXOffset, int spriteYOffset, Behavior behavior, String name) {
-		super(x, y, level, width, height, spriteXOffset, spriteYOffset, behavior, name);
+	protected EnemyEntity(Level level, String name, Behavior behavior) {
+		super(level, name, behavior);
 	}
+	
 }
