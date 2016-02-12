@@ -176,7 +176,7 @@ public class Main extends Canvas implements Runnable {
 	
 	    screen.clear();
 	    level.render(screen);
-	    player.render(screen);
+        
         screen.drawPixel(input.getMouseLevelX(level), input.getMouseLevelY(level), 0xff00ff, false);
 	    for (int i = 0; i < screen.pixels.length; i++) {
 		    pixels[i] = screen.pixels[i];

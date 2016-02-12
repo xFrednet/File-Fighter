@@ -20,7 +20,7 @@ import java.util.List;
 public class Level {
 	
 	public static final int TILE_SIZE = 32;
-	public static final int SPAWN_PARTICLE_COUNT = 10;
+	public static final int SPAWN_PARTICLE_COUNT = 50;
 	
 	public int WIDTH;
 	public int HEIGHT;
@@ -120,8 +120,8 @@ public class Level {
 		screen.setOffset(camera.getXOffset(), camera.getYOffset());
 		
 		renderLevel(screen);
-		renderParticles(screen);
 		renderEntities(screen);
+		renderParticles(screen);
 		
 		player.render(screen);
 		
