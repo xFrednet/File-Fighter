@@ -18,7 +18,7 @@ public abstract class Entity {
 	public static final int POSITION_COLOR = 0xffff0000;
 	public static final int NAME_TAG_SPAWN_X = -100;
 	public static final int NAME_TAG_SPAWN_Y = -100;
-	public static boolean showBoundingBoxes = true;
+	public static boolean showBoundingBoxes = false;
 	protected static int currentID = Integer.MIN_VALUE;
 	
 	protected final int entityID;
@@ -233,7 +233,7 @@ public abstract class Entity {
 			return Math.atan2(info.x - x, info.y - y);
 		}
 		public double getAngle(double x, double y) {
-			return Math.atan2(x - this.x, y - this.y);
+			return Math.atan2(x - getCenterX(), y - getCenterY());
 		}
 		
 		public boolean contains(EntityInfo info) {

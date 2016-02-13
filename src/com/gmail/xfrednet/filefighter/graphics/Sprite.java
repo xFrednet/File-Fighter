@@ -7,7 +7,7 @@ public class Sprite {
 	
 	public static final int TILE_SPRITE_SIZE = 32;
 	public static final int ENTITY_SPRITE_SIZE = 32;
-	public static final int PROJECTILE_SPRITE_SIZE = 16;
+	public static final int PROJECTILE_SPRITE_SIZE = 15;
 	
 	public static final int SPRITE_INVISIBLE_COLOR_1 = 0xffffbb0f;
 	public static final int SPRITE_INVISIBLE_COLOR_2 = 0xffff0000;
@@ -204,4 +204,12 @@ public class Sprite {
 		return particles;
 	}
 	
+	private static Sprite[] loadProjectileSprites(int x, int y, SpriteSheet sheet, int size) {
+		Sprite[] sprites = new Sprite[2];
+		
+		sprites[0] = new Sprite(x, y, sheet, size);
+		sprites[1] = new Sprite(x, size + y, sheet, size);
+	
+		return sprites;
+	}
 }
