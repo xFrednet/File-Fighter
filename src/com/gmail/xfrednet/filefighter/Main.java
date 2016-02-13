@@ -1,5 +1,6 @@
 package com.gmail.xfrednet.filefighter;
 
+import com.gmail.xfrednet.filefighter.entity.Entity;
 import com.gmail.xfrednet.filefighter.entity.Player;
 import com.gmail.xfrednet.filefighter.graphics.Camera;
 import com.gmail.xfrednet.filefighter.graphics.GUIManager;
@@ -10,6 +11,7 @@ import com.gmail.xfrednet.filefighter.graphics.gui.components.*;
 import com.gmail.xfrednet.filefighter.level.FileLevel;
 import com.gmail.xfrednet.filefighter.level.Level;
 import com.gmail.xfrednet.filefighter.util.Input;
+import com.sun.glass.events.KeyEvent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -165,6 +167,12 @@ public class Main extends Canvas implements Runnable {
         player.update(level);
         level.update();
         guiManager.update();
+        debugUpdate();
+    }
+    private void debugUpdate() {
+        if (input.isKeyDown(KeyEvent.VK_F3)) {
+            if (input.isKeyDown(KeyEvent.VK_B)) Entity.showBoundingBoxes = !Entity.showBoundingBoxes;
+        }
     }
     
     public void render() {

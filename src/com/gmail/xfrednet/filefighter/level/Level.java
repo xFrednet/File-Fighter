@@ -20,7 +20,7 @@ import java.util.List;
 public class Level {
 	
 	public static final int TILE_SIZE = 32;
-	public static final int SPAWN_PARTICLE_COUNT = 50;
+	public static final int SPAWN_PARTICLE_COUNT = 60;
 	
 	public int WIDTH;
 	public int HEIGHT;
@@ -54,7 +54,7 @@ public class Level {
 		//player
 		this.player = player;
 		player.setCamera(camera);
-		player.setPosition(60, 60);
+		player.setPosition(160, 160);
 		levelGUI = new GUIComponentGroup(guiManager, 0, 0);
 		guiManager.addComponent(levelGUI);
 		
