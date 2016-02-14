@@ -4,6 +4,7 @@ import com.gmail.xfrednet.filefighter.Main;
 import com.gmail.xfrednet.filefighter.entity.entitytask.behavior.UserInputBehavior;
 import com.gmail.xfrednet.filefighter.graphics.Camera;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
+import com.gmail.xfrednet.filefighter.item.item.weapon.PaperGun;
 import com.gmail.xfrednet.filefighter.level.Level;
 import com.gmail.xfrednet.filefighter.util.Input;
 
@@ -22,6 +23,7 @@ public class Player extends LivingEntity {
 		super(level, name);
 		super.setInfo(x, y, 28, 26, 2, 5);
 		behavior = new UserInputBehavior(input, speed, camera);
+		weapon = new PaperGun();
 	}
 	public Player(int x, int y, Input input, String name, Level level) {
 		this(x, y, input, null, name, level);
