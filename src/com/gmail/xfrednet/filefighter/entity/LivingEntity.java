@@ -2,6 +2,8 @@ package com.gmail.xfrednet.filefighter.entity;
 
 import com.gmail.xfrednet.filefighter.Main;
 import com.gmail.xfrednet.filefighter.entity.entitytask.Behavior;
+import com.gmail.xfrednet.filefighter.item.Item;
+import com.gmail.xfrednet.filefighter.item.item.Weapon;
 import com.gmail.xfrednet.filefighter.level.Level;
 
 /**
@@ -13,6 +15,7 @@ public abstract class LivingEntity extends Entity {
 	public static final int ANIMATION_SPEED =  ((int) (Main.UPS * 0.2) == 0) ? 1 : (int) (Main.UPS * 0.2);
 	public static final int STILL_STANDING_SPRITE_INDEX = 0;
 	
+	public Weapon weapon;
 	public Behavior behavior;
 	
 	protected int direction = 0;
@@ -68,9 +71,18 @@ public abstract class LivingEntity extends Entity {
 	
 	@Override
 	public void update(Level level) {
+		if (weapon != null) weapon.update(level);
 		behavior.update(this, level);
 		updateAnimation();
 	}
 	
 	abstract protected void updateCurrentSprite();
+	
+	/*
+	* getters
+	* */
+	public Weapon getWeapon() {
+		return weapon;
+	}
+	
 }

@@ -49,22 +49,13 @@ public abstract class Projectile extends Entity {
 	}
 	
 	public void move(double angle, Level level, double speed) {
+		if (speed > 1) {
+			move(angle, level, speed - 1);
+			speed = 1;
+		}
 		double xm = speed * Math.sin(angle);
 		double ym = speed * Math.cos(angle);
 		
-		if (xm > 1 || ym > 1) {
-			
-			int loopTime = (xm > ym) ? ((int) xm) : ((int) ym);
-			double loop_xm = xm / loopTime;
-			double loop_ym = ym / loopTime;
-			for (int i = 0; i < loopTime; i++) {
-				move(loop_xm, 0, level);
-				xm -= loop_xm;
-				
-				move(0, loop_ym, level);
-				ym -= loop_ym;
-			}
-		}
 		move(xm, ym, level);
 	}
 	private void move(double xm, double ym, Level level) {
