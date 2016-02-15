@@ -7,6 +7,8 @@ public class Sprite {
 	
 	public static final int TILE_SPRITE_SIZE = 32;
 	public static final int ENTITY_SPRITE_SIZE = 32;
+	public static final int PROJECTILE_SPRITE_SIZE = 15;
+	public static final int ITEM_ENTITY_SPRITE_SIZE = 32;
 	
 	public static final int SPRITE_INVISIBLE_COLOR_1 = 0xffffbb0f;
 	public static final int SPRITE_INVISIBLE_COLOR_2 = 0xffff0000;
@@ -18,6 +20,7 @@ public class Sprite {
 	public final static int TEST_ENTITY_ANIMATION_SPEED = 16;
 	public static Sprite[] testEntity_entity_sprite = loadEntityAnimation(0/*xPixel*/, 0/*yPixel*/, SpriteSheet.entities, ENTITY_SPRITE_SIZE, TEST_ENTITY_ANIMATED_SPRITE_COUNT);
 	
+	public static Sprite null_sprite = new Sprite(16, 16, 0xffff01ff);
 	/*
 	* Static Sprites
 	* */
@@ -28,9 +31,25 @@ public class Sprite {
 	/*
 	* Entity Sprites
 	* */
-	public static Sprite[] slime_entity_sprite = loadEntityAnimation(0, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 16);
-	public static Sprite[] player_entity_sprite = loadEntityAnimation(ENTITY_SPRITE_SIZE * 2, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 16);
-	public static Sprite[] textFile_entity_sprite = loadEntityAnimation(ENTITY_SPRITE_SIZE * 4, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 6);
+	public static Sprite[] slime_entity_sprites = loadEntityAnimation(0, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 16);
+	public static Sprite[] player_entity_sprites = loadEntityAnimation(ENTITY_SPRITE_SIZE * 2, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 16);
+	
+	//File Sprites
+	public static Sprite[] textFile_entity_sprites = loadEntityAnimation(ENTITY_SPRITE_SIZE * 4, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 6);
+	public static Sprite[] jpgFile_entity_sprites = loadEntityAnimation(ENTITY_SPRITE_SIZE * 6, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 16);
+	
+	/*
+	* Projectiles
+	* */
+	public static Sprite paper_projectile_sprite = new Sprite(0, 0, SpriteSheet.projectiles, PROJECTILE_SPRITE_SIZE);
+	public static Sprite[] paper_projectile_particles = loadParticlesFromSprites(paper_projectile_sprite);
+	
+	/*
+	* Particles
+	* */
+	public static Sprite[] smoke_particles = loadSplitSprite(new Sprite(0,0, SpriteSheet.particles, 16), 3);
+	
+	
 	
 	/*
 	* Class
@@ -47,12 +66,25 @@ public class Sprite {
 	/*
 	* Constructor
 	* */
+	private Sprite(int width, int height, int color) {
+		this.HEIGHT = height;
+		this.WIDTH = width;
+		
+		pixels = new int[WIDTH * HEIGHT];
+		
+		for (int i = 0; i < pixels.length; i++) {
+			pixels[i] = color;
+		}
+	}
 	private Sprite(int xOffset, int yOffset, SpriteSheet spriteSheet, int size) {
+		this(xOffset, yOffset, spriteSheet, size, size);
+	}
+	private Sprite(int xOffset, int yOffset, Sprite sprite, int size) {
 		WIDTH = size;
 		HEIGHT = size;
 		pixels = new int[WIDTH * HEIGHT];
 		
-		load(xOffset, yOffset, spriteSheet);
+		load(xOffset, yOffset, sprite);
 	}
 	private Sprite(int xOffset, int yOffset, SpriteSheet spriteSheet, int width, int height) {
 		WIDTH = width;
@@ -81,7 +113,25 @@ public class Sprite {
 			}
 		}
 	}
-	
+	private void load(int xOffset, int yOffset, Sprite sprite) {
+		if (xOffset < 0 || xOffset + WIDTH -1 >= sprite.WIDTH || yOffset < 0 || yOffset + HEIGHT - 1 >= sprite.HEIGHT) {
+			System.out.println("[ERROR] Sprite loads pixels outside the SpriteSheet ");
+			return;
+		}
+		int ya, xa;
+		int color;
+		for (int yp = 0; yp < HEIGHT; yp++) {
+			ya = yp + yOffset;
+			for (int xp = 0; xp < WIDTH; xp++) {
+				xa = xp + xOffset;
+				color = sprite.pixels[xa + ya * sprite.WIDTH];
+				
+				if (color == SPRITE_INVISIBLE_COLOR_1) color = Screen.INVISIBLE_COLOR;
+				if (color == SPRITE_INVISIBLE_COLOR_2) color = Screen.INVISIBLE_COLOR;
+				pixels[xp + yp * WIDTH] = color;
+			}
+		}
+	}
 	/*
 	* Static Util
 	* */
@@ -107,7 +157,7 @@ public class Sprite {
 		return sprites;
 	}
 	
-	public static Sprite[] loadEntityAnimation(int x, int y, SpriteSheet sheet, int size, int animationSprites) {
+	private static Sprite[] loadEntityAnimation(int x, int y, SpriteSheet sheet, int size, int animationSprites) {
 		Sprite[] sprites = new Sprite[4 * animationSprites];
 		
 		/*
@@ -126,6 +176,54 @@ public class Sprite {
 				sprites[i++] = new Sprite(size * xp + x, size * yp + y, sheet, size);
 			}
 		}
+		return sprites;
+	}
+	
+	private static Sprite[] loadSplitSprite(Sprite sprite, int size) {
+		int widthParticleCount = sprite.WIDTH / size;
+		int heightParticleCount = sprite.HEIGHT / size;
+		Sprite[] sprites = new Sprite[widthParticleCount * heightParticleCount];
+		
+		int i = 0;
+		int xs, xa, ya;
+		for (int ys = 0; ys < heightParticleCount; ys++) {
+			ya = ys * size;
+			for (xs = 0; xs < widthParticleCount; xs++) {
+				xa = xs * size;
+				
+				sprites[i++] = new Sprite(xa, ya, sprite, size);
+				
+			}
+		}
+		
+		return sprites;
+	}
+	private static Sprite[] loadParticlesFromSprites(Sprite sprite) {
+		int widthParticleCount = sprite.WIDTH / Particle.SPRITE_PARTICLE_SIZE;
+		int heightParticleCount = sprite.HEIGHT / Particle.SPRITE_PARTICLE_SIZE;
+		Sprite[] particles = new Sprite[widthParticleCount * heightParticleCount];
+		
+		int i = 0;
+		int xs, xa, ya;
+		for (int ys = 0; ys < heightParticleCount; ys++) {
+			ya = ys * Particle.SPRITE_PARTICLE_SIZE;
+			for (xs = 0; xs < widthParticleCount; xs++) {
+				xa = xs * Particle.SPRITE_PARTICLE_SIZE;
+				
+				particles[i++] = new Sprite(xa, ya, sprite, Particle.SPRITE_PARTICLE_SIZE);
+				
+			}
+		}
+		
+		return particles;
+	}
+	
+	private static Sprite[] loadProjectileSprites(int x, int y, SpriteSheet sheet, int size) {
+		Sprite[] sprites = new Sprite[2];
+		
+		sprites[0] = new Sprite(x, y, sheet, size);
+		sprites[1] = new Sprite(x, size + y, sheet, size);
+	
 		return sprites;
 	}
 }

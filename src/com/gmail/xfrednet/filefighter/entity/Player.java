@@ -4,6 +4,7 @@ import com.gmail.xfrednet.filefighter.Main;
 import com.gmail.xfrednet.filefighter.entity.entitytask.behavior.UserInputBehavior;
 import com.gmail.xfrednet.filefighter.graphics.Camera;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
+import com.gmail.xfrednet.filefighter.item.item.weapon.PaperGun;
 import com.gmail.xfrednet.filefighter.level.Level;
 import com.gmail.xfrednet.filefighter.util.Input;
 
@@ -13,14 +14,16 @@ import com.gmail.xfrednet.filefighter.util.Input;
 public class Player extends LivingEntity {
 	
 	public static final int ANIMATION_SPRITES = 16;
-	public static final int ANIMATION_SPEED = (int) (Main.UPS * 0.1);
+	public static final int ANIMATION_SPEED = ((int) (Main.UPS * 0.1) == 0) ? 1 : (int) (Main.UPS * 0.1);
 	
 	Input input;
 	double speed = 1.5;
 	
 	public Player(int x, int y, Input input, Camera camera, String name, Level level) {
-		super(x, y, level, 28, 26, 2, 5, null, name);
+		super(level, name);
+		super.setInfo(x, y, 28, 26, 2, 5);
 		behavior = new UserInputBehavior(input, speed, camera);
+		weapon = new PaperGun();
 	}
 	public Player(int x, int y, Input input, String name, Level level) {
 		this(x, y, input, null, name, level);
@@ -30,9 +33,9 @@ public class Player extends LivingEntity {
 	@Override
 	protected void updateCurrentSprite() {
 		if (isStanding) {
-			currentSprite = Sprite.player_entity_sprite[STILL_STANDING_SPRITE_INDEX];
+			currentSprite = Sprite.player_entity_sprites[STILL_STANDING_SPRITE_INDEX];
 		} else {
-			currentSprite = Sprite.player_entity_sprite[(direction * ANIMATION_SPRITES) + ((int)(animation / ANIMATION_SPEED) % ANIMATION_SPRITES)];
+			currentSprite = Sprite.player_entity_sprites[(direction * ANIMATION_SPRITES) + ((int)(animation / ANIMATION_SPEED) % ANIMATION_SPRITES)];
 		}
 	}
 	

@@ -2,7 +2,8 @@ package com.gmail.xfrednet.filefighter.entity;
 
 import com.gmail.xfrednet.filefighter.Main;
 import com.gmail.xfrednet.filefighter.entity.entitytask.Behavior;
-import com.gmail.xfrednet.filefighter.graphics.Sprite;
+import com.gmail.xfrednet.filefighter.item.Item;
+import com.gmail.xfrednet.filefighter.item.item.Weapon;
 import com.gmail.xfrednet.filefighter.level.Level;
 
 /**
@@ -11,9 +12,10 @@ import com.gmail.xfrednet.filefighter.level.Level;
 public abstract class LivingEntity extends Entity {
 	
 	public static final int MAX_ANIMATION_VALUE = 10000;
-	public static final int ANIMATION_SPEED = (int) (Main.UPS * 0.2);
+	public static final int ANIMATION_SPEED =  ((int) (Main.UPS * 0.2) == 0) ? 1 : (int) (Main.UPS * 0.2);
 	public static final int STILL_STANDING_SPRITE_INDEX = 0;
 	
+	public Weapon weapon;
 	public Behavior behavior;
 	
 	protected int direction = 0;
@@ -23,8 +25,12 @@ public abstract class LivingEntity extends Entity {
 	/*
 	* Constructor
 	* */
-	protected LivingEntity(int x, int y, Level level, int width, int height, int spriteXOffset, int spriteYOffset, Behavior behavior, String name) {
-		super(x, y, level, width, height, spriteXOffset, spriteYOffset, null, name);
+	
+	protected LivingEntity(Level level, String name) {
+		this(level, name, null);
+	}
+	protected LivingEntity(Level level, String name, Behavior behavior) {
+		super(level, name);
 		updateCurrentSprite();
 		this.behavior = behavior;
 	}
@@ -43,12 +49,12 @@ public abstract class LivingEntity extends Entity {
 		if (ym > 0) direction = 0;
 		
 		if (xm != 0)
-			if (!collision(xm, 0, level)) {
+			if (!levelCollision(xm, 0, level)) {
 				info.x += xm;
 			}
 		
 		if (ym != 0)
-			if (!collision(0, ym, level)) {
+			if (!levelCollision(0, ym, level)) {
 				info.y += ym;
 			}
 		
@@ -65,9 +71,18 @@ public abstract class LivingEntity extends Entity {
 	
 	@Override
 	public void update(Level level) {
+		if (weapon != null) weapon.update(level);
 		behavior.update(this, level);
 		updateAnimation();
 	}
 	
 	abstract protected void updateCurrentSprite();
+	
+	/*
+	* getters
+	* */
+	public Weapon getWeapon() {
+		return weapon;
+	}
+	
 }
