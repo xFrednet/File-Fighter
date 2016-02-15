@@ -231,16 +231,16 @@ public class Level {
 		
 		return returnEntities;
 	}
-	public List<Entity> entityMotionCollision(double xm, double ym, Entity entity) {
-		List<Entity> collidingEntities = new ArrayList<>();
+	public List<LivingEntity> livingEntityMotionCollision(double xm, double ym, Entity entity) {
+		List<LivingEntity> collidingEntities = new ArrayList<>();
 		
 		if (player.isColliding(entity)) {
 			collidingEntities.add(player);
 		}
 		
 		for (int i = 0; i < entityList.size(); i++) {
-			if (entityList.get(i).isColliding(entity)) {
-				collidingEntities.add(entityList.get(i));
+			if (entityList.get(i) instanceof LivingEntity && entityList.get(i).isColliding(entity) && entityList.get(i).getID() != entity.getID()) {
+				collidingEntities.add((LivingEntity) entityList.get(i));
 			}
 		}
 		

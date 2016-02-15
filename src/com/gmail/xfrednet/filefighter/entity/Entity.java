@@ -18,6 +18,8 @@ public abstract class Entity {
 	public static final int POSITION_COLOR = 0xffff0000;
 	public static final int NAME_TAG_SPAWN_X = -100;
 	public static final int NAME_TAG_SPAWN_Y = -100;
+	public static final int PLAYER_TEAM = 1;
+	public static final int ENEMY_TEAM = 0;
 	public static boolean showBoundingBoxes = false;
 	protected static int currentID = Integer.MIN_VALUE;
 	
@@ -28,8 +30,10 @@ public abstract class Entity {
 	protected GUIEntityNameTag nameTag;
 	protected boolean showNameTag = true;
 	protected boolean removed = false;
+	protected int team = ENEMY_TEAM;
 	
 	public final static Random random = new Random();
+	
 	
 	/*
 	* Constructor
@@ -108,9 +112,6 @@ public abstract class Entity {
 		
 		return false;
 	}
-	public List<Entity> entityCollision(double xm, double ym, Level level) {
-		return level.entityMotionCollision(xm, ym, this);
-	}
 	public double getAngleTo(Entity entity) {
 		return info.getAngle(entity.getInfo());
 	}
@@ -153,6 +154,10 @@ public abstract class Entity {
 	
 	public GUIEntityNameTag getNameTag() {
 		return nameTag;
+	}
+	
+	public int getTeam() {
+		return team;
 	}
 	
 	

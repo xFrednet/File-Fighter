@@ -4,24 +4,21 @@ import com.gmail.xfrednet.filefighter.graphics.Screen;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
 import com.gmail.xfrednet.filefighter.level.Level;
 
+import java.util.List;
+
 /**
  * Created by xFrednet on 11.02.2016.
  */
 public abstract class Projectile extends Entity {
 	
 	public static final int PARTICLES_ON_DESTROY = 10;
-	
-	public static final double PI = 3.14159265358979323846264;
-	public static final double PI_1_eighth = (1 / 8.0) * PI;
-	public static final double PI_3_eighth = (3 / 8.0) * PI;
-	public static final double PI_5_eighth = (5 / 8.0) * PI;
-	public static final double PI_7_eighth = (7 / 8.0) * PI;
  	
 	protected double direction;
 	protected int spriteDirection = 0;
 	protected double speed;
 	protected double damage;
 	protected int shootingEntityID;
+	protected int team;
 	
 	/*
 	* Constructor
@@ -32,10 +29,10 @@ public abstract class Projectile extends Entity {
 		this.speed = speed;
 		this.damage = damage;
 		this.shootingEntityID = shootingEntity.getID();
+		team = shootingEntity.getTeam();
 		
 		this.currentSprite = sprite;
 	}
-	
 	
 	/*
 	* Util
@@ -60,15 +57,28 @@ public abstract class Projectile extends Entity {
 	}
 	private void move(double xm, double ym, Level level) {
 		
-		if (!levelCollision(xm, ym, level)) {
+		if (!levelCollision(xm, ym, level) && !entityCollision(xm, ym, level)) {
 			info.x += xm;
 			info.y += ym;
 		} else {
 			destroy(level);
 		}
-		
 	}
 	
+	public boolean entityCollision(double xm, double ym, Level level) {
+		List<LivingEntity> entities = level.livingEntityMotionCollision(xm ,ym, this);
+		
+		if (entities.size() == 0) return false;
+		
+		for (int i = 0; i < entities.size(); i++) {
+			if (entities.get(i).getTeam() != team) return true;
+		}
+		
+		
+		return false;
+	}
+	
+	//destroy
 	public void destroy(Level level) {
 		removed = true;
 		level.spawnParticles(info.getCenterX(), info.getCenterY(), PARTICLES_ON_DESTROY, getParticleSprites());
