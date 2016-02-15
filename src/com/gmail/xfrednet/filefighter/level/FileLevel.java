@@ -81,6 +81,8 @@ public class FileLevel extends Level {
 		int x = (random.nextInt(WIDTH - 2) + 1) * TILE_SIZE;
 		int y = (random.nextInt(HEIGHT - 2) + 1) * TILE_SIZE;
 		
+		fileEnding = fileEnding.toLowerCase();
+		
 		switch (fileEnding) {
 			case "txt": return new TextFileEntity(x, y, this, getPlayer(), fileName);
 			//JGP

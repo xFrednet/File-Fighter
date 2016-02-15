@@ -12,7 +12,7 @@ public class Particle {
 	
 	public static final int SPRITE_PARTICLE_SIZE = 2;
 	public static final int DEFAULT_MAX_LIVE_TIME = Main.UPS * 3;
-	public static final double DEFAULT_SPEED = 0.3;
+	public static final double DEFAULT_SPEED = 0.5;
 	public static final double MINIMUM_LIVE_TIME_PERCENTAGE = 0.5;
 	public static final Random random = new Random();
 	private static final double PI = 3.141592653589793;
@@ -49,7 +49,7 @@ public class Particle {
 		this.y = y;
 		this.liveTime = (int)(maxLiveTime * MINIMUM_LIVE_TIME_PERCENTAGE) + random.nextInt((int) (maxLiveTime * (1 - MINIMUM_LIVE_TIME_PERCENTAGE)));
 		this.angle = angle;
-		this.speed = speed;
+		this.speed = speed * random.nextDouble();
 		this.sprite = sprite;
 	}
 	

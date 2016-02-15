@@ -7,7 +7,8 @@ public class Sprite {
 	
 	public static final int TILE_SPRITE_SIZE = 32;
 	public static final int ENTITY_SPRITE_SIZE = 32;
-	public static final int PROJECTILE_SPRITE_SIZE = 16;
+	public static final int PROJECTILE_SPRITE_SIZE = 15;
+	public static final int ITEM_ENTITY_SPRITE_SIZE = 32;
 	
 	public static final int SPRITE_INVISIBLE_COLOR_1 = 0xffffbb0f;
 	public static final int SPRITE_INVISIBLE_COLOR_2 = 0xffff0000;
@@ -19,6 +20,7 @@ public class Sprite {
 	public final static int TEST_ENTITY_ANIMATION_SPEED = 16;
 	public static Sprite[] testEntity_entity_sprite = loadEntityAnimation(0/*xPixel*/, 0/*yPixel*/, SpriteSheet.entities, ENTITY_SPRITE_SIZE, TEST_ENTITY_ANIMATED_SPRITE_COUNT);
 	
+	public static Sprite null_sprite = new Sprite(16, 16, 0xffff01ff);
 	/*
 	* Static Sprites
 	* */
@@ -47,6 +49,8 @@ public class Sprite {
 	* */
 	public static Sprite[] smoke_particles = loadSplitSprite(new Sprite(0,0, SpriteSheet.particles, 16), 3);
 	
+	
+	
 	/*
 	* Class
 	* */
@@ -62,6 +66,16 @@ public class Sprite {
 	/*
 	* Constructor
 	* */
+	private Sprite(int width, int height, int color) {
+		this.HEIGHT = height;
+		this.WIDTH = width;
+		
+		pixels = new int[WIDTH * HEIGHT];
+		
+		for (int i = 0; i < pixels.length; i++) {
+			pixels[i] = color;
+		}
+	}
 	private Sprite(int xOffset, int yOffset, SpriteSheet spriteSheet, int size) {
 		this(xOffset, yOffset, spriteSheet, size, size);
 	}
@@ -204,4 +218,12 @@ public class Sprite {
 		return particles;
 	}
 	
+	private static Sprite[] loadProjectileSprites(int x, int y, SpriteSheet sheet, int size) {
+		Sprite[] sprites = new Sprite[2];
+		
+		sprites[0] = new Sprite(x, y, sheet, size);
+		sprites[1] = new Sprite(x, size + y, sheet, size);
+	
+		return sprites;
+	}
 }
