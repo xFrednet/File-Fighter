@@ -28,7 +28,7 @@ public class PaperGun extends Weapon {
 	public boolean attack(Level level, Entity executingEntity, double angle) {
 		if (useTimer > 0) return false;
 		
-		level.add(new PaperProjectile(level, angle, executingEntity));
+		level.spawn(new PaperProjectile(level, angle, executingEntity));
 		
 		useTimer += USE_TIME;
 		
