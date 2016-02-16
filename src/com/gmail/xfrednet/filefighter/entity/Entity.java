@@ -50,7 +50,6 @@ public abstract class Entity {
 			nameTag = new GUIEntityNameTag(level.getLevelGUI(), NAME_TAG_SPAWN_X, NAME_TAG_SPAWN_Y, name);
 			level.getLevelGUI().addComponent(nameTag);
 		}
-		//System.out.println("[INFO] New Entity with ID: " + currentID + ", Name: " + name);
 	}
 	protected void setInfo(double x, double y, int width, int height, int spriteXOffset, int spriteYOffset) {
 		info = new EntityInfo(x, y, width, height, spriteXOffset, spriteYOffset);
@@ -61,7 +60,7 @@ public abstract class Entity {
 	* */
 	abstract public void update(Level level);
 	public void endUpdate(Level level) {
-		if (nameTag != null && showNameTag) {
+		if (showNameTag && nameTag != null) {
 			nameTag.setMapPosition((int)( info.getCenterX() - level.getCamera().getXOffset()), (int)(info.getMaxY() - level.getCamera().getYOffset()));
 		}
 	}
@@ -221,10 +220,10 @@ public abstract class Entity {
 		}
 		
 		public double getMaxX() {
-			return getIntX() + width - 1;
+			return x + width - 1;
 		}
 		public double getMaxY() {
-			return getIntY() + height - 1;
+			return y + height - 1;
 		}
 		
 		public double getCenterX() {

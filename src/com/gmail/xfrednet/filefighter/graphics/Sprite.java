@@ -16,9 +16,6 @@ public class Sprite {
 	/*
 	* Test Code
 	* */
-	public final static int TEST_ENTITY_ANIMATED_SPRITE_COUNT = 16;
-	public final static int TEST_ENTITY_ANIMATION_SPEED = 16;
-	public static Sprite[] testEntity_entity_sprite = loadEntityAnimation(0/*xPixel*/, 0/*yPixel*/, SpriteSheet.entities, ENTITY_SPRITE_SIZE, TEST_ENTITY_ANIMATED_SPRITE_COUNT);
 	
 	public static Sprite null_sprite = new Sprite(16, 16, 0xffff01ff);
 	/*
@@ -157,7 +154,7 @@ public class Sprite {
 		return sprites;
 	}
 	
-	private static Sprite[] loadEntityAnimation(int x, int y, SpriteSheet sheet, int size, int animationSprites) {
+	public static Sprite[] loadEntityAnimation(int x, int y, SpriteSheet sheet, int size, int animationSprites) {
 		Sprite[] sprites = new Sprite[4 * animationSprites];
 		
 		/*
