@@ -61,10 +61,12 @@ public class UserInputBehavior extends Behavior {
 		//System.out.println("[INFO] UserInputBehavior: xm: " + xm + ", ym " + ym);
 		
 		if (xm != 0 || ym != 0) {
-			entity.move(Math.atan2(xm, ym), level, speed);
 			
-			if (input.isKeyDown(MOVEMENT_SPEED_KEY)) {
+			if (!input.isKeyDown(MOVEMENT_SPEED_KEY)) {
 				entity.move(Math.atan2(xm, ym), level, speed);
+			} else {
+				entity.move(Math.atan2(xm, ym), level, speed * 2);
+				
 			}
 			
 			if (camera != null)
