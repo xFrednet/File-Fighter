@@ -46,15 +46,25 @@ public abstract class Projectile extends Entity {
 	}
 	
 	public void move(double angle, Level level, double speed) {
-		if (speed > 1) {
-			move(angle, level, speed - 1);
-			speed = 1;
-		}
-		double xm = speed * Math.sin(angle);
-		double ym = speed * Math.cos(angle);
 		
-		move(xm, ym, level);
+		if (speed > 1) {
+			double xm1 = 1 * Math.sin(angle);
+			double ym1 = 1 * Math.cos(angle);
+			
+			while (speed > 1) {
+				move(xm1, ym1, level);
+				projectileMoved(level);
+				speed--;
+			}
+			
+		}
+		
+		move(speed * Math.sin(angle), speed * Math.cos(angle), level);
+		
 	}
+	
+	protected void projectileMoved(Level level) {}
+	
 	private void move(double xm, double ym, Level level) {
 		
 		if (!levelCollision(xm, ym, level) && !entityCollision(xm, ym, level)) {

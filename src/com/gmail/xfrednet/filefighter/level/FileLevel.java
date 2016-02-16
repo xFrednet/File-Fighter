@@ -7,7 +7,6 @@ import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.JPGFileEntity;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.TextFileEntity;
 import com.gmail.xfrednet.filefighter.graphics.GUIManager;
 import com.gmail.xfrednet.filefighter.graphics.Screen;
-import com.gmail.xfrednet.filefighter.graphics.cameras.ControllableCamera;
 import com.gmail.xfrednet.filefighter.util.Input;
 
 import java.io.File;
@@ -62,7 +61,7 @@ public class FileLevel extends Level {
 		File[] files = file.listFiles();
 		for (int i = 0; i < files.length; i++) {
 			if (files[i].isFile()) 
-				add(getFileEntity(files[i]));
+				spawn(getFileEntity(files[i]));
 		}
 		
 		
@@ -75,11 +74,11 @@ public class FileLevel extends Level {
 		
 		int i = fileName.lastIndexOf('.');
 		if (i > 0) {
-			fileEnding = fileName.substring(i+1);
+			fileEnding = fileName.substring(i + 1);
 		}
 		
-		int x = (random.nextInt(WIDTH - 2) + 1) * TILE_SIZE;
-		int y = (random.nextInt(HEIGHT - 2) + 1) * TILE_SIZE;
+		int x = (random.nextInt(WIDTH - 2) + 1) * TILE_SIZE + TILE_SIZE / 2;
+		int y = (random.nextInt(HEIGHT - 2) + 1) * TILE_SIZE + TILE_SIZE / 2;
 		
 		fileEnding = fileEnding.toLowerCase();
 		

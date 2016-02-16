@@ -39,10 +39,18 @@ public abstract class LivingEntity extends Entity {
 	* Util
 	* */
 	public void move(double angle, Level level, double speed) {
-		double xm = speed * Math.sin(angle);
-		double ym = speed * Math.cos(angle);
+		if (speed > 1) {
+			double xm1 = 1 * Math.sin(angle);
+			double ym1 = 1 * Math.cos(angle);
+			
+			while (speed > 1) {
+				move(xm1, ym1, level);
+				speed--;
+			}
+			
+		}
 		
-		move(xm, ym, level);
+		move(speed * Math.sin(angle), speed * Math.cos(angle), level);
 	}
 	private void move(double xm, double ym, Level level) {
 		if (ym < 0) direction = 1;

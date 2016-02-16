@@ -20,7 +20,7 @@ public class Player extends LivingEntity {
 	
 	public Player(int x, int y, Input input, Camera camera, String name, Level level) {
 		super(level, name);
-		super.setInfo(x, y, 28, 26, 2, 5);
+		super.setInfo(x, y, 28, 25, 2, 6);
 		behavior = new UserInputBehavior(input, speed, camera);
 		weapon = new PaperGun();
 		team = PLAYER_TEAM;

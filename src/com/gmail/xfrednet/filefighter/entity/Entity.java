@@ -168,7 +168,7 @@ public abstract class Entity {
 		
 		private EntityInfo(double x, double y, int width, int height, int spriteXOffset, int spriteYOffset) {
 			this.x = x - width / 2; //centers entity on x
-			this.y = y - height / 2; //centers entity on x
+			this.y = y - height / 2; //centers entity on y
 			this.width = width;
 			this.height = height;
 			this.spriteXOffset = spriteXOffset;

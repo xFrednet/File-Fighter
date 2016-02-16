@@ -75,28 +75,28 @@ public class Level {
 			tileIDs[x + (HEIGHT - 1) * WIDTH] = Tile.List.WALL_ID;
 		}
 		
-		add(new Slime(32 * 4, 32 * 4, this, player, "xFrednet"));
+		spawn(new Slime(32 * 4, 32 * 4, this, player, "xFrednet"));
 		
-		add(new TestEntity(32 * 10, 32 * 10, this, "TestEntity"));
-		add(new TestEntity(32 * 20, 32 * 10, this, "TestEntity"));
-		add(new TestEntity(32 * 10, 32 * 20, this, "TestEntity"));
-		add(new TestEntity(32 * 20, 32 * 20, this, "TestEntity"));
+		spawn(new TestEntity(32 * 10, 32 * 10, this, "TestEntity"));
+		spawn(new TestEntity(32 * 20, 32 * 10, this, "TestEntity"));
+		spawn(new TestEntity(32 * 10, 32 * 20, this, "TestEntity"));
+		spawn(new TestEntity(32 * 20, 32 * 20, this, "TestEntity"));
 		
 	}
 	
 	/*
 	* spawning
 	* */
-	public void add(Entity entity) {
-		add(entity, true);
+	public void spawn(Entity entity) {
+		spawn(entity, true);
 	}
-	public void add(Projectile entity) {
-		add(entity, false);
+	public void spawn(Projectile entity) {
+		spawn(entity, false);
 	}
-	public void add(LivingEntity entity) {
-		add(entity, true);
+	public void spawn(LivingEntity entity) {
+		spawn(entity, true);
 	}
-	public void add(Entity entity, boolean showSpawnParticles) {
+	public void spawn(Entity entity, boolean showSpawnParticles) {
 		entityList.add(entity);
 		if (showSpawnParticles) {
 			spawnParticles(entity.getInfo().getCenterX(), entity.getInfo().getCenterY(), SPAWN_PARTICLE_COUNT, Sprite.smoke_particles);
@@ -107,7 +107,7 @@ public class Level {
 	}
 	public void spawnParticles(double x, double y, int count, Sprite[] sprites) {
 		for (int i = 0; i < count; i++) {
-			addParticle(new Particle(x, y, sprites));
+			addParticle(new Particle(x, y, this, sprites));
 		}
 	}
 	
