@@ -3,6 +3,7 @@ package com.gmail.xfrednet.filefighter.entity;
 import com.gmail.xfrednet.filefighter.graphics.Screen;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
 import com.gmail.xfrednet.filefighter.level.Level;
+import com.gmail.xfrednet.filefighter.level.Tile;
 
 import java.util.List;
 
@@ -52,7 +53,7 @@ public abstract class Projectile extends Entity {
 			double ym1 = 1 * Math.cos(angle);
 			
 			while (speed > 1) {
-				move(xm1, ym1, level);
+				if (!move(xm1, ym1, level)) return;
 				projectileMoved(level);
 				speed--;
 			}
@@ -65,27 +66,32 @@ public abstract class Projectile extends Entity {
 	
 	protected void projectileMoved(Level level) {}
 	
-	private void move(double xm, double ym, Level level) {
-		
-		if (!levelCollision(xm, ym, level) && !entityCollision(xm, ym, level)) {
+	private boolean move(double xm, double ym, Level level) {
+		LivingEntity collidingEntities = null;
+		if (!levelCollision(xm, ym, level) && (collidingEntities = entityCollision(xm, ym, level)) == null) {
 			info.x += xm;
 			info.y += ym;
+			return true;
 		} else {
 			destroy(level);
+			
+			if (collidingEntities != null) 
+				collidingEntities.damage(this, damage);
+			
+			return false;
 		}
 	}
 	
-	public boolean entityCollision(double xm, double ym, Level level) {
+	public LivingEntity  entityCollision(double xm, double ym, Level level) {
 		List<LivingEntity> entities = level.livingEntityMotionCollision(xm ,ym, this);
 		
-		if (entities.size() == 0) return false;
+		if (entities.size() == 0) return null;
 		
 		for (int i = 0; i < entities.size(); i++) {
-			if (entities.get(i).getTeam() != team) return true;
+			if (entities.get(i).getTeam() != team) return entities.get(i);
 		}
 		
-		
-		return false;
+		return null;
 	}
 	
 	//destroy

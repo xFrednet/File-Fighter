@@ -28,6 +28,7 @@ public class Main extends Canvas implements Runnable {
     public static final int HEIGHT = WIDTH * 9 / 16;
     public static final int scale = 3;
     public static final int UPS = 30;
+    /*"Alter ich Psycholog(y)ier dich gleich mal"*/
 	
 	public static final Font gameFont = new Font("Lucida Console", Font.PLAIN, 16);
     

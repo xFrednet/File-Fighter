@@ -11,11 +11,13 @@ import com.gmail.xfrednet.filefighter.level.Level;
  */
 public class JPGFileEntity extends EnemyEntity {
 	
+	public static final double MAX_HEALTH = 10;
 	public static final int ANIMATION_SPRITES = 16;
 	
 	public JPGFileEntity(int x, int y, Level level, Entity target, String name) {
 		super(level, name, new MoveToTarget(target.getID(), 1, 30)/*behavior*/);
 		super.setInfo(x, y, 24/*width*/, 18/*height*/, 4/*spriteXOffset*/, 7/*spriteXOffset*/);
+		setAttributes(MAX_HEALTH);
 	}
 	
 	@Override
