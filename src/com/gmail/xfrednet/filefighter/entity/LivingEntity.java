@@ -2,8 +2,8 @@ package com.gmail.xfrednet.filefighter.entity;
 
 import com.gmail.xfrednet.filefighter.Main;
 import com.gmail.xfrednet.filefighter.entity.entitytask.Behavior;
-import com.gmail.xfrednet.filefighter.item.Item;
 import com.gmail.xfrednet.filefighter.item.item.Weapon;
+import com.gmail.xfrednet.filefighter.item.item.Damage;
 import com.gmail.xfrednet.filefighter.level.Level;
 
 /**
@@ -17,6 +17,13 @@ public abstract class LivingEntity extends Entity {
 	
 	//attributes
 	protected double maxHealth;
+	protected double physicalDefence;
+	protected double mentalDefence;
+	protected double strength;
+	protected double intelligence;
+	protected double luck;
+	
+	//current attributes
 	protected double health;
 	
 	public Weapon weapon;
@@ -40,9 +47,16 @@ public abstract class LivingEntity extends Entity {
 		this.behavior = behavior;
 	}
 	
-	public void setAttributes(double maxHealth) {
+	public void setAttributes(double maxHealth, double physicalDefence, double mentalDefence, double intelligence, double strength, double luck) {
 		this.maxHealth = maxHealth;
-		health = maxHealth;
+		this.physicalDefence = physicalDefence;
+		this.mentalDefence = mentalDefence;
+		this.strength = strength;
+		this.intelligence = intelligence;
+		this.luck = luck;
+	}
+	public void setHealth(double health) {
+		this.health = health;
 	}
 	
 	/*
@@ -88,21 +102,36 @@ public abstract class LivingEntity extends Entity {
 	@Override
 	public void update(Level level) {
 		if (weapon != null) weapon.update(level);
-		behavior.update(this, level);
+		if (behavior != null) behavior.update(this, level);
 		updateAnimation();
 	}
-	
 	abstract protected void updateCurrentSprite();
 	
-	public void damage(Entity damageSource, double damage) {
-		health -= damage;
+	//damage
+	public void damage(Entity damageSource, Damage damage) {
+		health -= getCalculatedDamage(damage);
 		if (health <= 0) {
 			died(damageSource);
-			removed = true;
 		}
 	}
-	
-	private void died(Entity damageSource) {}
+	private void died(Entity damageSource) {
+		removed = true;
+	}
+	protected double getCalculatedDamage(Damage damage) {
+		double resultingDamage = damage.getDamageAmount();
+		
+		if (damage.getDamageType() == Damage.PHYSICAL_DAMAGE) {
+			resultingDamage -= getPhysicalDefence();
+		} else {
+			resultingDamage -= getMentalDefence();
+		}
+		
+		if (resultingDamage >= 0) {
+			return resultingDamage;
+		} else {
+			return 0;
+		}
+	}
 	
 	/*
 	* getters
@@ -111,4 +140,32 @@ public abstract class LivingEntity extends Entity {
 		return weapon;
 	}
 	
+	//attributes
+	public double getMaxHealth() {
+		return maxHealth;
+	}
+	
+	public double getPhysicalDefence() {
+		return physicalDefence;
+	}
+	
+	public double getMentalDefence() {
+		return mentalDefence;
+	}
+	
+	public double getStrength() {
+		return strength;
+	}
+	
+	public double getIntelligence() {
+		return intelligence;
+	}
+	
+	public double getLuck() {
+		return luck;
+	}
+	
+	public double getHealth() {
+		return health;
+	}
 }

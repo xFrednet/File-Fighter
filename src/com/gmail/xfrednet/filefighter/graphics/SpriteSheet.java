@@ -14,6 +14,8 @@ public class SpriteSheet {
 	public static SpriteSheet projectiles = new SpriteSheet("/textures/projectiles.png");
 	public static SpriteSheet particles = new SpriteSheet("/textures/particles.png");
 	
+	public static SpriteSheet player = new SpriteSheet("/textures/player/bluze.png");
+	
 	public int WIDTH;
 	public int HEIGHT;
 	public int[] pixels;

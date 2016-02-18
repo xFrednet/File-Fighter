@@ -2,6 +2,7 @@ package com.gmail.xfrednet.filefighter.level;
 
 import com.gmail.xfrednet.filefighter.entity.Entity;
 import com.gmail.xfrednet.filefighter.entity.Player;
+import com.gmail.xfrednet.filefighter.entity.livingentitys.Dummy;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.TestEntity;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.JPGFileEntity;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.TextFileEntity;
@@ -88,6 +89,9 @@ public class FileLevel extends Level {
 			case "jpg": return new JPGFileEntity(x, y, this, getPlayer(), fileName);
 			case "jpeg": return new JPGFileEntity(x, y, this, getPlayer(), fileName);
 			case "jpe": return new JPGFileEntity(x, y, this, getPlayer(), fileName);
+			
+			//Test code
+			case "dummy": return new Dummy(250,250,this, "dummy");
 		}
 		
 		return new TestEntity(x, y, this, "KNOWN ERROR");

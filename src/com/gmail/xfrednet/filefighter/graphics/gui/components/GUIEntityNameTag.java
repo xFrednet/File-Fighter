@@ -45,4 +45,8 @@ public class GUIEntityNameTag extends GUIComponent {
 		g.drawString(name, (int)(screenX - (bounds.getWidth() / 2)) + PADDING, screenY + PADDING +  fm.getAscent());
 		
 	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
 }

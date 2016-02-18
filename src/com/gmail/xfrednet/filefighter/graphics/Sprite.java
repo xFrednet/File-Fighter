@@ -18,6 +18,7 @@ public class Sprite {
 	* */
 	
 	public static Sprite null_sprite = new Sprite(16, 16, 0xffff01ff);
+	public static Sprite dummy_entity_sprite = new Sprite(ENTITY_SPRITE_SIZE * 8, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE);
 	/*
 	* Static Sprites
 	* */
@@ -29,7 +30,7 @@ public class Sprite {
 	* Entity Sprites
 	* */
 	public static Sprite[] slime_entity_sprites = loadEntityAnimation(0, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 16);
-	public static Sprite[] player_entity_sprites = loadEntityAnimation(ENTITY_SPRITE_SIZE * 2, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 16);
+	public static Sprite[] player_entity_sprites = loadEntityAnimation(0, 0, SpriteSheet.player, ENTITY_SPRITE_SIZE, 8);
 	
 	//File Sprites
 	public static Sprite[] textFile_entity_sprites = loadEntityAnimation(ENTITY_SPRITE_SIZE * 4, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 6);

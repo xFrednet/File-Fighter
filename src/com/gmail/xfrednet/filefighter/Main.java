@@ -28,6 +28,7 @@ public class Main extends Canvas implements Runnable {
     public static final int HEIGHT = WIDTH * 9 / 16;
     public static final int scale = 3;
     public static final int UPS = 30;
+    public static final String LEVEL_LOCATION = (System.getProperty("user.home").endsWith("xFrednet")) ? "C:\\Users\\xFrednet\\IdeaProjects\\File-Fighter\\level" : System.clearProperty("user.home") + "\\Desktop";
     /*"Alter ich Psycholog(y)ier dich gleich mal"*/
 	
 	public static final Font gameFont = new Font("Lucida Console", Font.PLAIN, 16);
@@ -100,7 +101,7 @@ public class Main extends Canvas implements Runnable {
 	    hud = new GameHud(guiManager);
 	    guiManager.addComponent(hud);
     
-        level = new FileLevel(player, input, screen, new File(System.clearProperty("user.home") + "\\Desktop"), guiManager);
+        level = new FileLevel(player, input, screen, new File(LEVEL_LOCATION), guiManager);
         camera = level.getCamera();
         
         thread = new Thread(this);

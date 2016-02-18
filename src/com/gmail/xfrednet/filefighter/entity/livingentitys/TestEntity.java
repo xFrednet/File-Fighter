@@ -13,11 +13,16 @@ import com.gmail.xfrednet.filefighter.level.Level;
 public class TestEntity extends LivingEntity {
 	
 	public static final double MAX_HEALTH = 10;
+	public static final double PHYSICAL_DEFENCE = 1;
+	public static final double MENTAL_DEFENCE = 1;
+	public static final double STRENGTH = 1;
+	public static final double INTELLIGENCE = 1;
+	public static final double LUCK = 1;
 	
 	public TestEntity(int x, int y, Level level, String name) {
 		super(level, name, new RandomMovement(1));
 		super.setInfo(x, y, 16, 30, 8, 1);
-		super.setAttributes(MAX_HEALTH);
+		setAttributes(MAX_HEALTH, PHYSICAL_DEFENCE, MENTAL_DEFENCE, STRENGTH, INTELLIGENCE, LUCK);
 	}
 	
 	@Override

@@ -2,8 +2,8 @@ package com.gmail.xfrednet.filefighter.entity;
 
 import com.gmail.xfrednet.filefighter.graphics.Screen;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
+import com.gmail.xfrednet.filefighter.item.item.Damage;
 import com.gmail.xfrednet.filefighter.level.Level;
-import com.gmail.xfrednet.filefighter.level.Tile;
 
 import java.util.List;
 
@@ -15,16 +15,15 @@ public abstract class Projectile extends Entity {
 	public static final int PARTICLES_ON_DESTROY = 10;
  	
 	protected double direction;
-	protected int spriteDirection = 0;
 	protected double speed;
-	protected double damage;
+	protected Damage damage;
 	protected int shootingEntityID;
 	protected int team;
 	
 	/*
 	* Constructor
 	* */
-	protected Projectile(Level level, String name, double direction, double speed, double damage, Entity shootingEntity, Sprite sprite) {
+	protected Projectile(Level level, String name, double direction, double speed, Damage damage, Entity shootingEntity, Sprite sprite) {
 		super(level, name, false);
 		this.direction = direction;
 		this.speed = speed;
