@@ -19,8 +19,8 @@ public class PaperProjectile extends Projectile {
 	/*
 	* Constructor
 	* */
-	public PaperProjectile(Level level, double direction, Entity shootingEntity) {
-		super(level, NAME, direction, 10, 1, shootingEntity, Sprite.paper_projectile_sprite);
+	public PaperProjectile(Level level, double direction, Entity shootingEntity, double speed, double damage) {
+		super(level, NAME, direction, speed, damage, shootingEntity, Sprite.paper_projectile_sprite);
 		super.setInfo(shootingEntity.getInfo().getCenterX(), shootingEntity.getInfo().getCenterY(), 6, 6, 5, 5);
 	}
 	

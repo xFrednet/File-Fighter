@@ -15,9 +15,14 @@ public abstract class LivingEntity extends Entity {
 	public static final int ANIMATION_SPEED =  ((int) (Main.UPS * 0.2) == 0) ? 1 : (int) (Main.UPS * 0.2);
 	public static final int STILL_STANDING_SPRITE_INDEX = 0;
 	
+	//attributes
+	protected double maxHealth;
+	protected double health;
+	
 	public Weapon weapon;
 	public Behavior behavior;
 	
+	//texture related
 	protected int direction = 0;
 	protected int animation = 0;
 	public boolean isStanding = false;
@@ -33,6 +38,11 @@ public abstract class LivingEntity extends Entity {
 		super(level, name);
 		updateCurrentSprite();
 		this.behavior = behavior;
+	}
+	
+	public void setAttributes(double maxHealth) {
+		this.maxHealth = maxHealth;
+		health = maxHealth;
 	}
 	
 	/*
@@ -83,6 +93,16 @@ public abstract class LivingEntity extends Entity {
 	}
 	
 	abstract protected void updateCurrentSprite();
+	
+	public void damage(Entity damageSource, double damage) {
+		health -= damage;
+		if (health <= 0) {
+			died(damageSource);
+			removed = true;
+		}
+	}
+	
+	private void died(Entity damageSource) {}
 	
 	/*
 	* getters

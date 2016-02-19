@@ -12,16 +12,12 @@ import com.gmail.xfrednet.filefighter.level.Level;
  */
 public class TestEntity extends LivingEntity {
 	
-	public static final int ANIMATION_SPRITES = 16;
-	int targetID;
+	public static final double MAX_HEALTH = 10;
 	
 	public TestEntity(int x, int y, Level level, String name) {
 		super(level, name, new RandomMovement(1));
 		super.setInfo(x, y, 16, 30, 8, 1);
-	}
-	public TestEntity(int x, int y, Level level, Entity target, String name) {
-		super(level, name, new MoveToTarget(target.getID(), 1, 30));
-		super.setInfo(x, y, 16, 30, 8, 1);
+		super.setAttributes(MAX_HEALTH);
 	}
 	
 	@Override

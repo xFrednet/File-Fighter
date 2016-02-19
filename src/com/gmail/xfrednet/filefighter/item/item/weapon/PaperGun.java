@@ -13,7 +13,9 @@ import com.gmail.xfrednet.filefighter.level.Level;
 public class PaperGun extends Weapon {
 	
 	public static final String NAME = "Paper gun";
-	public static final int USE_TIME = (int) (Main.UPS * 0.3);
+	public static final int USE_TIME = (int) (Main.UPS * 0.5);
+	public static final double PROJECTILE_SPEED = 7.5;
+	public static final double PROJECTILE_DAMAGE = 3.5;
 	
 	public PaperGun() {
 		super(NAME);
@@ -28,7 +30,7 @@ public class PaperGun extends Weapon {
 	public boolean attack(Level level, Entity executingEntity, double angle) {
 		if (useTimer > 0) return false;
 		
-		level.spawn(new PaperProjectile(level, angle, executingEntity));
+		level.spawn(new PaperProjectile(level, angle, executingEntity, PROJECTILE_SPEED, PROJECTILE_DAMAGE));
 		
 		useTimer += USE_TIME;
 		

@@ -27,10 +27,11 @@ public abstract class Entity {
 	protected EntityInfo info;
 	protected Sprite currentSprite;
 	protected String name;
-	protected GUIEntityNameTag nameTag;
-	protected boolean showNameTag = true;
 	protected boolean removed = false;
 	protected int team = ENEMY_TEAM;
+	//name tag
+	protected GUIEntityNameTag nameTag;
+	protected boolean showNameTag = true;
 	
 	public final static Random random = new Random();
 	

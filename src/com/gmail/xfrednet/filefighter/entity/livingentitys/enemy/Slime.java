@@ -13,10 +13,12 @@ public class Slime extends EnemyEntity {
 	
 	public static final int ANIMATION_SPRITES = 16;
 	public static final int ANIMATION_SPEED = 1;
+	public static final double MAX_HEALTH = 10;
 	
 	public Slime(int x, int y, Level level, Entity target, String name) {
 		super(level, name, new MoveToTarget(target.getID(), 1, 30)/*behavior*/);
 		super.setInfo(x, y, 27/*width*/, 17/*height*/, 3/*spriteXOffset*/, 15/*spriteXOffset*/);
+		setAttributes(MAX_HEALTH);
 	}
 	
 	@Override

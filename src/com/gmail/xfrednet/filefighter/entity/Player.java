@@ -13,6 +13,7 @@ import com.gmail.xfrednet.filefighter.util.Input;
  */
 public class Player extends LivingEntity {
 	
+	public static final double MAX_HEALTH = 100;
 	public static final int ANIMATION_SPRITES = 16;
 	public static final int ANIMATION_SPEED = ((int) (Main.UPS * 0.1) == 0) ? 1 : (int) (Main.UPS * 0.1);
 	
@@ -21,6 +22,7 @@ public class Player extends LivingEntity {
 	public Player(int x, int y, Input input, Camera camera, String name, Level level) {
 		super(level, name);
 		super.setInfo(x, y, 28, 25, 2, 6);
+		setAttributes(MAX_HEALTH);
 		behavior = new UserInputBehavior(input, speed, camera);
 		weapon = new PaperGun();
 		team = PLAYER_TEAM;
