@@ -11,19 +11,12 @@ import com.gmail.xfrednet.filefighter.level.Level;
  */
 public class Dummy extends LivingEntity {
 	
-	public static final double MAX_HEALTH = 1000;
-	public static final double PHYSICAL_DEFENCE = 3;
-	public static final double MENTAL_DEFENCE = 1;
-	public static final double STRENGTH = 1;
-	public static final double INTELLIGENCE = 1;
-	public static final double LUCK = 1;
 	private static final boolean SHOW_DAMAGE = true;
 	
 	
 	public Dummy(double x, double y, Level level, String name) {
-		super(level, name);
+		super(level, name, 0);
 		super.setInfo(x, y, 28, 25, 2, 6);
-		setAttributes(MAX_HEALTH, PHYSICAL_DEFENCE, MENTAL_DEFENCE, STRENGTH, INTELLIGENCE, LUCK);
 	}
 	
 	@Override
@@ -44,6 +37,19 @@ public class Dummy extends LivingEntity {
 		} else {
 			name = ((damage.getDamageType() == Damage.PHYSICAL_DAMAGE) ? "P" : "M") +
 					" " + getCalculatedDamage(damage);
+		}
+	}
+	
+	@Override
+	protected double getBaseAttribute(int attribute) {
+		switch (attribute) {
+			case ATTRIBUTE_MAX_HEALTH: return 10;
+			case ATTRIBUTE_PHYSICAL_DEFENCE: return 1;
+			case ATTRIBUTE_MENTAL_DEFENCE: return 0;
+			case ATTRIBUTE_STRENGTH: return 0;
+			case ATTRIBUTE_INTELLIGENCE: return 0;
+			case ATTRIBUTE_LUCK: return 0;
+			default: return 0;
 		}
 	}
 	

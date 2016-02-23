@@ -11,21 +11,12 @@ import com.gmail.xfrednet.filefighter.level.Level;
  */
 public class Slime extends EnemyEntity {
 	
-	public static final double MAX_HEALTH = 100;
-	public static final double PHYSICAL_DEFENCE = 1;
-	public static final double MENTAL_DEFENCE = 1;
-	public static final double STRENGTH = 1;
-	public static final double INTELLIGENCE = 1;
-	public static final double LUCK = 1;
-	
-	
 	public static final int ANIMATION_SPRITES = 16;
 	public static final int ANIMATION_SPEED = 1;
 	
 	public Slime(int x, int y, Level level, Entity target, String name) {
-		super(level, name, new MoveToTarget(target.getID(), 1, 30)/*behavior*/);
+		super(level, name, 0, new MoveToTarget(target.getID(), 1, 30)/*behavior*/);
 		super.setInfo(x, y, 27/*width*/, 17/*height*/, 3/*spriteXOffset*/, 15/*spriteXOffset*/);
-		setAttributes(MAX_HEALTH, PHYSICAL_DEFENCE, MENTAL_DEFENCE, STRENGTH, INTELLIGENCE, LUCK);
 	}
 	
 	@Override
@@ -34,6 +25,19 @@ public class Slime extends EnemyEntity {
 			currentSprite = Sprite.slime_entity_sprites[STILL_STANDING_SPRITE_INDEX];
 		} else {
 			currentSprite = Sprite.slime_entity_sprites[(direction * ANIMATION_SPRITES) + ((int)(animation / ANIMATION_SPEED) % ANIMATION_SPRITES)];
+		}
+	}
+	
+	@Override
+	protected double getBaseAttribute(int attribute) {
+		switch (attribute) {
+			case ATTRIBUTE_MAX_HEALTH: return 10;
+			case ATTRIBUTE_PHYSICAL_DEFENCE: return 1;
+			case ATTRIBUTE_MENTAL_DEFENCE: return 1;
+			case ATTRIBUTE_STRENGTH: return 1;
+			case ATTRIBUTE_INTELLIGENCE: return 1;
+			case ATTRIBUTE_LUCK: return 1;
+			default: return 0;
 		}
 	}
 }

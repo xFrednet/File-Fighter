@@ -75,6 +75,9 @@ public abstract class Entity {
 				nameTag.render(g);
 		}
 	}
+	public void render(Screen screen, int x, int y, boolean fixed, int scale) {
+		screen.drawSprite(x, y, currentSprite, fixed, scale);
+	}
 	
 	/*
 	* Util
@@ -160,6 +163,9 @@ public abstract class Entity {
 		return team;
 	}
 	
+	public Sprite getCurrentSprite() {
+		return currentSprite;
+	}
 	
 	/*
 	* Class
@@ -218,6 +224,13 @@ public abstract class Entity {
 		}
 		public int getSpriteY() {
 			return getIntY() - spriteYOffset;
+		}
+		
+		public int getHeight() {
+			return height;
+		}
+		public int getWidth() {
+			return width;
 		}
 		
 		public double getMaxX() {

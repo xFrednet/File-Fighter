@@ -1,6 +1,7 @@
 package com.gmail.xfrednet.filefighter.graphics.gui.components;
 
 import com.gmail.xfrednet.filefighter.Main;
+import com.gmail.xfrednet.filefighter.graphics.Screen;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponent;
 
 import java.awt.*;

@@ -12,20 +12,21 @@ public class Sprite {
 	
 	public static final int SPRITE_INVISIBLE_COLOR_1 = 0xffffbb0f;
 	public static final int SPRITE_INVISIBLE_COLOR_2 = 0xffff0000;
+	public static final int ITEM_SPRITE_SIZE = 16;
 	
 	/*
 	* Test Code
 	* */
-	
 	public static Sprite null_sprite = new Sprite(16, 16, 0xffff01ff);
 	public static Sprite dummy_entity_sprite = new Sprite(ENTITY_SPRITE_SIZE * 8, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE);
+	
 	/*
-	* Static Sprites
+	* Tile Sprites
 	* */
 	public static Sprite null_tile_sprite = new Sprite(0, 0, SpriteSheet.tiles, TILE_SPRITE_SIZE);
 	public static Sprite space_tile_sprite = new Sprite(TILE_SPRITE_SIZE, 0, SpriteSheet.tiles, TILE_SPRITE_SIZE);
-	
 	public static Sprite[] wall_tile_sprite = loadConnectedTileSprites(0, TILE_SPRITE_SIZE * 4, SpriteSheet.tiles, TILE_SPRITE_SIZE);
+	
 	/*
 	* Entity Sprites
 	* */
@@ -45,9 +46,21 @@ public class Sprite {
 	/*
 	* Particles
 	* */
-	public static Sprite[] smoke_particles = loadSplitSprite(new Sprite(0,0, SpriteSheet.particles, 16), 3);
+	public static Sprite[] smoke_particles = loadSplitSprite(new Sprite(0, 0, SpriteSheet.particles, 16), 3);
 	
+	/*
+	* GUIComponents
+	* */
+	public static Sprite itemFrame = new Sprite(0, 0, SpriteSheet.guiComponents, 18);
 	
+	/*
+	* Items
+	* */
+	public static class Item {
+		
+		public static Sprite paperGun = new Sprite(0, 0, SpriteSheet.items, ITEM_SPRITE_SIZE);
+		
+	}
 	
 	/*
 	* Class

@@ -2,7 +2,6 @@ package com.gmail.xfrednet.filefighter.item.item;
 
 import com.gmail.xfrednet.filefighter.entity.Entity;
 import com.gmail.xfrednet.filefighter.entity.LivingEntity;
-import com.sun.deploy.security.DeployURLClassPathCallback;
 
 /**
  * Created by xFrednet on 18.02.2016.
@@ -20,9 +19,9 @@ public class Damage {
 		this.damageAmount = baseDamage;
 		if (shootingEntity instanceof LivingEntity) {
 			if (damageType == PHYSICAL_DAMAGE) {
-				this.damageAmount += ((LivingEntity)shootingEntity).getStrength();
+				this.damageAmount += ((LivingEntity)shootingEntity).getAttribute(LivingEntity.ATTRIBUTE_STRENGTH);
 			} else {
-				this.damageAmount += ((LivingEntity)shootingEntity).getIntelligence();
+				this.damageAmount += ((LivingEntity)shootingEntity).getAttribute(LivingEntity.ATTRIBUTE_INTELLIGENCE);
 			}
 		}
 	}

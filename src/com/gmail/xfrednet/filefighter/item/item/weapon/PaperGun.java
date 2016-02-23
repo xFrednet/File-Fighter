@@ -23,7 +23,7 @@ public class PaperGun extends Weapon {
 	
 	@Override
 	public Sprite getItemSprite() {
-		return Sprite.null_sprite;
+		return Sprite.Item.paperGun;
 	}
 	
 	@Override
@@ -35,5 +35,10 @@ public class PaperGun extends Weapon {
 		useTimer += USE_TIME;
 		
 		return true;
+	}
+	
+	@Override
+	public int getDamageType() {
+		return PaperProjectile.DAMAGE_TYPE;
 	}
 }

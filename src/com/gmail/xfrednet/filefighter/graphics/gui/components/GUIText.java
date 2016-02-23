@@ -1,6 +1,7 @@
 package com.gmail.xfrednet.filefighter.graphics.gui.components;
 
 import com.gmail.xfrednet.filefighter.Main;
+import com.gmail.xfrednet.filefighter.graphics.Screen;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponent;
 
 import java.awt.*;
@@ -29,7 +30,7 @@ public class GUIText extends GUIComponent {
 		this(parent, x, y, text, showBackground, Main.gameFont);
 	}
 	public GUIText(GUIComponent parent, int x, int y, String text, boolean showBackground, Font font) {
-		super(parent, x - PADDING, y - PADDING);
+		super(parent, x, y);
 		
 		this.text = text;
 		this.showBackground = showBackground;

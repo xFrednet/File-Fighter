@@ -9,6 +9,8 @@ import com.gmail.xfrednet.filefighter.level.Level;
  */
 public abstract class Weapon extends Item {
 	
+	private boolean damageType;
+	
 	protected Weapon(String name) {
 		super(name);
 		maxStackSize = 1;
@@ -20,4 +22,5 @@ public abstract class Weapon extends Item {
 	
 	abstract public boolean attack(Level level, Entity executingEntity, double angle);
 	
+	abstract public int getDamageType();
 }

@@ -71,31 +71,49 @@ public class FileLevel extends Level {
 	
 	private Entity getFileEntity(File file) {
 		String fileName = file.getName();
-		String fileEnding = "";
 		
+		//file ending
+		String fileEnding = "";
 		int i = fileName.lastIndexOf('.');
 		if (i > 0) {
 			fileEnding = fileName.substring(i + 1);
 		}
+		fileEnding = fileEnding.toLowerCase();
 		
+		//spawn location
 		int x = (random.nextInt(WIDTH - 2) + 1) * TILE_SIZE + TILE_SIZE / 2;
 		int y = (random.nextInt(HEIGHT - 2) + 1) * TILE_SIZE + TILE_SIZE / 2;
 		
-		fileEnding = fileEnding.toLowerCase();
-		
+		//entity choice
+		Entity fileEntity = null;
 		switch (fileEnding) {
+			case "lnk": fileEntity = getEntityByName(x, y, fileName); break;
+			//text files
 			case "txt": return new TextFileEntity(x, y, this, getPlayer(), fileName);
+			
 			//JGP
 			case "jpg": return new JPGFileEntity(x, y, this, getPlayer(), fileName);
 			case "jpeg": return new JPGFileEntity(x, y, this, getPlayer(), fileName);
 			case "jpe": return new JPGFileEntity(x, y, this, getPlayer(), fileName);
 			
 			//Test code
-			case "dummy": return new Dummy(250,250,this, "dummy");
+			case "dummy": return new Dummy(250, 250, this, "dummy");
+		}
+		if (fileEntity == null) {
+			return new TestEntity(x, y, this, "KNOWN ERROR");
+		} else {
+			return fileEntity;
 		}
 		
-		return new TestEntity(x, y, this, "KNOWN ERROR");
+	}
+	
+	private Entity getEntityByName(double x, double y, String fileName) {
+		fileName.toLowerCase();
 		
+		if (fileName.contains("mozilla firefox")) {
+			return new TestEntity(x, y, this, "Mozilla Firefox");
+		}
+		return null;
 	}
 	
 }
