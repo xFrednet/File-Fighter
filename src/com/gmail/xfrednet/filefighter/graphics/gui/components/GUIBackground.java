@@ -27,6 +27,9 @@ public class GUIBackground extends GUIComponent {
 		super(parent, x, y, width, height);
 		screenBackgroundColor = color;
 		type = SCREEN_BACKGROUND;
+		
+		
+		
 	}
 	
 	@Override

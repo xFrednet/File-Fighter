@@ -19,7 +19,7 @@ public class UserInputBehavior extends Behavior {
 	private static final int MOVEMENT_RIGHT_KEY = KeyEvent.VK_D;
 	private static final int MOVEMENT_SPEED_KEY = KeyEvent.VK_E;
 	private static final int DISCONNECT_CAMERA = KeyEvent.VK_NUMPAD0;
-	private static final int SHOW_HIDE_EQUIPMENT_GUI = KeyEvent.VK_E;
+	private static final int SHOW_HIDE_EQUIPMENT_GUI = KeyEvent.VK_C;
 	
 	private static final int MOUSE_ATTACK_BUTTON = Input.LEFT_MOUSE_BUTTON;
 	

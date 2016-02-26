@@ -175,4 +175,12 @@ public class GUIComponent {
 	public boolean getVisibility() {
 		return show;
 	}
+	
+	public int getWidthWithPadding() {
+		return width + padding * 2;
+	}
+	public int getHeightWithPadding() {
+		return height + padding * 2;
+	}
+	
 }

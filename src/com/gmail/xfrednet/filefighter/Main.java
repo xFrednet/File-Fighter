@@ -112,11 +112,6 @@ public class Main extends Canvas implements Runnable {
     }
     
     public synchronized void stop() {
-        try {
-            thread.join();
-        } catch (InterruptedException e) {
-            System.exit(0);
-        }
         System.exit(0);
     }
     
@@ -172,6 +167,11 @@ public class Main extends Canvas implements Runnable {
         level.update();
         guiManager.update();
         debugUpdate();
+        
+        if (input.isKeyDown(KeyEvent.VK_ESCAPE)) {
+            running = false;
+        }
+        
     }
     private void debugUpdate() {
         if (input.isKeyDown(KeyEvent.VK_F3)) {

@@ -21,6 +21,7 @@ public class SpriteSheet {
 	public int WIDTH;
 	public int HEIGHT;
 	public int[] pixels;
+	private BufferedImage image;
 	
 	public SpriteSheet(String path) {
 		load(path);
@@ -28,7 +29,7 @@ public class SpriteSheet {
 	
 	private void load(String path) {
 		try {
-			BufferedImage image = ImageIO.read(SpriteSheet.class.getResource(path));
+			image = ImageIO.read(SpriteSheet.class.getResource(path));
 			WIDTH = image.getWidth();
 			HEIGHT = image.getHeight();
 			
@@ -40,4 +41,7 @@ public class SpriteSheet {
 		}
 	}
 	
+	public BufferedImage getImage() {
+		return image;
+	}
 }

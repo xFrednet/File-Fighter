@@ -205,7 +205,7 @@ public class Screen {
 		int ya;
 		int xa;
 		int xp;
-		for (int yp = 0; yp < width; yp++) {
+		for (int yp = 0; yp < height; yp++) {
 			ya = y + yp;
 			if (ya < 0 || ya >= HEIGHT) continue;
 			

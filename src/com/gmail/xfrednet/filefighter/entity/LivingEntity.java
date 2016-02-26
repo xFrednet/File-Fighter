@@ -42,7 +42,7 @@ public abstract class LivingEntity extends Entity {
 	/*
 	* Skill points
 	* */
-	private static final int SKILL_POINT_CATEGORY_COUNT = 5;
+	public static final int SKILL_POINT_CATEGORY_COUNT = 5;
 	
 	public static final int SKILL_POINT_HEALTH = 0;
 	public static final int SKILL_POINT_DEFENCE = 1;
@@ -136,7 +136,9 @@ public abstract class LivingEntity extends Entity {
 		setHealth(attributes[ATTRIBUTE_MAX_HEALTH]);
 	}
 	
+	//skill point
 	private void autoApplySkillPoints() {
+		if (!autoSpendSkillPoints()) return;
 		if (getWeapon() == null) return;
 		int[] chances = new int[SKILL_POINT_CATEGORY_COUNT];
 		
@@ -185,8 +187,7 @@ public abstract class LivingEntity extends Entity {
 //		System.out.println("Luck: " + skillPoints[SKILL_POINT_LUCK]);
 //		System.out.println();
 	}
-	
-	private boolean autoSpendSkillPoints() {
+	protected boolean autoSpendSkillPoints() {
 		return true;
 	}
 	
@@ -272,6 +273,19 @@ public abstract class LivingEntity extends Entity {
 		}
 	}
 	
+	//skill points
+	public void applySkillPoints(int skillPointCategory) {
+		if (hasUnspentSkillPoints()) {
+			if (skillPointCategory > 0 || skillPointCategory <= SKILL_POINT_CATEGORY_COUNT) {
+				
+				unspentSkillPoints--;
+				skillPoints[skillPointCategory]++;
+				
+				updateAttributes();
+			}
+		}
+	}
+	
 	//attributes
 	public void updateAttributes() {
 		//health
@@ -307,10 +321,7 @@ public abstract class LivingEntity extends Entity {
 		return this.equipment[equipment];
 	}
 	
-	/*
-	* abstract Getters
-	* */
-	protected abstract double getBaseAttribute(int attribute);
+	
 	
 	public void showEquipmentGUI(boolean show) {
 		if (equipmentGUI == null) {
@@ -328,5 +339,53 @@ public abstract class LivingEntity extends Entity {
 		} else {
 			return equipmentGUI.getVisibility();
 		}
+	}
+	
+	public String getSkillPointName(int skillPoint) {
+		switch (skillPoint) {
+			case SKILL_POINT_HEALTH: return "Health";
+			case SKILL_POINT_DEFENCE: return "Defence";
+			case SKILL_POINT_STRENGTH: return "Strength";
+			case SKILL_POINT_INTELLIGENCE: return "Intelligence";
+			case SKILL_POINT_LUCK: return "Luck";
+		}
+		return "null";
+	}
+	
+	public String[] getSkillPointInfo(int skillPoint) {
+		switch (skillPoint) {
+			case SKILL_POINT_HEALTH: 
+				return new String[] {"Increases Health by " + ATTRIBUTE_HEALTH_PER_POINT};
+			case SKILL_POINT_DEFENCE: 
+				return new String[] {
+						"Increases Physical-Defence by " + ATTRIBUTE_PHYSICAL_DEFENCE_PER_POINT, 
+						"Increases Mental-Defence by " + ATTRIBUTE_MENTAL_DEFENCE_PER_POINT};
+			case SKILL_POINT_STRENGTH: 
+				return new String[] {"Increases Physical-Attack-Damage by " + ATTRIBUTE_STRENGTH_PER_POINT};
+			case SKILL_POINT_INTELLIGENCE: 
+				return new String[] {"Increases Mental-Attack-Damage by " + ATTRIBUTE_INTELLIGENCE_PER_POINT};
+			case SKILL_POINT_LUCK: 
+				return new String[] {"Increases Luck by " + ATTRIBUTE_LUCK_PER_POINT};
+		}
+		return new String[0];
+	}
+	
+	
+	/*
+	* abstract Getters
+	* */
+	protected abstract double getBaseAttribute(int attribute);
+	
+	public boolean hasUnspentSkillPoints() {
+		return unspentSkillPoints > 0;
+	}
+	
+	public int getSpentSkillPoint(int skillPointCategory) {
+		if (skillPointCategory < 0 || skillPointCategory >= SKILL_POINT_CATEGORY_COUNT) return 0;
+		return skillPoints[skillPointCategory];
+	}
+	
+	public int getUnspentSkillPoints() {
+		return unspentSkillPoints;
 	}
 }

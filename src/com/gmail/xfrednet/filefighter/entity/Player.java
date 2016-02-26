@@ -70,12 +70,8 @@ public class Player extends LivingEntity {
 		}
 	}
 	
-	//render
-	@Override
-	public void render(Screen screen) {
-		super.render(screen);
+	protected boolean autoSpendSkillPoints() {
+		return false;
 	}
-	
-	
 	
 }

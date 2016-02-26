@@ -1,5 +1,9 @@
 package com.gmail.xfrednet.filefighter.graphics;
 
+import com.gmail.xfrednet.filefighter.graphics.gui.components.GUIItemFrame;
+
+import java.awt.image.BufferedImage;
+
 /**
  * Created by xFrednet on 06.02.2016.
  */
@@ -51,13 +55,13 @@ public class Sprite {
 	/*
 	* GUIComponents
 	* */
-	public static Sprite itemFrame = new Sprite(0, 0, SpriteSheet.guiComponents, 18);
+	public static Sprite[] itemFrame = loadItemFrames();
+	
 	
 	/*
 	* Items
 	* */
 	public static class Item {
-		
 		public static Sprite paperGun = new Sprite(0, 0, SpriteSheet.items, ITEM_SPRITE_SIZE);
 		
 	}
@@ -73,6 +77,9 @@ public class Sprite {
 	public final int WIDTH;
 	public final int HEIGHT;
 	public int[] pixels;
+	private SpriteSheet spriteSheet;
+	private int x;
+	private int y;
 	
 	/*
 	* Constructor
@@ -101,6 +108,9 @@ public class Sprite {
 		WIDTH = width;
 		HEIGHT = height;
 		pixels = new int[WIDTH * HEIGHT];
+		this.spriteSheet = spriteSheet;
+		x = xOffset;
+		y = yOffset;
 		
 		load(xOffset, yOffset, spriteSheet);
 	}
@@ -143,6 +153,28 @@ public class Sprite {
 			}
 		}
 	}
+	
+	/*
+	* Util
+	* */
+	
+	public int getImageX() {
+		return x;
+	}
+	public int getImageY() {
+		return y;
+	}
+	public int getImageMaxX() {
+		return x + WIDTH;
+	}
+	public int getImageMaxY() {
+		return y + HEIGHT;
+	}
+	
+	public BufferedImage getImage() {
+		return spriteSheet.getImage();
+	}
+	
 	/*
 	* Static Util
 	* */
@@ -229,12 +261,16 @@ public class Sprite {
 		return particles;
 	}
 	
-	private static Sprite[] loadProjectileSprites(int x, int y, SpriteSheet sheet, int size) {
-		Sprite[] sprites = new Sprite[2];
+	private static Sprite[] loadItemFrames() {
+		Sprite[] itemFrames = new Sprite[GUIItemFrame.TYPE_COUNT];
 		
-		sprites[0] = new Sprite(x, y, sheet, size);
-		sprites[1] = new Sprite(x, size + y, sheet, size);
-	
-		return sprites;
+		int x = 0;
+		int y = 0;
+		for (int i = 0; i < GUIItemFrame.TYPE_COUNT; i++) {
+			itemFrames[i] = new Sprite(x, y, SpriteSheet.guiComponents, GUIItemFrame.SPRITE_SIZE);
+			x += GUIItemFrame.SPRITE_SIZE;
+		}
+		
+		return itemFrames;
 	}
 }
