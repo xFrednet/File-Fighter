@@ -21,20 +21,23 @@ public abstract class LivingEntity extends Entity {
 	/*
 	* attributes
 	* */
-	private static final int ATTRIBUTE_COUNT = 6;
+	private static final int ATTRIBUTE_COUNT = 9;
 	
 	public static final int ATTRIBUTE_MAX_HEALTH = 0;
-	public static final int ATTRIBUTE_PHYSICAL_DEFENCE = 1;
-	public static final int ATTRIBUTE_MENTAL_DEFENCE = 2;
-	public static final int ATTRIBUTE_STRENGTH = 3;
-	public static final int ATTRIBUTE_INTELLIGENCE = 4;
-	public static final int ATTRIBUTE_LUCK = 5;
+	public static final int ATTRIBUTE_MAX_STAMINA = 1;
+	public static final int ATTRIBUTE_PHYSICAL_DEFENCE = 2;
+	public static final int ATTRIBUTE_MENTAL_DEFENCE = 3;
+	public static final int ATTRIBUTE_STRENGTH = 4;
+	public static final int ATTRIBUTE_INTELLIGENCE = 5;
+	public static final int ATTRIBUTE_LUCK = 6;
+	public static final int ATTRIBUTE_HEALTH_REGENERATION = 7;
+	public static final int ATTRIBUTE_STAMINA_REGENERATION = 8;
 	
 	private static final double ATTRIBUTE_HEALTH_PER_POINT = 10;
 	private static final double ATTRIBUTE_PHYSICAL_DEFENCE_PER_POINT = 2;
 	private static final double ATTRIBUTE_MENTAL_DEFENCE_PER_POINT = 2;
-	private static final double ATTRIBUTE_STRENGTH_PER_POINT = 5;
-	private static final double ATTRIBUTE_INTELLIGENCE_PER_POINT = 5;
+	private static final double ATTRIBUTE_STRENGTH_PER_POINT = 3;
+	private static final double ATTRIBUTE_INTELLIGENCE_PER_POINT = 3;
 	private static final double ATTRIBUTE_LUCK_PER_POINT = 1;
 	
 	protected double[] attributes = new double[ATTRIBUTE_COUNT];
@@ -58,6 +61,9 @@ public abstract class LivingEntity extends Entity {
 	
 	//current attributes
 	protected double health;
+	protected double stamina;
+	//the Entity only generates if the hurtTimer is 0
+	protected int hurtTimer = 0;
 	
 	/*
 	* Equipment
@@ -244,8 +250,24 @@ public abstract class LivingEntity extends Entity {
 		if (behavior != null) behavior.update(this, level);
 		if (unspentSkillPoints > 0) autoApplySkillPoints(); 
 		updateAnimation();
+		regenerate();
 	}
-	abstract protected void updateCurrentSprite();
+	
+	private void regenerate() {
+		gainStamina(attributes[ATTRIBUTE_STAMINA_REGENERATION]);
+		
+		if (hurtTimer == 0) {
+			if (health < attributes[ATTRIBUTE_MAX_HEALTH]) {
+				
+				//healing costs 10% of the Stamina regenerated each update
+				if (useStamina(attributes[ATTRIBUTE_STAMINA_REGENERATION] / 10)) {
+					heal(attributes[ATTRIBUTE_HEALTH_REGENERATION]);
+				}
+			}
+		} else {
+			hurtTimer--;
+		}
+	}
 	
 	//damage
 	public void damage(Entity damageSource, Damage damage) {
@@ -253,6 +275,7 @@ public abstract class LivingEntity extends Entity {
 		if (health <= 0) {
 			died(damageSource);
 		}
+		hurtTimer = getHurtTime();
 	}
 	protected void died(Entity damageSource) {
 		removed = true;
@@ -290,6 +313,7 @@ public abstract class LivingEntity extends Entity {
 	public void updateAttributes() {
 		//health
 		attributes[ATTRIBUTE_MAX_HEALTH] = getBaseAttribute(ATTRIBUTE_MAX_HEALTH) + skillPoints[SKILL_POINT_HEALTH] * ATTRIBUTE_HEALTH_PER_POINT;
+		attributes[ATTRIBUTE_MAX_STAMINA] = getBaseAttribute(ATTRIBUTE_MAX_STAMINA);
 		
 		//defence
 		attributes[ATTRIBUTE_PHYSICAL_DEFENCE] = getBaseAttribute(ATTRIBUTE_PHYSICAL_DEFENCE) + skillPoints[SKILL_POINT_DEFENCE] * ATTRIBUTE_PHYSICAL_DEFENCE_PER_POINT;
@@ -301,28 +325,11 @@ public abstract class LivingEntity extends Entity {
 		
 		//luck
 		attributes[ATTRIBUTE_LUCK] = getBaseAttribute(ATTRIBUTE_LUCK) + skillPoints[SKILL_POINT_LUCK] * ATTRIBUTE_LUCK_PER_POINT;
+		
+		//regeneration
+		attributes[ATTRIBUTE_HEALTH_REGENERATION] = getBaseAttribute(ATTRIBUTE_HEALTH_REGENERATION);
+		attributes[ATTRIBUTE_STAMINA_REGENERATION] = getBaseAttribute(ATTRIBUTE_STAMINA_REGENERATION);
 	}
-	
-	/*
-	* getters
-	* */
-	public Weapon getWeapon() {
-		return weapon;
-	}
-	
-	//attributes
-	public double getAttribute(int attribute) {
-		if (attribute < 0 || attribute >= ATTRIBUTE_COUNT) return 0;
-		return attributes[attribute];
-	}
-	
-	public Equipment getEquipment(int equipment) {
-		if (equipment < 0 || equipment >= EQUIPMENT_COUNT) return null;
-		return this.equipment[equipment];
-	}
-	
-	
-	
 	public void showEquipmentGUI(boolean show) {
 		if (equipmentGUI == null) {
 			equipmentGUI = new GUILivingEntityEquipment(Main.hud, this);
@@ -333,6 +340,52 @@ public abstract class LivingEntity extends Entity {
 		
 	}
 	
+	//regeneration 
+	public void heal(double health) {
+		if (this.health == attributes[ATTRIBUTE_MAX_HEALTH]) return;
+		if ((this.health += health) > attributes[ATTRIBUTE_MAX_HEALTH]) {
+			this.health = attributes[ATTRIBUTE_MAX_HEALTH];
+		}
+	}
+	public void gainStamina(double stamina) {
+		if (this.stamina == attributes[ATTRIBUTE_MAX_STAMINA]) return;
+		if ((this.stamina += stamina) > attributes[ATTRIBUTE_MAX_STAMINA]) {
+			this.stamina = attributes[ATTRIBUTE_MAX_STAMINA];
+		}
+	}
+	public boolean useStamina(double stamina) {
+		if (this.stamina - stamina < 0) return false;
+		this.stamina -= stamina;
+		return true;
+	}
+	
+	/*
+	* getters
+	* */
+	public Weapon getWeapon() {
+		return weapon;
+	}
+	protected int getHurtTime() {
+		return Main.UPS;
+	}
+	
+	//attributes
+	public double getAttribute(int attribute) {
+		if (attribute < 0 || attribute >= ATTRIBUTE_COUNT) return 0;
+		return attributes[attribute];
+	}
+	public double getHealth() {
+		return health;
+	}
+	public double getStamina() {
+		return stamina;
+	}
+	
+	public Equipment getEquipment(int equipment) {
+		if (equipment < 0 || equipment >= EQUIPMENT_COUNT) return null;
+		return this.equipment[equipment];
+	}
+	
 	public boolean isEquipmentGUIShown() {
 		if (equipmentGUI == null) {
 			return false;
@@ -341,6 +394,18 @@ public abstract class LivingEntity extends Entity {
 		}
 	}
 	
+	
+	//skill points
+	public boolean hasUnspentSkillPoints() {
+		return unspentSkillPoints > 0;
+	}
+	public int getSpentSkillPoint(int skillPointCategory) {
+		if (skillPointCategory < 0 || skillPointCategory >= SKILL_POINT_CATEGORY_COUNT) return 0;
+		return skillPoints[skillPointCategory];
+	}
+	public int getUnspentSkillPoints() {
+		return unspentSkillPoints;
+	}
 	public String getSkillPointName(int skillPoint) {
 		switch (skillPoint) {
 			case SKILL_POINT_HEALTH: return "Health";
@@ -354,38 +419,26 @@ public abstract class LivingEntity extends Entity {
 	
 	public String[] getSkillPointInfo(int skillPoint) {
 		switch (skillPoint) {
-			case SKILL_POINT_HEALTH: 
+			case SKILL_POINT_HEALTH:
 				return new String[] {"Increases Health by " + ATTRIBUTE_HEALTH_PER_POINT};
-			case SKILL_POINT_DEFENCE: 
+			case SKILL_POINT_DEFENCE:
 				return new String[] {
-						"Increases Physical-Defence by " + ATTRIBUTE_PHYSICAL_DEFENCE_PER_POINT, 
+						"Increases Physical-Defence by " + ATTRIBUTE_PHYSICAL_DEFENCE_PER_POINT,
 						"Increases Mental-Defence by " + ATTRIBUTE_MENTAL_DEFENCE_PER_POINT};
-			case SKILL_POINT_STRENGTH: 
+			case SKILL_POINT_STRENGTH:
 				return new String[] {"Increases Physical-Attack-Damage by " + ATTRIBUTE_STRENGTH_PER_POINT};
-			case SKILL_POINT_INTELLIGENCE: 
+			case SKILL_POINT_INTELLIGENCE:
 				return new String[] {"Increases Mental-Attack-Damage by " + ATTRIBUTE_INTELLIGENCE_PER_POINT};
-			case SKILL_POINT_LUCK: 
+			case SKILL_POINT_LUCK:
 				return new String[] {"Increases Luck by " + ATTRIBUTE_LUCK_PER_POINT};
 		}
 		return new String[0];
 	}
 	
-	
 	/*
 	* abstract Getters
 	* */
-	protected abstract double getBaseAttribute(int attribute);
+	abstract protected double getBaseAttribute(int attribute);
+	abstract protected void updateCurrentSprite();
 	
-	public boolean hasUnspentSkillPoints() {
-		return unspentSkillPoints > 0;
-	}
-	
-	public int getSpentSkillPoint(int skillPointCategory) {
-		if (skillPointCategory < 0 || skillPointCategory >= SKILL_POINT_CATEGORY_COUNT) return 0;
-		return skillPoints[skillPointCategory];
-	}
-	
-	public int getUnspentSkillPoints() {
-		return unspentSkillPoints;
-	}
 }

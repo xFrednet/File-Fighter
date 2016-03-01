@@ -22,8 +22,8 @@ public class PaperProjectile extends Projectile {
 	/*
 	* Constructor
 	* */
-	public PaperProjectile(Level level, double direction, Entity shootingEntity, double speed, double damage) {
-		super(level, NAME, direction, speed, new Damage(DAMAGE_TYPE, damage, shootingEntity), shootingEntity, Sprite.paper_projectile_sprite);
+	public PaperProjectile(Level level, double direction, double speed, double range, double damage, Entity shootingEntity) {
+		super(level, NAME, direction, speed, range, new Damage(DAMAGE_TYPE, damage, shootingEntity), shootingEntity, Sprite.paper_projectile_sprite);
 		super.setInfo(shootingEntity.getInfo().getCenterX(), shootingEntity.getInfo().getCenterY(), 6, 6, 5, 5);
 	}
 	
@@ -47,5 +47,10 @@ public class PaperProjectile extends Projectile {
 	@Override
 	protected Sprite getSprite() {
 		return Sprite.paper_projectile_sprite;
+	}
+	
+	@Override
+	protected int getDamageType() {
+		return DAMAGE_TYPE;
 	}
 }

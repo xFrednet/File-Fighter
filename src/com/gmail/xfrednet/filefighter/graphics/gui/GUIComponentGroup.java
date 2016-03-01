@@ -1,8 +1,9 @@
 package com.gmail.xfrednet.filefighter.graphics.gui;
 
+import com.gmail.xfrednet.filefighter.Main;
 import com.gmail.xfrednet.filefighter.graphics.Screen;
 
-import java.awt.Graphics;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,11 @@ import java.util.List;
  * Created by xFrednet on 09.02.2016.
  */
 public class GUIComponentGroup extends GUIComponent {
+	
+	//font
+	public static final Font HEADLINE_FONT = new Font(Main.gameFont.getName(), Font.BOLD, 32);
+	public static final Font FONT = new Font(Main.gameFont.getName(), Font.BOLD, Main.gameFont.getSize());
+	public static final Font INFO_FONT = new Font(Main.gameFont.getName(), Font.PLAIN, (int) (Main.gameFont.getSize() * 0.9));
 	
 	protected List<GUIComponent> components = new ArrayList<GUIComponent>();
 	

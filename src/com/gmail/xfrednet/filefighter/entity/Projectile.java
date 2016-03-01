@@ -12,10 +12,12 @@ import java.util.List;
  */
 public abstract class Projectile extends Entity {
 	
-	public static final int PARTICLES_ON_DESTROY = 10;
+	public static final int PARTICLES_ON_DESTROY = 20;
  	
 	protected double direction;
 	protected double speed;
+	protected double range = 0;
+	protected double maxRange;
 	protected Damage damage;
 	protected int shootingEntityID;
 	protected int team;
@@ -23,11 +25,12 @@ public abstract class Projectile extends Entity {
 	/*
 	* Constructor
 	* */
-	protected Projectile(Level level, String name, double direction, double speed, Damage damage, Entity shootingEntity, Sprite sprite) {
+	protected Projectile(Level level, String name, double direction, double speed, double maxRange, Damage damage, Entity shootingEntity, Sprite sprite) {
 		super(level, name, false);
 		this.direction = direction;
 		this.speed = speed;
 		this.damage = damage;
+		this.maxRange = (maxRange * 3/4) + (random.nextDouble() * (maxRange / 1/4));
 		this.shootingEntityID = shootingEntity.getID();
 		team = shootingEntity.getTeam();
 		
@@ -54,20 +57,21 @@ public abstract class Projectile extends Entity {
 			while (speed > 1) {
 				if (!move(xm1, ym1, level)) return;
 				projectileMoved(level);
+				range++;
 				speed--;
 			}
 			
 		}
 		
 		move(speed * Math.sin(angle), speed * Math.cos(angle), level);
-		
+		range += speed;
 	}
 	
 	protected void projectileMoved(Level level) {}
 	
 	private boolean move(double xm, double ym, Level level) {
 		LivingEntity collidingEntities = null;
-		if (!levelCollision(xm, ym, level) && (collidingEntities = entityCollision(xm, ym, level)) == null) {
+		if (!levelCollision(xm, ym, level) && (collidingEntities = entityCollision(xm, ym, level)) == null && range < maxRange) {
 			info.x += xm;
 			info.y += ym;
 			return true;
@@ -104,4 +108,5 @@ public abstract class Projectile extends Entity {
 	* */
 	abstract protected Sprite[] getParticleSprites();
 	abstract protected Sprite getSprite();
+	abstract protected int getDamageType();
 }

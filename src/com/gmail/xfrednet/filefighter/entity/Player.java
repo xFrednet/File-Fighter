@@ -3,9 +3,8 @@ package com.gmail.xfrednet.filefighter.entity;
 import com.gmail.xfrednet.filefighter.Main;
 import com.gmail.xfrednet.filefighter.entity.entitytask.behavior.UserInputBehavior;
 import com.gmail.xfrednet.filefighter.graphics.Camera;
-import com.gmail.xfrednet.filefighter.graphics.Screen;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
-import com.gmail.xfrednet.filefighter.item.item.weapon.PaperGun;
+import com.gmail.xfrednet.filefighter.item.item.weapon.gun.PaperGun;
 import com.gmail.xfrednet.filefighter.level.Level;
 import com.gmail.xfrednet.filefighter.util.Input;
 
@@ -43,11 +42,14 @@ public class Player extends LivingEntity {
 	protected double getBaseAttribute(int attribute) {
 		switch (attribute) {
 			case ATTRIBUTE_MAX_HEALTH: return 100;
+			case ATTRIBUTE_MAX_STAMINA: return 100;
 			case ATTRIBUTE_PHYSICAL_DEFENCE: return 1;
 			case ATTRIBUTE_MENTAL_DEFENCE: return 1;
 			case ATTRIBUTE_STRENGTH: return 1;
 			case ATTRIBUTE_INTELLIGENCE: return 1;
 			case ATTRIBUTE_LUCK: return 1;
+			case ATTRIBUTE_HEALTH_REGENERATION: return 0.01;
+			case ATTRIBUTE_STAMINA_REGENERATION: return 0.2;
 			default: return 0;
 		}
 	}

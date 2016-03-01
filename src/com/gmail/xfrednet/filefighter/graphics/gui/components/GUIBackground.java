@@ -35,6 +35,7 @@ public class GUIBackground extends GUIComponent {
 	@Override
 	public void render(Graphics g) {
 		if (type == GRAPHICS_BACKGROUND) {
+			g.setColor(graphicsColor);
 			g.fillRect(screenX, screenY, width, height);
 		}	
 	}

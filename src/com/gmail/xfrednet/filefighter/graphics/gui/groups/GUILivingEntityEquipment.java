@@ -6,10 +6,7 @@ import com.gmail.xfrednet.filefighter.entity.LivingEntity;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponent;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponentGroup;
-import com.gmail.xfrednet.filefighter.graphics.gui.components.GUIBackground;
-import com.gmail.xfrednet.filefighter.graphics.gui.components.GUIEntitySprite;
-import com.gmail.xfrednet.filefighter.graphics.gui.components.GUIItemFrame;
-import com.gmail.xfrednet.filefighter.graphics.gui.components.GUIText;
+import com.gmail.xfrednet.filefighter.graphics.gui.components.*;
 import com.gmail.xfrednet.filefighter.util.MouseInteraction;
 
 import javax.imageio.ImageIO;
@@ -33,10 +30,6 @@ public class GUILivingEntityEquipment extends GUIComponentGroup {
 	public static final int ENTITY_SCALE = 2;
 	public static final int GUI_WIDTH = 336;
 	public static final int GUI_HEIGHT = 470;
-	//font
-	public static final Font HEADLINE_FONT = new Font(Main.gameFont.getName(), Font.BOLD, 32);
-	public static final Font FONT = new Font(Main.gameFont.getName(), Font.BOLD, Main.gameFont.getSize());
-	public static final Font INFO_FONT = new Font(Main.gameFont.getName(), Font.PLAIN, (int) (Main.gameFont.getSize() * 0.9));
 	//string
 	public static final String FRAME_NAME = "EQUIPMENT";
 	
@@ -79,7 +72,6 @@ public class GUILivingEntityEquipment extends GUIComponentGroup {
 		
 		SkillPointBanner skills = new SkillPointBanner(this, 0, contentY, PADDING);
 		addComponent(skills);
-		
 	}
 	
 	private void addHeadline() {
@@ -87,7 +79,6 @@ public class GUILivingEntityEquipment extends GUIComponentGroup {
 		headline.setColor(TEXT_COLOR, Color.BLACK);
 		addComponent(headline);
 	}
-	
 	
 	//gui components
 	private class ArmorBanner extends GUIComponentGroup {

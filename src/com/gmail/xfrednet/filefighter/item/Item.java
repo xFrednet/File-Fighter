@@ -2,13 +2,18 @@ package com.gmail.xfrednet.filefighter.item;
 
 import com.gmail.xfrednet.filefighter.entity.Entity;
 import com.gmail.xfrednet.filefighter.entity.ItemEntity;
+import com.gmail.xfrednet.filefighter.entity.LivingEntity;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
 import com.gmail.xfrednet.filefighter.level.Level;
+
+import java.util.Random;
 
 /**
  * Created by xFrednet on 14.02.2016.
  */
 public abstract class Item {
+	
+	protected static final Random random = new Random();
 	
 	protected String name;
 	protected int count;
@@ -33,10 +38,10 @@ public abstract class Item {
 	/*
 	* Use methods
 	* */
-	public boolean usePrimaryAction(Level level, Entity executingEntity, double angle) {
+	public boolean usePrimaryAction(Level level, LivingEntity executingEntity, double angle) {
 		return true;
 	}
-	public boolean useSecondaryAction(Level level, Entity executingEntity, double angle) {
+	public boolean useSecondaryAction(Level level, LivingEntity executingEntity, double angle) {
 		return true;
 	}
 	
