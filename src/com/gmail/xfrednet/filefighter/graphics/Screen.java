@@ -114,6 +114,50 @@ public class Screen {
 			}
 		}
 	}
+	public void drawSprite(int x, int y, Sprite sprite, boolean fixed, int scale) {
+		if (scale == 1) drawSprite(x, y, sprite, fixed);
+		if (!fixed) {
+			x -= xOffset;
+			y -= yOffset;
+		}
+		
+		int ya;
+		int xa;
+		int xaa;
+		int yaa;
+		int yap;
+		int xap;
+		int color;
+		for (int yp = 0; yp < sprite.HEIGHT; yp++) {
+			ya = y + yp * scale;
+			if (ya < -scale || ya >= HEIGHT) continue;
+			
+			for (int xp = 0; xp < sprite.WIDTH; xp++) {
+				xa = x + xp * scale;
+				if (xa < -scale || xa >= WIDTH) continue;
+				
+				color = sprite.pixels[xp + yp * sprite.WIDTH];
+				
+				if (color != INVISIBLE_COLOR){
+					pixels[xa + ya * WIDTH] = color;
+					for (yap = 0; yap < scale; yap++) {
+						yaa = ya + yap;
+						if (yaa < 0 || yaa >= HEIGHT) continue;
+						
+						for (xap = 0; xap < scale; xap++) {
+							xaa = xa + xap;
+							if (xaa < 0 || xaa >= WIDTH) continue;
+							
+							pixels[xaa + yaa * WIDTH] = color;
+							
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	//shapes
 	public void drawRectangle(int x, int y, int width, int height, int color, boolean fixed) {
 		if (!fixed) {
 			x -= xOffset;
@@ -124,7 +168,7 @@ public class Screen {
 		int xa;
 		for (int yp = 0; yp < height; yp++) {
 			ya = yp + y;
-			if (ya < 0 || ya >= HEIGHT) continue; 
+			if (ya < 0 || ya >= HEIGHT) continue;
 			
 			xa = x;
 			if (!(xa < 0 || xa >= WIDTH)) {
@@ -150,6 +194,28 @@ public class Screen {
 				pixels[xa + ya * WIDTH] = color;
 			}
 			
+		}
+	}
+	public void drawFilledRectangle(int x, int y, int width, int height, int color, boolean fixed) {
+		if (!fixed) {
+			x -= xOffset;
+			y -= yOffset;
+		}
+		
+		int ya;
+		int xa;
+		int xp;
+		for (int yp = 0; yp < height; yp++) {
+			ya = y + yp;
+			if (ya < 0 || ya >= HEIGHT) continue;
+			
+			for (xp = 0; xp < width; xp++) {
+				xa = x + xp;
+				if (xa < 0 || xa >= WIDTH) continue;
+				
+				pixels[xa + ya * WIDTH] = color;
+				
+			}
 		}
 	}
 	public void drawPixel(int x, int y, int color, boolean fixed) {
@@ -204,5 +270,6 @@ public class Screen {
 			}
 		}
 	}
+	
 	
 }

@@ -2,6 +2,7 @@ package com.gmail.xfrednet.filefighter.entity;
 
 import com.gmail.xfrednet.filefighter.graphics.Screen;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
+import com.gmail.xfrednet.filefighter.item.item.Damage;
 import com.gmail.xfrednet.filefighter.level.Level;
 
 import java.util.List;
@@ -11,23 +12,25 @@ import java.util.List;
  */
 public abstract class Projectile extends Entity {
 	
-	public static final int PARTICLES_ON_DESTROY = 10;
+	public static final int PARTICLES_ON_DESTROY = 20;
  	
 	protected double direction;
-	protected int spriteDirection = 0;
 	protected double speed;
-	protected double damage;
+	protected double range = 0;
+	protected double maxRange;
+	protected Damage damage;
 	protected int shootingEntityID;
 	protected int team;
 	
 	/*
 	* Constructor
 	* */
-	protected Projectile(Level level, String name, double direction, double speed, double damage, Entity shootingEntity, Sprite sprite) {
+	protected Projectile(Level level, String name, double direction, double speed, double maxRange, Damage damage, Entity shootingEntity, Sprite sprite) {
 		super(level, name, false);
 		this.direction = direction;
 		this.speed = speed;
 		this.damage = damage;
+		this.maxRange = (maxRange * 3/4) + (random.nextDouble() * (maxRange / 1/4));
 		this.shootingEntityID = shootingEntity.getID();
 		team = shootingEntity.getTeam();
 		
@@ -52,40 +55,46 @@ public abstract class Projectile extends Entity {
 			double ym1 = 1 * Math.cos(angle);
 			
 			while (speed > 1) {
-				move(xm1, ym1, level);
+				if (!move(xm1, ym1, level)) return;
 				projectileMoved(level);
+				range++;
 				speed--;
 			}
 			
 		}
 		
 		move(speed * Math.sin(angle), speed * Math.cos(angle), level);
-		
+		range += speed;
 	}
 	
 	protected void projectileMoved(Level level) {}
 	
-	private void move(double xm, double ym, Level level) {
-		
-		if (!levelCollision(xm, ym, level) && !entityCollision(xm, ym, level)) {
+	private boolean move(double xm, double ym, Level level) {
+		LivingEntity collidingEntities = null;
+		if (!levelCollision(xm, ym, level) && (collidingEntities = entityCollision(xm, ym, level)) == null && range < maxRange) {
 			info.x += xm;
 			info.y += ym;
+			return true;
 		} else {
 			destroy(level);
+			
+			if (collidingEntities != null) 
+				collidingEntities.damage(this, damage);
+			
+			return false;
 		}
 	}
 	
-	public boolean entityCollision(double xm, double ym, Level level) {
+	public LivingEntity  entityCollision(double xm, double ym, Level level) {
 		List<LivingEntity> entities = level.livingEntityMotionCollision(xm ,ym, this);
 		
-		if (entities.size() == 0) return false;
+		if (entities.size() == 0) return null;
 		
 		for (int i = 0; i < entities.size(); i++) {
-			if (entities.get(i).getTeam() != team) return true;
+			if (entities.get(i).getTeam() != team) return entities.get(i);
 		}
 		
-		
-		return false;
+		return null;
 	}
 	
 	//destroy
@@ -99,4 +108,5 @@ public abstract class Projectile extends Entity {
 	* */
 	abstract protected Sprite[] getParticleSprites();
 	abstract protected Sprite getSprite();
+	abstract protected int getDamageType();
 }

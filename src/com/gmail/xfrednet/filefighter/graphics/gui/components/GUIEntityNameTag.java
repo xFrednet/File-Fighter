@@ -1,6 +1,7 @@
 package com.gmail.xfrednet.filefighter.graphics.gui.components;
 
 import com.gmail.xfrednet.filefighter.Main;
+import com.gmail.xfrednet.filefighter.graphics.Screen;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponent;
 
 import java.awt.*;
@@ -44,5 +45,9 @@ public class GUIEntityNameTag extends GUIComponent {
 		g.setColor(NAME_TAG_TEXT_COLOR);
 		g.drawString(name, (int)(screenX - (bounds.getWidth() / 2)) + PADDING, screenY + PADDING +  fm.getAscent());
 		
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 }

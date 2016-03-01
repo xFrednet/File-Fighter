@@ -1,5 +1,9 @@
 package com.gmail.xfrednet.filefighter.graphics;
 
+import com.gmail.xfrednet.filefighter.graphics.gui.components.GUIItemFrame;
+
+import java.awt.image.BufferedImage;
+
 /**
  * Created by xFrednet on 06.02.2016.
  */
@@ -12,27 +16,26 @@ public class Sprite {
 	
 	public static final int SPRITE_INVISIBLE_COLOR_1 = 0xffffbb0f;
 	public static final int SPRITE_INVISIBLE_COLOR_2 = 0xffff0000;
+	public static final int ITEM_SPRITE_SIZE = 16;
 	
 	/*
 	* Test Code
 	* */
-	public final static int TEST_ENTITY_ANIMATED_SPRITE_COUNT = 16;
-	public final static int TEST_ENTITY_ANIMATION_SPEED = 16;
-	public static Sprite[] testEntity_entity_sprite = loadEntityAnimation(0/*xPixel*/, 0/*yPixel*/, SpriteSheet.entities, ENTITY_SPRITE_SIZE, TEST_ENTITY_ANIMATED_SPRITE_COUNT);
-	
 	public static Sprite null_sprite = new Sprite(16, 16, 0xffff01ff);
+	public static Sprite dummy_entity_sprite = new Sprite(ENTITY_SPRITE_SIZE * 8, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE);
+	
 	/*
-	* Static Sprites
+	* Tile Sprites
 	* */
 	public static Sprite null_tile_sprite = new Sprite(0, 0, SpriteSheet.tiles, TILE_SPRITE_SIZE);
 	public static Sprite space_tile_sprite = new Sprite(TILE_SPRITE_SIZE, 0, SpriteSheet.tiles, TILE_SPRITE_SIZE);
-	
 	public static Sprite[] wall_tile_sprite = loadConnectedTileSprites(0, TILE_SPRITE_SIZE * 4, SpriteSheet.tiles, TILE_SPRITE_SIZE);
+	
 	/*
 	* Entity Sprites
 	* */
 	public static Sprite[] slime_entity_sprites = loadEntityAnimation(0, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 16);
-	public static Sprite[] player_entity_sprites = loadEntityAnimation(ENTITY_SPRITE_SIZE * 2, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 16);
+	public static Sprite[] player_entity_sprites = loadEntityAnimation(0, 0, SpriteSheet.player, ENTITY_SPRITE_SIZE, 8);
 	
 	//File Sprites
 	public static Sprite[] textFile_entity_sprites = loadEntityAnimation(ENTITY_SPRITE_SIZE * 4, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 6);
@@ -47,9 +50,21 @@ public class Sprite {
 	/*
 	* Particles
 	* */
-	public static Sprite[] smoke_particles = loadSplitSprite(new Sprite(0,0, SpriteSheet.particles, 16), 3);
+	public static Sprite[] smoke_particles = loadSplitSprite(new Sprite(0, 0, SpriteSheet.particles, 16), 3);
+	
+	/*
+	* GUIComponents
+	* */
+	public static Sprite[] itemFrame = loadItemFrames();
 	
 	
+	/*
+	* Items
+	* */
+	public static class Item {
+		public static Sprite paperGun = new Sprite(0, 0, SpriteSheet.items, ITEM_SPRITE_SIZE);
+		
+	}
 	
 	/*
 	* Class
@@ -62,6 +77,9 @@ public class Sprite {
 	public final int WIDTH;
 	public final int HEIGHT;
 	public int[] pixels;
+	private SpriteSheet spriteSheet;
+	private int x;
+	private int y;
 	
 	/*
 	* Constructor
@@ -90,6 +108,9 @@ public class Sprite {
 		WIDTH = width;
 		HEIGHT = height;
 		pixels = new int[WIDTH * HEIGHT];
+		this.spriteSheet = spriteSheet;
+		x = xOffset;
+		y = yOffset;
 		
 		load(xOffset, yOffset, spriteSheet);
 	}
@@ -132,6 +153,28 @@ public class Sprite {
 			}
 		}
 	}
+	
+	/*
+	* Util
+	* */
+	
+	public int getImageX() {
+		return x;
+	}
+	public int getImageY() {
+		return y;
+	}
+	public int getImageMaxX() {
+		return x + WIDTH;
+	}
+	public int getImageMaxY() {
+		return y + HEIGHT;
+	}
+	
+	public BufferedImage getImage() {
+		return spriteSheet.getImage();
+	}
+	
 	/*
 	* Static Util
 	* */
@@ -157,7 +200,7 @@ public class Sprite {
 		return sprites;
 	}
 	
-	private static Sprite[] loadEntityAnimation(int x, int y, SpriteSheet sheet, int size, int animationSprites) {
+	public static Sprite[] loadEntityAnimation(int x, int y, SpriteSheet sheet, int size, int animationSprites) {
 		Sprite[] sprites = new Sprite[4 * animationSprites];
 		
 		/*
@@ -218,12 +261,16 @@ public class Sprite {
 		return particles;
 	}
 	
-	private static Sprite[] loadProjectileSprites(int x, int y, SpriteSheet sheet, int size) {
-		Sprite[] sprites = new Sprite[2];
+	private static Sprite[] loadItemFrames() {
+		Sprite[] itemFrames = new Sprite[GUIItemFrame.TYPE_COUNT];
 		
-		sprites[0] = new Sprite(x, y, sheet, size);
-		sprites[1] = new Sprite(x, size + y, sheet, size);
-	
-		return sprites;
+		int x = 0;
+		int y = 0;
+		for (int i = 0; i < GUIItemFrame.TYPE_COUNT; i++) {
+			itemFrames[i] = new Sprite(x, y, SpriteSheet.guiComponents, GUIItemFrame.SPRITE_SIZE);
+			x += GUIItemFrame.SPRITE_SIZE;
+		}
+		
+		return itemFrames;
 	}
 }

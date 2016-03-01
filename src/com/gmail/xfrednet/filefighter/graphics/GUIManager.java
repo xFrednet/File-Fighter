@@ -80,6 +80,16 @@ public class GUIManager extends GUIComponent {
 		}
 	}
 	
+	@Override
+	public void render(Screen screen) {
+		for (int i = 0; i < components.size(); i++) {
+			if (!components.get(i).isShown()) continue;
+			
+			components.get(i).render(screen);
+			
+		}
+	}
+	
 	public void update() {
 		for (int i = 0; i < components.size(); i++) {
 			if (!components.get(i).isShown()) continue;

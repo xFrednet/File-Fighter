@@ -14,9 +14,14 @@ public class SpriteSheet {
 	public static SpriteSheet projectiles = new SpriteSheet("/textures/projectiles.png");
 	public static SpriteSheet particles = new SpriteSheet("/textures/particles.png");
 	
+	public static SpriteSheet player = new SpriteSheet("/textures/player/bluze.png");
+	public static SpriteSheet guiComponents = new SpriteSheet("/textures/guiComponents.png");
+	public static SpriteSheet items = new SpriteSheet("/textures/items.png");
+	
 	public int WIDTH;
 	public int HEIGHT;
 	public int[] pixels;
+	private BufferedImage image;
 	
 	public SpriteSheet(String path) {
 		load(path);
@@ -24,7 +29,7 @@ public class SpriteSheet {
 	
 	private void load(String path) {
 		try {
-			BufferedImage image = ImageIO.read(SpriteSheet.class.getResource(path));
+			image = ImageIO.read(SpriteSheet.class.getResource(path));
 			WIDTH = image.getWidth();
 			HEIGHT = image.getHeight();
 			
@@ -36,4 +41,7 @@ public class SpriteSheet {
 		}
 	}
 	
+	public BufferedImage getImage() {
+		return image;
+	}
 }
