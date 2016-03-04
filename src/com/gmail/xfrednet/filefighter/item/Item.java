@@ -15,7 +15,6 @@ public abstract class Item {
 	
 	protected static final Random random = new Random();
 	
-	protected String name;
 	protected int count;
 	protected int useTimer = 0;
 	protected int maxStackSize = 1;
@@ -23,17 +22,22 @@ public abstract class Item {
 	/*
 	* Constructor
 	* */
-	protected Item(String name) {
-		this(name, 1);
+	protected Item() {
+		this(1);
 	}
-	protected Item(String name, int count) {
-		this.name = name;
+	protected Item(int count) {
 		this.count = count;
+		maxStackSize = getMaxStackSize();
 	}
+	
+	
+	
 	/*
 	* abstract
 	* */
-	abstract public Sprite getItemSprite();
+	public Sprite getItemSprite() {
+		return Sprite.null_sprite;
+	}
 	
 	/*
 	* Use methods
@@ -63,12 +67,13 @@ public abstract class Item {
 	* getters
 	* */
 	public ItemEntity getItemEntity(Level level) {
-		return new ItemEntity(0, 0,level, this);
+		return new ItemEntity(0, 0, level, this);
 	}
 	
-	public String getName() {
-		return name;
-	}
-	
+	/*
+	* abstract
+	* */
+	abstract public String getName();
+	abstract protected int getMaxStackSize();
 	
 }

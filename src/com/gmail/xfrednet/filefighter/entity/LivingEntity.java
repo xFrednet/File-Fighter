@@ -2,6 +2,7 @@ package com.gmail.xfrednet.filefighter.entity;
 
 import com.gmail.xfrednet.filefighter.Main;
 import com.gmail.xfrednet.filefighter.entity.entitytask.Behavior;
+import com.gmail.xfrednet.filefighter.graphics.Screen;
 import com.gmail.xfrednet.filefighter.graphics.gui.groups.GUILivingEntityEquipment;
 import com.gmail.xfrednet.filefighter.item.item.Equipment;
 import com.gmail.xfrednet.filefighter.item.item.Weapon;
@@ -205,6 +206,18 @@ public abstract class LivingEntity extends Entity {
 	}
 	
 	/*
+	* Game loop Util
+	* */
+	@Override
+	public void update(Level level) {
+		if (weapon != null) weapon.update(level);
+		if (behavior != null) behavior.update(this, level);
+		if (unspentSkillPoints > 0) autoApplySkillPoints();
+		updateAnimation();
+		regenerate();
+	}
+	
+	/*
 	* Util
 	* */
 	public void move(double angle, Level level, double speed) {
@@ -244,14 +257,7 @@ public abstract class LivingEntity extends Entity {
 		updateCurrentSprite();
 	}
 	
-	@Override
-	public void update(Level level) {
-		if (weapon != null) weapon.update(level);
-		if (behavior != null) behavior.update(this, level);
-		if (unspentSkillPoints > 0) autoApplySkillPoints(); 
-		updateAnimation();
-		regenerate();
-	}
+	
 	
 	private void regenerate() {
 		gainStamina(attributes[ATTRIBUTE_STAMINA_REGENERATION]);

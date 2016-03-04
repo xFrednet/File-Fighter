@@ -1,5 +1,6 @@
 package com.gmail.xfrednet.filefighter.item.item.equipment;
 
+import com.gmail.xfrednet.filefighter.graphics.Sprite;
 import com.gmail.xfrednet.filefighter.item.Item;
 import com.gmail.xfrednet.filefighter.item.item.Equipment;
 
@@ -8,11 +9,10 @@ import com.gmail.xfrednet.filefighter.item.item.Equipment;
  */
 public abstract class Armor extends Equipment {
 	
-	protected Armor(String name) {
-		this(name, 1);
+	protected Armor() {
+		super();
 	}
-	protected Armor(String name, int count) {
-		super(name, count);
-	}
+	
+	abstract public Sprite getAnimatedSprite(int animation);
 	
 }

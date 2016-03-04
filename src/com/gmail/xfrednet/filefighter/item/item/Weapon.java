@@ -12,16 +12,20 @@ public abstract class Weapon extends Item {
 	
 	private boolean damageType;
 	
-	protected Weapon(String name) {
-		super(name);
-		maxStackSize = 1;
+	protected Weapon() {
+		super();
 	}
 	
 	public boolean usePrimaryAction(Level level, LivingEntity executingEntity, double angle) {
 		return attack(level, executingEntity, angle);
 	}
 	
+	public int getMaxStackSize() {
+		return 1;
+	}
+	/*
+	* abstract
+	* */
 	abstract public boolean attack(Level level, LivingEntity executingEntity, double angle);
-	
 	abstract public int getDamageType();
 }

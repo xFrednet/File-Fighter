@@ -24,12 +24,9 @@ public class GUIItemFrame extends GUIComponent {
 	public static final int TYPE_SHOES = 4;
 	
 	Item item;
+	Sprite itemSprite;
 	Sprite s;
 	int type;
-	
-	//hover text
-	boolean hasHoverText = false;
-	boolean showHoverText = false;
 	
 	/*
 	* Constructor
@@ -42,6 +39,11 @@ public class GUIItemFrame extends GUIComponent {
 		this.item = item;
 		this.type = type;
 		s = Sprite.itemFrame[type];
+		
+		if (item != null) {
+			itemSprite = item.getItemSprite();
+		}
+		
 	}
 	
 	/*
@@ -50,7 +52,14 @@ public class GUIItemFrame extends GUIComponent {
 	@Override
 	public void render(Graphics g) {
 		super.render(g);
-		g.drawImage(s.getImage(), screenX, screenY, screenX + width, screenY + height, s.getImageX(), s.getImageY(), s.getImageMaxX(), s.getImageMaxY(), null);
+		
+		if (itemSprite != null) {
+			g.drawImage(Sprite.itemFrame[TYPE_ITEM].getImage(), screenX, screenY, screenX + width, screenY + height, Sprite.itemFrame[TYPE_ITEM].getImageX(), Sprite.itemFrame[TYPE_ITEM].getImageY(), Sprite.itemFrame[TYPE_ITEM].getImageMaxX(), Sprite.itemFrame[TYPE_ITEM].getImageMaxY(), null);
+			g.drawImage(itemSprite.getImage(), screenX, screenY, screenX + width, screenY + height, itemSprite.getImageX(), itemSprite.getImageY(), itemSprite.getImageMaxX(), itemSprite.getImageMaxY(), null);
+		} else {
+			g.drawImage(Sprite.itemFrame[type].getImage(), screenX, screenY, screenX + width, screenY + height, Sprite.itemFrame[type].getImageX(), Sprite.itemFrame[type].getImageY(), Sprite.itemFrame[type].getImageMaxX(), Sprite.itemFrame[type].getImageMaxY(), null);
+		}
+		
 	}
 	
 }

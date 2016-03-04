@@ -78,8 +78,14 @@ public abstract class Projectile extends Entity {
 		} else {
 			destroy(level);
 			
-			if (collidingEntities != null) 
-				collidingEntities.damage(this, damage);
+			if (collidingEntities != null) {
+				Entity damageSource;
+				
+				if ((damageSource = level.getEntity(shootingEntityID)) == null) 
+					damageSource = this;
+				
+				collidingEntities.damage(damageSource, damage);
+			}
 			
 			return false;
 		}
@@ -108,5 +114,4 @@ public abstract class Projectile extends Entity {
 	* */
 	abstract protected Sprite[] getParticleSprites();
 	abstract protected Sprite getSprite();
-	abstract protected int getDamageType();
 }

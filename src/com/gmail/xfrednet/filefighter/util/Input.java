@@ -5,6 +5,7 @@ import com.gmail.xfrednet.filefighter.level.Level;
 
 
 import javax.imageio.stream.MemoryCacheImageOutputStream;
+import java.awt.*;
 import java.awt.event.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -16,7 +17,11 @@ import java.util.List;
  */
 public class Input implements KeyListener, MouseMotionListener, MouseListener {
 	
-	public static int LEFT_MOUSE_BUTTON = 0;
+	public static final int LEFT_MOUSE_BUTTON = 0;
+	
+	public static final int DEFAULT_CURSOR = 0;
+	public static final int CURSOR_2 = 1;
+	public static final int CURSOR_3 = 2;
 	
 	private boolean[] keyDown = new boolean[256];
 	private boolean[] mouseButtonsDown = new boolean[5];
@@ -55,6 +60,42 @@ public class Input implements KeyListener, MouseMotionListener, MouseListener {
 		
 	}
 	
+	public void setDefaultCursor() {
+		setCursor(DEFAULT_CURSOR);
+	}
+	public void setCursor(int cursor) {
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+		Dimension s = toolkit.getBestCursorSize(32, 32);
+		
+		Image image = null;
+		Point point = null;
+		
+		switch (cursor) {
+			case DEFAULT_CURSOR: 
+				image = toolkit.getImage("res/cursors/scope3.png");
+				point = new Point(Main.jframe.getX() + 15, Main.jframe.getY() + 15);
+				break;
+			case CURSOR_2:
+				image = toolkit.getImage("res/cursors/scope2.png");
+				point = new Point(Main.jframe.getX() + 15, Main.jframe.getY() + 15);
+				break;
+			case CURSOR_3:
+				image = toolkit.getImage("res/cursors/scope1.png");
+				point = new Point(Main.jframe.getX() + 15, Main.jframe.getY() + 15);
+				break;
+			default:
+				image = toolkit.getImage("res/cursors/scope1.png");
+				point = new Point(Main.jframe.getX() + 15, Main.jframe.getY() + 15);
+				break;
+		}
+		
+		
+		
+		Cursor c = toolkit.createCustomCursor(image, point, "img");
+		Main.jframe.setCursor(c);
+		
+	}
+	
 	/*
 	* Util Class
 	* */
@@ -86,7 +127,7 @@ public class Input implements KeyListener, MouseMotionListener, MouseListener {
 		}
 		
 		public void mouseWaits(int time) {
-			if (containsMouse) interaction.mouseWaits(getActionX(), getMouseY(), time);
+			if (containsMouse) interaction.mouseWaits(getActionX(), getActionY(), time);
 		}
 		
 		public void mouseMoved() {

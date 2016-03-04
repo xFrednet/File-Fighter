@@ -37,7 +37,7 @@ public class Main extends Canvas implements Runnable {
 	public static final Font gameFont = new Font("Lucida Console", Font.PLAIN, 16);
     
     Thread thread;
-    JFrame jframe;
+    public static JFrame jframe;
     public static Input input;
     
     //Graphics
@@ -71,8 +71,7 @@ public class Main extends Canvas implements Runnable {
         addKeyListener(input);
         addMouseListener(input);
         addMouseMotionListener(input);
-    
-
+        
         player = new Player(60, 60, input, PLAYER_NAME, null);
         
     }
@@ -82,22 +81,24 @@ public class Main extends Canvas implements Runnable {
 	* */
     public static void main(String[] args) {
         Main main = new Main();
-        
-        main.jframe = new JFrame(NAME);
-        main.jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        main.jframe.setResizable(false);
-        main.jframe.setFocusable(false);
-        main.jframe.add(main);
-        main.jframe.pack();
     
-        main.jframe.setLocationRelativeTo(null);
-        main.jframe.show();
-        
+        jframe = new JFrame(NAME);
+        jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jframe.setResizable(false);
+        jframe.setFocusable(false);
+        jframe.add(main);
+        jframe.pack();
+    
+        input.setDefaultCursor();
+    
+        jframe.setLocationRelativeTo(null);
+        jframe.show();
+    
         main.start();
     }
     
     /*
-	* Util
+	* Game loop 
 	* */
     public void start() {
         guiManager = new GUIManager(getWidth(), getHeight());
@@ -117,7 +118,6 @@ public class Main extends Canvas implements Runnable {
         System.exit(0);
     }
     
-    //Game loop
     @Override
     public void run() {
         running = true;
@@ -194,7 +194,6 @@ public class Main extends Canvas implements Runnable {
         Graphics g = bs.getDrawGraphics();
         guiManager.render(screen);
         
-        screen.drawPixel(input.getMouseLevelX(level), input.getMouseLevelY(level), 0xff00ff, false);
 	    for (int i = 0; i < screen.pixels.length; i++) {
 		    pixels[i] = screen.pixels[i];
 	    }
@@ -204,7 +203,6 @@ public class Main extends Canvas implements Runnable {
 	    g.setFont(gameFont);
 	    g.fillRect(0, 0, getWidth(), getHeight());
         g.drawImage(image, 0, 0, getWidth(), getHeight(), null);
-        g.fillRect(input.getMouseX() - 1, input.getMouseY() - 1, scale, scale);
         guiManager.render(g);
         
         g.dispose();

@@ -1,9 +1,6 @@
 package com.gmail.xfrednet.filefighter.level;
 
-import com.gmail.xfrednet.filefighter.entity.Entity;
-import com.gmail.xfrednet.filefighter.entity.LivingEntity;
-import com.gmail.xfrednet.filefighter.entity.Player;
-import com.gmail.xfrednet.filefighter.entity.Projectile;
+import com.gmail.xfrednet.filefighter.entity.*;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.TestEntity;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.Slime;
 import com.gmail.xfrednet.filefighter.graphics.*;
@@ -29,9 +26,9 @@ public class Level {
 	public List<Entity> entityList = new ArrayList<>();
 	public List<Particle> particles = new ArrayList<>();
 	
-	private Player player;
-	private Camera camera;
-	private GUIComponentGroup levelGUI;
+	protected Player player;
+	protected Camera camera;
+	protected GUIComponentGroup levelGUI;
 	
 	public Level(int width, int height, Player player, Input input, Screen screen, GUIManager guiManager) {
 		WIDTH = width;
@@ -89,6 +86,9 @@ public class Level {
 	* */
 	public void spawn(Entity entity) {
 		spawn(entity, true);
+	}
+	public void spawn(ItemEntity entity) {
+		spawn(entity, false);
 	}
 	public void spawn(Projectile entity) {
 		spawn(entity, false);
@@ -225,6 +225,17 @@ public class Level {
 		
 		for (int i = 0; i < entityList.size(); i++) {
 			if (entityList.get(i).getDistance(x, y) < maxDistance) {
+				returnEntities.add(entityList.get(i));
+			}
+		}
+		
+		return returnEntities;
+	}
+	public List<Entity> getItemEntities(double x, double y, double maxDistance) {
+		List<Entity> returnEntities = new ArrayList<>();
+		
+		for (int i = 0; i < entityList.size(); i++) {
+			if (entityList.get(i) instanceof ItemEntity && entityList.get(i).getDistance(x, y) < maxDistance) {
 				returnEntities.add(entityList.get(i));
 			}
 		}

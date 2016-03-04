@@ -1,6 +1,7 @@
 package com.gmail.xfrednet.filefighter.item.item.weapon;
 
 import com.gmail.xfrednet.filefighter.entity.Entity;
+import com.gmail.xfrednet.filefighter.item.item.Damage;
 import com.gmail.xfrednet.filefighter.item.item.Weapon;
 import com.gmail.xfrednet.filefighter.level.Level;
 
@@ -9,8 +10,8 @@ import com.gmail.xfrednet.filefighter.level.Level;
  */
 public abstract class ShootingWeapon extends Weapon {
 	
-	protected ShootingWeapon(String name) {
-		super(name);
+	protected ShootingWeapon() {
+		super();
 	}
 	
 	/*
@@ -21,10 +22,14 @@ public abstract class ShootingWeapon extends Weapon {
 		return angle + ((rad * random.nextDouble()) - rad / 2);  
 	}
 	
+	protected Damage getDamage(Entity entity) {
+		return new Damage(getDamageType(), getDamageAmount(), entity);
+	}
+	
 	/*
 	* abstract getters
 	* */
-	abstract public double getDamage();
+	abstract public double getDamageAmount();
 	abstract public double getShootSpeed();
 	abstract public double getRange();
 	abstract public double getAccuracy();
