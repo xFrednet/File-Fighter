@@ -23,7 +23,7 @@ public class GUIComponent {
 	//colors
 	public static final Color BACKGROUND_COLOR = new Color(0xffacacac, true);
 	public static final Color TEXT_COLOR = new Color(0xff606060, true);
-	public static final Color SKILL_POINT_CATEGORY_SEPARATOR_COLOR = new Color(0xff757575, true);
+	public static final Color SEPARATOR_COLOR = new Color(0xff757575, true);
 	
 	//size
 	public static final int PADDING = 6;

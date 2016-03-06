@@ -57,7 +57,12 @@ public class Sprite {
 	* */
 	public static Sprite[] itemFrame = loadItemFrames();
 	
-	
+	/*
+	* Tile Entities
+	* */
+	public static class TileEntities {
+		public static Sprite chest_sprite = new Sprite(0, 0, SpriteSheet.tileEntities, TILE_SPRITE_SIZE);
+	}
 	/*
 	* Items
 	* */
@@ -70,6 +75,9 @@ public class Sprite {
 		public static Sprite leather_boots = new Sprite(ITEM_SPRITE_SIZE * 3, ITEM_SPRITE_SIZE * 5, SpriteSheet.items, ITEM_SPRITE_SIZE);
 		
 	}
+	/*
+	* Equipment
+	* */
 	public static class Equipment {
 		//Basic Equipment
 		public static Sprite[] leather_helmet_sprite = loadEntityAnimation(ENTITY_SPRITE_SIZE * 2, 0, SpriteSheet.player, ENTITY_SPRITE_SIZE, 8);

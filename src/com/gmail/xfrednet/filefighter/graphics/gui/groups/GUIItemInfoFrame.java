@@ -114,7 +114,7 @@ public class GUIItemInfoFrame extends GUIComponentGroup {
 			super.render(g);
 			
 			if (showBorder) {
-				g.setColor(SKILL_POINT_CATEGORY_SEPARATOR_COLOR);
+				g.setColor(SEPARATOR_COLOR);
 				g.drawRect(screenX, screenY, width - 1, height - 1);
 			}
 		}

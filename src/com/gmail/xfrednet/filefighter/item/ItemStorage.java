@@ -1,11 +1,14 @@
 package com.gmail.xfrednet.filefighter.item;
 
+import com.gmail.xfrednet.filefighter.Main;
+import com.gmail.xfrednet.filefighter.entity.Player;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponent;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponentGroup;
 import com.gmail.xfrednet.filefighter.graphics.gui.components.GUIBackground;
 import com.gmail.xfrednet.filefighter.graphics.gui.components.GUIItemFrame;
 import com.gmail.xfrednet.filefighter.graphics.gui.components.GUITitle;
 import com.gmail.xfrednet.filefighter.item.item.weapon.gun.PaperGun;
+import com.gmail.xfrednet.filefighter.util.Input;
 
 /**
  * Created by xFrednet on 05.03.2016.
@@ -20,7 +23,11 @@ public class ItemStorage {
 	protected String name;
 	
 	protected GUIItemStorage gui;
+	protected Player player;
 	
+	/*
+	* Constructor
+	* */
 	public ItemStorage(int width, int height, String name) {
 		this.width = width;
 		this.height = height;
@@ -31,12 +38,24 @@ public class ItemStorage {
 	}
 	
 	/*
+	* Util
+	* */
+	public void mouseInteraction(int slot, GUIItemFrame itemFrame) {
+		if (player == null) {
+			System.out.println("Player = null");
+			return;
+		}
+		player.setInHandItem(switchItem(player.getInHandItem(), slot));
+		
+	}
+	
+	/*
 	* setters
 	* */
-	public Item addItem(Item item) {
-		return addItem(item, getFirstFreeSlot());
+	public Item switchItem(Item item) {
+		return switchItem(item, getFirstFreeSlot());
 	}
-	public Item addItem(Item item, int slot) {
+	public Item switchItem(Item item, int slot) {
 		if (slot < 0 || slot >= items.length) return item;
 		
 		Item currentItem = items[slot];
@@ -48,8 +67,6 @@ public class ItemStorage {
 		
 		return currentItem;
 	}
-	
-	
 	
 	/*
 	* getters
@@ -65,7 +82,6 @@ public class ItemStorage {
 		}
 		return true;
 	}
-	
 	public int getFirstFreeSlot() {
 		for (int i = 0; i < items.length; i++) {
 			if (items[i] == null) return i;
@@ -73,9 +89,10 @@ public class ItemStorage {
 		return STORAGE_FULL;
 	}
 	
-	public GUIItemStorage getGUI(GUIComponent parent, int x, int y) {
+	public GUIItemStorage getGUI(GUIComponent parent, int x, int y, Player player) {
 		if (gui == null) {
-			gui = new GUIItemStorage(parent, x, y);
+			this.player = player;
+			gui = new GUIItemStorage(parent, x, y, player.getInput());
 		} else {
 			gui.updateItemFrames();
 		}
@@ -92,13 +109,13 @@ public class ItemStorage {
 		
 		GUIItemFrame[] itemFrames;
 		
-		public GUIItemStorage(GUIComponent parent, int x, int y) {
+		public GUIItemStorage(GUIComponent parent, int x, int y, Input input) {
 			super(parent, x, y, GUIItemFrame.SIZE * ItemStorage.this.width + PADDING * 2, GUIItemFrame.SIZE * ItemStorage.this.height + PADDING + GUITitle.HEIGHT, PADDING);
 			
-			init();
+			init(Main.input);
 		}
 		
-		private void init() {
+		private void init(Input input) {
 			addComponent(new GUIBackground(this));
 			addComponent(new GUITitle(this, 0, 0, name));
 			
@@ -110,6 +127,11 @@ public class ItemStorage {
 				componentY = GUITitle.HEIGHT + GUIItemFrame.SIZE * y;
 				for (int x = 0; x < ItemStorage.this.width; x++) {
 					itemFrames[x + y * ItemStorage.this.width] = new GUIItemFrame(this, PADDING + GUIItemFrame.SIZE * x, componentY, items[x + y * ItemStorage.this.width]);
+					
+					if (input != null) {
+						itemFrames[x + y * ItemStorage.this.width].addItemStorageFunction(ItemStorage.this, x + y * ItemStorage.this.width, input);
+					}
+					
 					addComponent(itemFrames[x + y * ItemStorage.this.width]);
 				}
 			}

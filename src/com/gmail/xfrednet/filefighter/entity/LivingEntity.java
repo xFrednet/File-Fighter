@@ -353,15 +353,6 @@ public abstract class LivingEntity extends Entity {
 		return true;
 	}
 	
-	protected Item pickupItem(Item item) {
-		Item returnItem = item;
-		if (item instanceof Weapon) {
-			returnItem = weapon;
-			weapon = (Weapon) item;
-		} 
-		return returnItem;
-	}
-	
 	/*
 	* getters
 	* */

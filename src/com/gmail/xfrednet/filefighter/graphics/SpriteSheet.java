@@ -13,6 +13,7 @@ public class SpriteSheet {
 	
 	public static SpriteSheet tiles = new SpriteSheet("/textures/tiles.png");
 	public static SpriteSheet entities = new SpriteSheet("/textures/entities.png");
+	public static SpriteSheet tileEntities = new SpriteSheet("/textures/tileEntities.png");
 	public static SpriteSheet projectiles = new SpriteSheet("/textures/projectiles.png");
 	public static SpriteSheet particles = new SpriteSheet("/textures/particles.png");
 	

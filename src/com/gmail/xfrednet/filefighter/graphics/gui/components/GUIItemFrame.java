@@ -4,13 +4,16 @@ import com.gmail.xfrednet.filefighter.Main;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponent;
 import com.gmail.xfrednet.filefighter.item.Item;
+import com.gmail.xfrednet.filefighter.item.ItemStorage;
+import com.gmail.xfrednet.filefighter.util.Input;
+import com.gmail.xfrednet.filefighter.util.MouseInteraction;
 
 import java.awt.*;
 
 /**
  * Created by xFrednet on 20.02.2016.
  */
-public class GUIItemFrame extends GUIComponent {
+public class GUIItemFrame extends GUIComponent implements MouseInteraction {
 	
 	public static final int SIZE = 18 * Main.scale;
 	public static final int SPRITE_SIZE = 18;
@@ -28,6 +31,11 @@ public class GUIItemFrame extends GUIComponent {
 	Sprite s;
 	int type;
 	
+	//itemStorage
+	ItemStorage storage;
+	int slot;
+	boolean hasStorage = false;
+	
 	/*
 	* Constructor
 	* */
@@ -39,7 +47,12 @@ public class GUIItemFrame extends GUIComponent {
 		setItem(item);
 		this.type = type;
 		s = Sprite.itemFrame[type];
-		
+	}
+	public void addItemStorageFunction(ItemStorage storage, int slot, Input input) {
+		this.storage = storage;
+		this.slot = slot;
+		input.addMouseInteraction(this, screenX, screenY, width - 1, height - 1);
+		hasStorage = true;
 	}
 	
 	/*
@@ -63,7 +76,35 @@ public class GUIItemFrame extends GUIComponent {
 		
 		if (item != null) {
 			itemSprite = item.getItemSprite();
+		} else {
+			itemSprite = null;
+		}
+		
+	}
+	
+	/*
+	* MouseInteraction
+	* */
+	@Override
+	public void mouseEntered(int x, int y) {}
+	
+	@Override
+	public void mouseExited(int x, int y) {}
+	
+	@Override
+	public void mousePressed(int x, int y, int button) {
+		if (parent.getVisibility() && hasStorage) {
+			storage.mouseInteraction(slot, this);
 		}
 	}
+	
+	@Override
+	public void mouseReleased(int x, int y, int button) {}
+	
+	@Override
+	public void mouseWaits(int x, int y, int time) {}
+	
+	@Override
+	public void mouseMoved(int x, int y) {}
 }
 

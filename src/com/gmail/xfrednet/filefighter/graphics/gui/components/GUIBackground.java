@@ -40,7 +40,20 @@ public class GUIBackground extends GUIComponent {
 		if (type == GRAPHICS_BACKGROUND) {
 			g.setColor(graphicsColor);
 			g.fillRect(screenX, screenY, width, height);
+			
+			g.setColor(SEPARATOR_COLOR);
+			g.drawRect(screenX + 1, screenY + 1, width - 3, height - 3);
+			g.drawRect(screenX, screenY, width - 1, height - 1);
+			return;
 		}	
+		
+		if (type == SCREEN_BACKGROUND) {
+			g.setColor(SEPARATOR_COLOR);
+			int x = screenX - screenX % 3;
+			int y = screenY - screenY % 3;
+			g.drawRect(x + 1, y + 1, width - 3, height - 3);
+			g.drawRect(x, y, width - 1, height - 1);
+		}
 	}
 	
 	@Override

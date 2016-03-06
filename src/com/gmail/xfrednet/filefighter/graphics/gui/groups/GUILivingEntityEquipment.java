@@ -29,7 +29,9 @@ public class GUILivingEntityEquipment extends GUIComponentGroup {
 	public static final int PADDING = 2 * Main.scale;
 	public static final int ENTITY_SCALE = 2;
 	public static final int GUI_WIDTH = 336;
-	public static final int GUI_HEIGHT = 470;
+	public static final int GUI_HEIGHT = 471;
+	public static final int GUI_X = 552;
+	public static final int GUI_Y = 171;
 	//string
 	public static final String FRAME_NAME = "EQUIPMENT";
 	
@@ -43,7 +45,7 @@ public class GUILivingEntityEquipment extends GUIComponentGroup {
 	ArmorBanner mentalArmor;
 	
 	public GUILivingEntityEquipment(GUIComponent parent, LivingEntity livingEntity) {
-		this(parent, GRAVITY_CENTER, GRAVITY_CENTER, livingEntity);
+		this(parent, GUI_X, GUI_Y, livingEntity);
 	}
 	
 	public GUILivingEntityEquipment(GUIComponent parent, int x, int y, LivingEntity livingEntity) {
@@ -244,7 +246,7 @@ public class GUILivingEntityEquipment extends GUIComponentGroup {
 			public void render(Graphics g) {
 				super.render(g);
 				g.setFont(FONT);
-				g.setColor(SKILL_POINT_CATEGORY_SEPARATOR_COLOR);
+				g.setColor(SEPARATOR_COLOR);
 				g.drawRect(screenX, screenY, getWidthWithPadding(), height);
 				
 				//button rect

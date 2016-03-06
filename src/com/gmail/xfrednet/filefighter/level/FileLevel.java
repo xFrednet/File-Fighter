@@ -10,6 +10,7 @@ import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.JPGFileEntity;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.TextFileEntity;
 import com.gmail.xfrednet.filefighter.graphics.GUIManager;
 import com.gmail.xfrednet.filefighter.graphics.Screen;
+import com.gmail.xfrednet.filefighter.level.tileentity.Chest;
 import com.gmail.xfrednet.filefighter.util.Input;
 
 import java.io.File;
@@ -69,6 +70,9 @@ public class FileLevel extends Level {
 		
 		spawn(new ItemEntity(50, 50, this, player.getEquipment(LivingEntity.EQUIPMENT_PHYSICAL_ARMOR_HELMET)));
 		spawn(new ItemEntity(50, 75, this, player.getWeapon()));
+		
+		tileEntities.add(new Chest(3, 2));
+		tileEntities.add(new Chest(4, 2, "Chest 2"));
 		
 	}
 	
