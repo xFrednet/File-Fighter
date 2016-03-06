@@ -36,13 +36,9 @@ public class GUIItemFrame extends GUIComponent {
 	}
 	public GUIItemFrame(GUIComponent parent, int x, int y, Item item, int type) {
 		super(parent, x, y, SIZE, SIZE);
-		this.item = item;
+		setItem(item);
 		this.type = type;
 		s = Sprite.itemFrame[type];
-		
-		if (item != null) {
-			itemSprite = item.getItemSprite();
-		}
 		
 	}
 	
@@ -62,4 +58,12 @@ public class GUIItemFrame extends GUIComponent {
 		
 	}
 	
+	public void setItem(Item item) {
+		this.item = item;
+		
+		if (item != null) {
+			itemSprite = item.getItemSprite();
+		}
+	}
 }
+

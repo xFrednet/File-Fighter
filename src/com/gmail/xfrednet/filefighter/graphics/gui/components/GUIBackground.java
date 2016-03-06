@@ -18,6 +18,9 @@ public class GUIBackground extends GUIComponent {
 	int screenBackgroundColor;
 	Color graphicsColor;
 	
+	public GUIBackground(GUIComponent parent) {
+		this(parent, 0, 0, MATCH_PARENT, MATCH_PARENT, BACKGROUND_COLOR);
+	}
 	public GUIBackground(GUIComponent parent, int x, int y, int width, int height, Color color) {
 		super(parent, x, y, width, height);
 		graphicsColor = color;

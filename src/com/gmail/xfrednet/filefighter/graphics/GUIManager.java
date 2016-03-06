@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by xFrednet on 09.02.2016.
  */
-public class GUIManager extends GUIComponent {
+public class GUIManager extends GUIComponentGroup {
 	
 	private int canvasWidth;
 	private int canvasHeight;
@@ -52,50 +52,11 @@ public class GUIManager extends GUIComponent {
 		
 	}
 	
-	
-	
 	/*
 	* Util
 	* */
 	public void setBounds(int width, int height) {
 		setBounds(0, 0, width, height);
 	}
-	public void addComponent(GUIComponent component) {
-		components.add(component);
-	}
-	
-	public void removeComponent(GUIComponent component) {
-		components.remove(component);
-	}
-	/*
-	* Game Loop Util
-	* */
-	@Override
-	public void render(Graphics g) {
-		for (int i = 0; i < components.size(); i++) {
-			if (!components.get(i).isShown()) continue;
-			
-			components.get(i).render(g);
-			
-		}
-	}
-	
-	@Override
-	public void render(Screen screen) {
-		for (int i = 0; i < components.size(); i++) {
-			if (!components.get(i).isShown()) continue;
-			
-			components.get(i).render(screen);
-			
-		}
-	}
-	
-	public void update() {
-		for (int i = 0; i < components.size(); i++) {
-			if (!components.get(i).isShown()) continue;
-			
-			components.get(i).update();
-			
-		}
-	}
+
 }

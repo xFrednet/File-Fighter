@@ -4,6 +4,7 @@ import com.gmail.xfrednet.filefighter.Main;
 import com.gmail.xfrednet.filefighter.entity.entitytask.Behavior;
 import com.gmail.xfrednet.filefighter.graphics.Screen;
 import com.gmail.xfrednet.filefighter.graphics.gui.groups.GUILivingEntityEquipment;
+import com.gmail.xfrednet.filefighter.item.Item;
 import com.gmail.xfrednet.filefighter.item.item.Equipment;
 import com.gmail.xfrednet.filefighter.item.item.Weapon;
 import com.gmail.xfrednet.filefighter.item.item.Damage;
@@ -91,7 +92,6 @@ public abstract class LivingEntity extends Entity {
 	
 	public Weapon weapon;
 	public Behavior behavior;
-	GUILivingEntityEquipment equipmentGUI = null;
 	
 	//texture related
 	protected int direction = 0;
@@ -256,9 +256,6 @@ public abstract class LivingEntity extends Entity {
 		
 		updateCurrentSprite();
 	}
-	
-	
-	
 	private void regenerate() {
 		gainStamina(attributes[ATTRIBUTE_STAMINA_REGENERATION]);
 		
@@ -336,15 +333,6 @@ public abstract class LivingEntity extends Entity {
 		attributes[ATTRIBUTE_HEALTH_REGENERATION] = getBaseAttribute(ATTRIBUTE_HEALTH_REGENERATION);
 		attributes[ATTRIBUTE_STAMINA_REGENERATION] = getBaseAttribute(ATTRIBUTE_STAMINA_REGENERATION);
 	}
-	public void showEquipmentGUI(boolean show) {
-		if (equipmentGUI == null) {
-			equipmentGUI = new GUILivingEntityEquipment(Main.hud, this);
-			Main.hud.addComponent(equipmentGUI);
-		}
-		
-		equipmentGUI.setVisible(show);
-		
-	}
 	
 	//regeneration 
 	public void heal(double health) {
@@ -363,6 +351,15 @@ public abstract class LivingEntity extends Entity {
 		if (this.stamina - stamina < 0) return false;
 		this.stamina -= stamina;
 		return true;
+	}
+	
+	protected Item pickupItem(Item item) {
+		Item returnItem = item;
+		if (item instanceof Weapon) {
+			returnItem = weapon;
+			weapon = (Weapon) item;
+		} 
+		return returnItem;
 	}
 	
 	/*
@@ -390,14 +387,6 @@ public abstract class LivingEntity extends Entity {
 	public Equipment getEquipment(int equipment) {
 		if (equipment < 0 || equipment >= EQUIPMENT_COUNT) return null;
 		return this.equipment[equipment];
-	}
-	
-	public boolean isEquipmentGUIShown() {
-		if (equipmentGUI == null) {
-			return false;
-		} else {
-			return equipmentGUI.getVisibility();
-		}
 	}
 	
 	

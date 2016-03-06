@@ -188,6 +188,9 @@ public abstract class Entity {
 		return currentSprite;
 	}
 	
+	public void remove() {
+		removed = true;
+	}
 	
 	
 	/*

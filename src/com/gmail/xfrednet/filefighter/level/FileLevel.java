@@ -2,6 +2,7 @@ package com.gmail.xfrednet.filefighter.level;
 
 import com.gmail.xfrednet.filefighter.entity.Entity;
 import com.gmail.xfrednet.filefighter.entity.ItemEntity;
+import com.gmail.xfrednet.filefighter.entity.LivingEntity;
 import com.gmail.xfrednet.filefighter.entity.Player;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.Dummy;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.TestEntity;
@@ -66,7 +67,8 @@ public class FileLevel extends Level {
 				spawn(getFileEntity(files[i]));
 		}
 		
-		spawn(new ItemEntity(50, 50, this, player.getWeapon()));
+		spawn(new ItemEntity(50, 50, this, player.getEquipment(LivingEntity.EQUIPMENT_PHYSICAL_ARMOR_HELMET)));
+		spawn(new ItemEntity(50, 75, this, player.getWeapon()));
 		
 	}
 	

@@ -70,7 +70,7 @@ public class GUILivingEntityEquipment extends GUIComponentGroup {
 		components.add(guiEntitySprite);
 		contentY += ArmorBanner.SCALE1_HEIGHT;
 		
-		SkillPointBanner skills = new SkillPointBanner(this, 0, contentY, PADDING);
+		SkillPointBanner skills = new SkillPointBanner(this, -PADDING, contentY, PADDING);
 		addComponent(skills);
 	}
 	
@@ -187,7 +187,7 @@ public class GUILivingEntityEquipment extends GUIComponentGroup {
 			
 			for (int i = 0; i < displayedInfo.length; i++) {
 				g.setFont(INFO_FONT);
-				g.drawString(displayedInfo[i], screenX, screenY + skillInfoY + PADDING + INFO_FONT.getSize() * (i + 1));
+				g.drawString(displayedInfo[i], screenX + padding, screenY + skillInfoY + PADDING + INFO_FONT.getSize() * (i + 1));
 			}
 			
 			g.setFont(FONT);
@@ -228,11 +228,14 @@ public class GUILivingEntityEquipment extends GUIComponentGroup {
 			
 			int skillPointCategory;
 			String skillName;
+			int buttonY;
 			
 			public SkillPointRow(GUIComponent parent, int x, int y, int skillPoint) {
 				super(parent, x, y, SKILL_POINT_ROW_WIDTH, SKILL_POINT_ROW_HEIGHT, PADDING);
 				this.skillPointCategory = skillPoint;
 				skillName = livingEntity.getSkillPointName(skillPoint);
+				
+				buttonY = screenY + padding;
 				
 				Main.input.addMouseInteraction(this, screenX, screenY, width, height);
 			}
@@ -242,20 +245,20 @@ public class GUILivingEntityEquipment extends GUIComponentGroup {
 				super.render(g);
 				g.setFont(FONT);
 				g.setColor(SKILL_POINT_CATEGORY_SEPARATOR_COLOR);
-				g.drawRect(screenX - padding, screenY - padding, getWidthWithPadding(), height);
+				g.drawRect(screenX, screenY, getWidthWithPadding(), height);
 				
 				//button rect
 				g.setColor(Color.PINK);
 				
 				if (currentAnimation == 0) {
-					g.drawImage(skillButtons, screenX + buttonX, screenY, screenX + buttonX + BUTTON_SIZE, screenY + BUTTON_SIZE, 0, 0, BUTTON_SIZE, BUTTON_SIZE, null);
+					g.drawImage(skillButtons, screenX + buttonX, buttonY, screenX + buttonX + BUTTON_SIZE, buttonY + BUTTON_SIZE, 0, 0, BUTTON_SIZE, BUTTON_SIZE, null);
 				} else if (currentAnimation == 1) {
-					g.drawImage(skillButtons, screenX + buttonX, screenY, screenX + buttonX + BUTTON_SIZE, screenY + BUTTON_SIZE, 0, BUTTON_SIZE, BUTTON_SIZE, BUTTON_SIZE * 2, null);
+					g.drawImage(skillButtons, screenX + buttonX, buttonY, screenX + buttonX + BUTTON_SIZE, buttonY + BUTTON_SIZE, 0, BUTTON_SIZE, BUTTON_SIZE, BUTTON_SIZE * 2, null);
 				}
 				
 				g.setColor(TEXT_COLOR);
-				g.drawString(skillName, screenX, screenY + FONT.getSize());
-				g.drawString(livingEntity.getSpentSkillPoint(skillPointCategory) + " ", screenX + SPENT_SKILL_POINT_COUNT_X, screenY + FONT.getSize());
+				g.drawString(skillName, screenX + padding, screenY + FONT.getSize() + padding);
+				g.drawString(livingEntity.getSpentSkillPoint(skillPointCategory) + " ", screenX + SPENT_SKILL_POINT_COUNT_X, screenY + FONT.getSize() + padding);
 				
 			}
 			
@@ -275,7 +278,7 @@ public class GUILivingEntityEquipment extends GUIComponentGroup {
 			
 			@Override
 			public void mousePressed(int x, int y, int button) {
-				if (x >= (this.x + buttonX) && x < (this.x + buttonX + BUTTON_SIZE) && y >= PADDING && y < (PADDING + BUTTON_SIZE)) buttonPressed();
+				if (x >= (this.x + buttonX) && x < (this.x + buttonX + BUTTON_SIZE) && y < (BUTTON_SIZE)) buttonPressed();
 			}
 			
 			@Override

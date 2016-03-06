@@ -31,7 +31,7 @@ public class Main extends Canvas implements Runnable {
     public static final int HEIGHT = WIDTH * 9 / 16;
     public static final int scale = 3;
     public static final int UPS = 30;
-    public static final String LEVEL_LOCATION = (System.getProperty("user.home").endsWith("xFrednet")) ? "C:\\Users\\xFrednet\\IdeaProjects\\File-Fighter\\level" : System.clearProperty("user.home") + "\\Desktop";
+    public static final String LEVEL_LOCATION = (System.getProperty("user.home").endsWith("xFrednset")) ? "C:\\Users\\xFrednet\\IdeaProjects\\File-Fighter\\level" : System.clearProperty("user.home") + "\\Desktop";
     /*"Alter ich Psycholog(y)ier dich gleich mal"*/
 	
 	public static final Font gameFont = new Font("Lucida Console", Font.PLAIN, 16);
@@ -72,8 +72,11 @@ public class Main extends Canvas implements Runnable {
         addMouseListener(input);
         addMouseMotionListener(input);
         
-        player = new Player(60, 60, input, PLAYER_NAME, null);
-        
+        guiManager = new GUIManager(getWidth(), getHeight());
+	    hud = new GameHud(guiManager);
+	    guiManager.addComponent(hud);
+	    player = new Player(60, 60, input, PLAYER_NAME, guiManager);
+	    
     }
     
     /*
@@ -101,9 +104,7 @@ public class Main extends Canvas implements Runnable {
 	* Game loop 
 	* */
     public void start() {
-        guiManager = new GUIManager(getWidth(), getHeight());
-	    hud = new GameHud(guiManager, player);
-	    guiManager.addComponent(hud);
+        
     
         level = new FileLevel(player, input, screen, new File(LEVEL_LOCATION), guiManager);
         camera = level.getCamera();
@@ -211,28 +212,23 @@ public class Main extends Canvas implements Runnable {
     }
     
 	public static class GameHud extends GUIComponentGroup {
-		
-        public LivingEntity entity;
-		
+        
         /*
         * GUIComponents
         * */
         public GUIText FPSInfo;
-		public GUILivingEntityStatusBar healthBar;
+		
         
         /*
         * Constructor
         * */
-		public GameHud(GUIComponent parent, LivingEntity entity) {
+		public GameHud(GUIComponent parent) {
 			super(parent, 0, 0, MATCH_PARENT, MATCH_PARENT);
 			
 			FPSInfo = new GUIText(this, 0, 0, "FPS: %, UPS: %", true, new Font(gameFont.getName(), Font.PLAIN, 8));
 			FPSInfo.setColor(new Color(0xff00ff21, true), new Color(0xaa000000, true));
 			addComponent(FPSInfo);
             
-            
-            this.entity = entity;
-            addComponent(healthBar = new GUILivingEntityStatusBar(this, 20, 20, entity));
 		}
 	}
 	

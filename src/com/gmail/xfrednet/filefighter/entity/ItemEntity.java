@@ -28,4 +28,8 @@ public class ItemEntity extends Entity {
 	public void render(Screen screen) {
 		screen.drawItemEntity((int)info.x, (int)info.y, currentSprite);
 	}
+	
+	public Item getItem() {
+		return item;
+	}
 }

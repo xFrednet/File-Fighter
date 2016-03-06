@@ -1,9 +1,12 @@
 package com.gmail.xfrednet.filefighter.item;
 
+import com.gmail.xfrednet.filefighter.Main;
 import com.gmail.xfrednet.filefighter.entity.Entity;
 import com.gmail.xfrednet.filefighter.entity.ItemEntity;
 import com.gmail.xfrednet.filefighter.entity.LivingEntity;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
+import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponentGroup;
+import com.gmail.xfrednet.filefighter.graphics.gui.groups.GUIItemInfoFrame;
 import com.gmail.xfrednet.filefighter.level.Level;
 
 import java.util.Random;
@@ -68,6 +71,9 @@ public abstract class Item {
 	* */
 	public ItemEntity getItemEntity(Level level) {
 		return new ItemEntity(0, 0, level, this);
+	}
+	public GUIItemInfoFrame getGUIItemInfoFrame(GUIComponentGroup parent, int x, int y) {
+		return new GUIItemInfoFrame(parent, x, y, this);
 	}
 	
 	/*

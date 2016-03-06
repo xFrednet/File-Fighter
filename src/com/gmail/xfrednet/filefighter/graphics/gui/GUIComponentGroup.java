@@ -12,11 +12,6 @@ import java.util.List;
  */
 public class GUIComponentGroup extends GUIComponent {
 	
-	//font
-	public static final Font HEADLINE_FONT = new Font(Main.gameFont.getName(), Font.BOLD, 32);
-	public static final Font FONT = new Font(Main.gameFont.getName(), Font.BOLD, Main.gameFont.getSize());
-	public static final Font INFO_FONT = new Font(Main.gameFont.getName(), Font.PLAIN, (int) (Main.gameFont.getSize() * 0.9));
-	
 	protected List<GUIComponent> components = new ArrayList<GUIComponent>();
 	
 	public GUIComponentGroup(GUIComponent parent, int x, int y) {
@@ -31,6 +26,14 @@ public class GUIComponentGroup extends GUIComponent {
 	}
 	public GUIComponentGroup(GUIComponent parent, int x, int y, int width, int height, int padding) {
 		super(parent, x, y, width, height, padding);
+		
+		if (components == null) {
+			components = new ArrayList<>();
+		}
+	}
+	
+	public GUIComponentGroup(int canvasWidth, int canvasHeight) {
+		super(canvasWidth, canvasHeight);
 		
 		if (components == null) {
 			components = new ArrayList<>();
