@@ -1,5 +1,6 @@
 package com.gmail.xfrednet.filefighter.entity;
 
+import com.gmail.xfrednet.filefighter.graphics.Screen;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
 import com.gmail.xfrednet.filefighter.item.Item;
 import com.gmail.xfrednet.filefighter.level.Level;
@@ -13,6 +14,7 @@ public class ItemEntity extends Entity {
 	
 	public ItemEntity(double x, double y, Level level, Item item) {
 		super(level, item.getName());
+		this.item = item;
 		currentSprite = item.getItemSprite();
 		setInfo(x, y, Sprite.ITEM_ENTITY_SPRITE_SIZE, Sprite.ITEM_ENTITY_SPRITE_SIZE, 0, 0);
 	}
@@ -22,5 +24,12 @@ public class ItemEntity extends Entity {
 		item.updateFormEntity(level);
 	}
 	
+	@Override
+	public void render(Screen screen) {
+		screen.drawItemEntity((int)info.x, (int)info.y, currentSprite);
+	}
 	
+	public Item getItem() {
+		return item;
+	}
 }

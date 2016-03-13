@@ -1,10 +1,10 @@
 package com.gmail.xfrednet.filefighter.item.item.weapon.gun;
 
 import com.gmail.xfrednet.filefighter.Main;
-import com.gmail.xfrednet.filefighter.entity.Entity;
 import com.gmail.xfrednet.filefighter.entity.LivingEntity;
 import com.gmail.xfrednet.filefighter.entity.projectiles.PaperProjectile;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
+import com.gmail.xfrednet.filefighter.item.item.Damage;
 import com.gmail.xfrednet.filefighter.item.item.weapon.ShootingWeapon;
 import com.gmail.xfrednet.filefighter.level.Level;
 
@@ -13,10 +13,8 @@ import com.gmail.xfrednet.filefighter.level.Level;
  */
 public class PaperGun extends ShootingWeapon {
 	
-	public static final String NAME = "Paper gun";
-	
 	public PaperGun() {
-		super(NAME);
+		super();
 	}
 	
 	@Override
@@ -24,7 +22,7 @@ public class PaperGun extends ShootingWeapon {
 		if (useTimer > 0) return false;
 		
 		if (executingEntity.useStamina(getStaminaUsage())) {
-			level.spawn(new PaperProjectile(level, getModifiedAngle(angle), getProjectileSpeed(), getRange(), getDamage(), executingEntity));
+			level.spawn(new PaperProjectile(level, getModifiedAngle(angle), getProjectileSpeed(), getRange(), getDamage(executingEntity), executingEntity));
 		}
 		
 		useTimer += getShootSpeed();
@@ -36,11 +34,23 @@ public class PaperGun extends ShootingWeapon {
 	* abstract getters
 	* */
 	@Override
-	public Sprite getItemSprite() {
-		return Sprite.Item.paperGun;
+	public String getName() {
+		return "Paper Gun";
 	}
 	@Override
-	public double getDamage() {
+	public Sprite getItemSprite() {
+		return Sprite.Item.paperGun;
+	} 
+	
+	//weapon
+	@Override
+	public int getDamageType() {
+		return Damage.PHYSICAL_DAMAGE;
+	}
+	
+	//shootingWeapon 
+	@Override
+	public double getDamageAmount() {
 		return 3.5;
 	}
 	
@@ -57,11 +67,6 @@ public class PaperGun extends ShootingWeapon {
 	@Override
 	public double getAccuracy() {
 		return 40d;
-	}
-	
-	@Override
-	public int getDamageType() {
-		return PaperProjectile.DAMAGE_TYPE;
 	}
 	
 	@Override

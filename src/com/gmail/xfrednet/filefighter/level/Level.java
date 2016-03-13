@@ -1,9 +1,7 @@
 package com.gmail.xfrednet.filefighter.level;
 
-import com.gmail.xfrednet.filefighter.entity.Entity;
-import com.gmail.xfrednet.filefighter.entity.LivingEntity;
-import com.gmail.xfrednet.filefighter.entity.Player;
-import com.gmail.xfrednet.filefighter.entity.Projectile;
+import com.gmail.xfrednet.filefighter.Main;
+import com.gmail.xfrednet.filefighter.entity.*;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.TestEntity;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.Slime;
 import com.gmail.xfrednet.filefighter.graphics.*;
@@ -27,11 +25,12 @@ public class Level {
 	public int[] tileIDs;
 	
 	public List<Entity> entityList = new ArrayList<>();
+	public List<TileEntity> tileEntities = new ArrayList<>(); 
 	public List<Particle> particles = new ArrayList<>();
 	
-	private Player player;
-	private Camera camera;
-	private GUIComponentGroup levelGUI;
+	protected Player player;
+	protected Camera camera;
+	protected GUIComponentGroup levelGUI;
 	
 	public Level(int width, int height, Player player, Input input, Screen screen, GUIManager guiManager) {
 		WIDTH = width;
@@ -90,6 +89,9 @@ public class Level {
 	public void spawn(Entity entity) {
 		spawn(entity, true);
 	}
+	public void spawn(ItemEntity entity) {
+		spawn(entity, false);
+	}
 	public void spawn(Projectile entity) {
 		spawn(entity, false);
 	}
@@ -115,7 +117,7 @@ public class Level {
 	* Game loop util 
 	* */
 	
-	//Update
+	//Render
 	public void render(Screen screen) {
 		screen.setOffset(camera.getXOffset(), camera.getYOffset());
 		
@@ -127,17 +129,17 @@ public class Level {
 		
 	}
 	
-	public void renderParticles(Screen screen) {
+	private void renderParticles(Screen screen) {
 		for (int i = 0; i < particles.size(); i++) {
 			particles.get(i).render(screen);
 		}
 	}
-	public void renderEntities(Screen screen) {
+	private void renderEntities(Screen screen) {
 		for (int i = 0; i < entityList.size(); i++) {
 			entityList.get(i).render(screen);
 		}
 	}
-	public void renderLevel(Screen screen) {
+	private void renderLevel(Screen screen) {
 		int xScroll = camera.getXOffset();
 		int yScroll = camera.getYOffset();
 		
@@ -155,10 +157,16 @@ public class Level {
 				}
 			}
 		}
+		
+		for (int i = 0; i < tileEntities.size(); i++) {
+			if (tileEntities.get(i).getX() < x0 || tileEntities.get(i).getX() >= x1 || tileEntities.get(i).getY() < y0 || tileEntities.get(i).getY() >= y1) continue;
+			tileEntities.get(i).render(screen);
+		}
 	}
 	
-	//Render
+	//Update
 	public void update() {
+		updateTileEntities();
 		updateEntities();
 		updateParticles();
 	}
@@ -184,8 +192,15 @@ public class Level {
 			}
 		}
 	}
-	
-	
+	public void updateTileEntities() {
+		for (int i = 0; i < tileEntities.size(); i++) {
+			tileEntities.get(i).update(this);
+			
+			if (tileEntities.get(i).isRemoved()) {
+				tileEntities.remove(i);
+			}
+		}
+	}
 	
 	/*
 	* Getters
@@ -231,6 +246,17 @@ public class Level {
 		
 		return returnEntities;
 	}
+	public List<Entity> getItemEntities(double x, double y, double maxDistance) {
+		List<Entity> returnEntities = new ArrayList<>();
+		
+		for (int i = 0; i < entityList.size(); i++) {
+			if (entityList.get(i) instanceof ItemEntity && entityList.get(i).getDistance(x, y) < maxDistance) {
+				returnEntities.add(entityList.get(i));
+			}
+		}
+		
+		return returnEntities;
+	}
 	public List<LivingEntity> livingEntityMotionCollision(double xm, double ym, Entity entity) {
 		List<LivingEntity> collidingEntities = new ArrayList<>();
 		
@@ -255,4 +281,14 @@ public class Level {
 		return camera;
 	}
 	
+	public void clicked(int mouseX, int mouseY, int button, Player player) {
+		int tileX = (camera.getXOffset() + mouseX / Main.scale) >> 5;
+		int tileY = (camera.getYOffset() + mouseY / Main.scale) >> 5;
+		
+		for (int i = 0; i < tileEntities.size(); i++) {
+			if (tileEntities.get(i).getX() == tileX && tileEntities.get(i).getY() == tileY) {
+				tileEntities.get(i).mouseInteraction(mouseX, mouseY, button, this, player);
+			}
+		}
+	}
 }

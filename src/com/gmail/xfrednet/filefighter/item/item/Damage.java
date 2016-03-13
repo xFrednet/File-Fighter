@@ -14,14 +14,14 @@ public class Damage {
 	int damageType;
 	double damageAmount;
 	
-	public Damage(int damageType, double baseDamage, Entity shootingEntity) {
+	public Damage(int damageType, double baseDamage, Entity entity) {
 		this.damageType = damageType;
 		this.damageAmount = baseDamage;
-		if (shootingEntity instanceof LivingEntity) {
+		if (entity instanceof LivingEntity) {
 			if (damageType == PHYSICAL_DAMAGE) {
-				this.damageAmount += ((LivingEntity)shootingEntity).getAttribute(LivingEntity.ATTRIBUTE_STRENGTH);
+				this.damageAmount += ((LivingEntity)entity).getAttribute(LivingEntity.ATTRIBUTE_PHYSICAL_DAMAGE);
 			} else {
-				this.damageAmount += ((LivingEntity)shootingEntity).getAttribute(LivingEntity.ATTRIBUTE_INTELLIGENCE);
+				this.damageAmount += ((LivingEntity)entity).getAttribute(LivingEntity.ATTRIBUTE_MENTAL_DAMAGE);
 			}
 		}
 	}

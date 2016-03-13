@@ -35,8 +35,8 @@ public class Slime extends EnemyEntity {
 			case ATTRIBUTE_MAX_STAMINA: return 20;
 			case ATTRIBUTE_PHYSICAL_DEFENCE: return 1;
 			case ATTRIBUTE_MENTAL_DEFENCE: return 1;
-			case ATTRIBUTE_STRENGTH: return 1;
-			case ATTRIBUTE_INTELLIGENCE: return 1;
+			case ATTRIBUTE_PHYSICAL_DAMAGE: return 1;
+			case ATTRIBUTE_MENTAL_DAMAGE: return 1;
 			case ATTRIBUTE_LUCK: return 1;
 			case ATTRIBUTE_HEALTH_REGENERATION: return 0;
 			case ATTRIBUTE_STAMINA_REGENERATION: return 0.2;

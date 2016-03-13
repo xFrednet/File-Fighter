@@ -12,7 +12,7 @@ public class Sprite {
 	public static final int TILE_SPRITE_SIZE = 32;
 	public static final int ENTITY_SPRITE_SIZE = 32;
 	public static final int PROJECTILE_SPRITE_SIZE = 15;
-	public static final int ITEM_ENTITY_SPRITE_SIZE = 32;
+	public static final int ITEM_ENTITY_SPRITE_SIZE = 16;
 	
 	public static final int SPRITE_INVISIBLE_COLOR_1 = 0xffffbb0f;
 	public static final int SPRITE_INVISIBLE_COLOR_2 = 0xffff0000;
@@ -21,7 +21,7 @@ public class Sprite {
 	/*
 	* Test Code
 	* */
-	public static Sprite null_sprite = new Sprite(16, 16, 0xffff01ff);
+	public static Sprite null_sprite = new Sprite(16, 16, 0xffff03ff);
 	public static Sprite dummy_entity_sprite = new Sprite(ENTITY_SPRITE_SIZE * 8, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE);
 	
 	/*
@@ -57,23 +57,51 @@ public class Sprite {
 	* */
 	public static Sprite[] itemFrame = loadItemFrames();
 	
-	
+	/*
+	* Tile Entities
+	* */
+	public static class TileEntities {
+		public static Sprite chest_sprite = new Sprite(0, 0, SpriteSheet.tileEntities, TILE_SPRITE_SIZE);
+	}
 	/*
 	* Items
 	* */
 	public static class Item {
 		public static Sprite paperGun = new Sprite(0, 0, SpriteSheet.items, ITEM_SPRITE_SIZE);
 		
+		/*
+		* Armor
+		* */
+		public static Sprite leather_helmet = new Sprite(ITEM_SPRITE_SIZE * 0, ITEM_SPRITE_SIZE * 5, SpriteSheet.items, ITEM_SPRITE_SIZE);
+		public static Sprite leather_chestplate = new Sprite(ITEM_SPRITE_SIZE * 1, ITEM_SPRITE_SIZE * 5, SpriteSheet.items, ITEM_SPRITE_SIZE);
+		public static Sprite leather_pents = new Sprite(ITEM_SPRITE_SIZE * 2, ITEM_SPRITE_SIZE * 5, SpriteSheet.items, ITEM_SPRITE_SIZE);
+		public static Sprite leather_boots = new Sprite(ITEM_SPRITE_SIZE * 3, ITEM_SPRITE_SIZE * 5, SpriteSheet.items, ITEM_SPRITE_SIZE);
+		/*
+		* Accessories
+		* */
+		public static Sprite gold_diamond_necklace = new Sprite(ITEM_SPRITE_SIZE * 0, ITEM_SPRITE_SIZE * 1, SpriteSheet.items, ITEM_SPRITE_SIZE);
+		public static Sprite silver_diamond_ring = new Sprite(ITEM_SPRITE_SIZE * 0, ITEM_SPRITE_SIZE * 2, SpriteSheet.items, ITEM_SPRITE_SIZE);
+		public static Sprite bronze_ring = new Sprite(ITEM_SPRITE_SIZE * 1, ITEM_SPRITE_SIZE * 2, SpriteSheet.items, ITEM_SPRITE_SIZE);
+		public static Sprite gold_bracelet = new Sprite(ITEM_SPRITE_SIZE * 0, ITEM_SPRITE_SIZE * 3, SpriteSheet.items, ITEM_SPRITE_SIZE);
 	}
-	
+	/*
+	* Equipment
+	* */
+	public static class Equipment {
+		//Basic Equipment
+		public static Sprite[] leather_helmet_sprite = loadEntityAnimation(ENTITY_SPRITE_SIZE * 2, 0, SpriteSheet.player, ENTITY_SPRITE_SIZE, 8);
+		public static Sprite[] leather_chestplate_sprite = loadEntityAnimation(ENTITY_SPRITE_SIZE * 4, 0, SpriteSheet.player, ENTITY_SPRITE_SIZE, 8);
+		public static Sprite[] leather_pents_sprite = loadEntityAnimation(ENTITY_SPRITE_SIZE * 6, 0, SpriteSheet.player, ENTITY_SPRITE_SIZE, 8);
+		public static Sprite[] leather_boots_sprite = loadEntityAnimation(ENTITY_SPRITE_SIZE * 8, 0, SpriteSheet.player, ENTITY_SPRITE_SIZE, 8);
+	}
 	/*
 	* Class
 	* */
 	
+	
 	/*
 	* Values
 	* */
-	
 	public final int WIDTH;
 	public final int HEIGHT;
 	public int[] pixels;
@@ -84,7 +112,7 @@ public class Sprite {
 	/*
 	* Constructor
 	* */
-	private Sprite(int width, int height, int color) {
+	protected Sprite(int width, int height, int color) {
 		this.HEIGHT = height;
 		this.WIDTH = width;
 		
@@ -94,17 +122,17 @@ public class Sprite {
 			pixels[i] = color;
 		}
 	}
-	private Sprite(int xOffset, int yOffset, SpriteSheet spriteSheet, int size) {
+	protected Sprite(int xOffset, int yOffset, SpriteSheet spriteSheet, int size) {
 		this(xOffset, yOffset, spriteSheet, size, size);
 	}
-	private Sprite(int xOffset, int yOffset, Sprite sprite, int size) {
+	protected Sprite(int xOffset, int yOffset, Sprite sprite, int size) {
 		WIDTH = size;
 		HEIGHT = size;
 		pixels = new int[WIDTH * HEIGHT];
 		
 		load(xOffset, yOffset, sprite);
 	}
-	private Sprite(int xOffset, int yOffset, SpriteSheet spriteSheet, int width, int height) {
+	protected Sprite(int xOffset, int yOffset, SpriteSheet spriteSheet, int width, int height) {
 		WIDTH = width;
 		HEIGHT = height;
 		pixels = new int[WIDTH * HEIGHT];
@@ -114,8 +142,19 @@ public class Sprite {
 		
 		load(xOffset, yOffset, spriteSheet);
 	}
+	public Sprite(Sprite sprite) {
+		WIDTH = sprite.WIDTH;
+		HEIGHT = sprite.HEIGHT;
+		pixels = new int[WIDTH * HEIGHT];
+		this.spriteSheet = sprite.spriteSheet;
+		x = sprite.getImageX();
+		y = sprite.getImageY();
+		
+		System.arraycopy(sprite.pixels, 0, pixels, 0, pixels.length);
+		
+	}
 	
-	private void load(int xOffset, int yOffset, SpriteSheet spriteSheet) {
+	protected void load(int xOffset, int yOffset, SpriteSheet spriteSheet) {
 		if (xOffset < 0 || xOffset + WIDTH -1 >= spriteSheet.WIDTH || yOffset < 0 || yOffset + HEIGHT - 1 >= spriteSheet.HEIGHT) {
 			System.out.println("[ERROR] Sprite loads pixels outside the SpriteSheet ");
 			return;
@@ -134,7 +173,7 @@ public class Sprite {
 			}
 		}
 	}
-	private void load(int xOffset, int yOffset, Sprite sprite) {
+	protected void load(int xOffset, int yOffset, Sprite sprite) {
 		if (xOffset < 0 || xOffset + WIDTH -1 >= sprite.WIDTH || yOffset < 0 || yOffset + HEIGHT - 1 >= sprite.HEIGHT) {
 			System.out.println("[ERROR] Sprite loads pixels outside the SpriteSheet ");
 			return;
@@ -157,7 +196,6 @@ public class Sprite {
 	/*
 	* Util
 	* */
-	
 	public int getImageX() {
 		return x;
 	}
@@ -173,6 +211,23 @@ public class Sprite {
 	
 	public BufferedImage getImage() {
 		return spriteSheet.getImage();
+	}
+	
+	public void add(Sprite sprite) {
+		if (sprite == null ||WIDTH != sprite.WIDTH || HEIGHT != sprite.HEIGHT) {
+			System.out.println("[ERR] can't add the sprite do to different Sizes");
+			return;
+		}
+		
+		int color;
+		for (int i = 0; i < pixels.length; i++) {
+			color = sprite.pixels[i];
+			
+			if (color != Screen.INVISIBLE_COLOR) {
+				pixels[i] = color;
+			}
+		}
+		
 	}
 	
 	/*

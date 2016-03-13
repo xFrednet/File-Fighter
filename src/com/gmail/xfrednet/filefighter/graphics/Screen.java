@@ -246,6 +246,29 @@ public class Screen {
 			}
 		}
 	}
+	public void drawTileEntity(int x, int y, Sprite sprite) {
+		x -= xOffset;
+		y -= yOffset;
+		
+		int ya;
+		int xa;
+		int color;
+		for (int yp = 0; yp < sprite.HEIGHT; yp++) {
+			ya = yp + y;
+			if (ya < 0 || ya >= HEIGHT) continue;
+			
+			for (int xp = 0; xp < sprite.WIDTH; xp++) {
+				xa = xp + x;
+				if (xa < 0 || xa >= WIDTH) continue;
+				
+				color = sprite.pixels[xp + yp * sprite.WIDTH];
+				
+				if (color != INVISIBLE_COLOR)
+					pixels[xa + ya * WIDTH] = color;
+				
+			}
+		}
+	}
 	public void drawProjectile(int x, int y, Sprite sprite, double angle) {
 		
 		x -= xOffset;
@@ -267,6 +290,30 @@ public class Screen {
 				
 				if (color != INVISIBLE_COLOR)
 					pixels[xa + ya * WIDTH] = color;
+			}
+		}
+	}
+	public void drawItemEntity(int x, int y, Sprite sprite) {
+		if (sprite == null) return;
+		
+		x -= xOffset;
+		y -= yOffset;
+		
+		int ya;
+		int xa;
+		int color;
+		for (int yp = 0; yp < sprite.HEIGHT; yp++) {
+			ya = yp + y;
+			if (ya < 0 || ya >= HEIGHT) continue;
+			
+			for (int xp = 0; xp < sprite.WIDTH; xp++) {
+				xa = xp + x;
+				if (xa < 0 || xa >= WIDTH) continue;
+				
+				color = sprite.pixels[xp + yp * sprite.WIDTH];
+				if (color != INVISIBLE_COLOR) 
+					pixels[xa + ya * WIDTH] = color;
+				
 			}
 		}
 	}

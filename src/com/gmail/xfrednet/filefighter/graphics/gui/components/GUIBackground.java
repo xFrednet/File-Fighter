@@ -17,7 +17,11 @@ public class GUIBackground extends GUIComponent {
 	int type;
 	int screenBackgroundColor;
 	Color graphicsColor;
+	boolean showSeparator = true;
 	
+	public GUIBackground(GUIComponent parent) {
+		this(parent, 0, 0, MATCH_PARENT, MATCH_PARENT, BACKGROUND_COLOR);
+	}
 	public GUIBackground(GUIComponent parent, int x, int y, int width, int height, Color color) {
 		super(parent, x, y, width, height);
 		graphicsColor = color;
@@ -32,12 +36,32 @@ public class GUIBackground extends GUIComponent {
 		
 	}
 	
+	public GUIBackground setShowSeparator(boolean show) {
+		showSeparator = show;
+		return this;
+	}
+	
 	@Override
 	public void render(Graphics g) {
 		if (type == GRAPHICS_BACKGROUND) {
 			g.setColor(graphicsColor);
 			g.fillRect(screenX, screenY, width, height);
+			
+			if (showSeparator) {
+				g.setColor(SEPARATOR_COLOR);
+				g.drawRect(screenX + 1, screenY + 1, width - 3, height - 3);
+				g.drawRect(screenX, screenY, width - 1, height - 1);
+			}
+			return;
 		}	
+		
+		if (type == SCREEN_BACKGROUND) {
+			g.setColor(SEPARATOR_COLOR);
+			int x = screenX - screenX % 3;
+			int y = screenY - screenY % 3;
+			g.drawRect(x + 1, y + 1, width - 3, height - 3);
+			g.drawRect(x, y, width - 1, height - 1);
+		}
 	}
 	
 	@Override

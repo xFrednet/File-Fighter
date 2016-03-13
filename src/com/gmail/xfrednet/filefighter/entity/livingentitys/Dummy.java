@@ -47,8 +47,8 @@ public class Dummy extends LivingEntity {
 			case ATTRIBUTE_MAX_STAMINA: return 100;
 			case ATTRIBUTE_PHYSICAL_DEFENCE: return 1;
 			case ATTRIBUTE_MENTAL_DEFENCE: return 0;
-			case ATTRIBUTE_STRENGTH: return 0;
-			case ATTRIBUTE_INTELLIGENCE: return 0;
+			case ATTRIBUTE_PHYSICAL_DAMAGE: return 0;
+			case ATTRIBUTE_MENTAL_DAMAGE: return 0;
 			case ATTRIBUTE_LUCK: return 0;
 			case ATTRIBUTE_HEALTH_REGENERATION: return 0;
 			case ATTRIBUTE_STAMINA_REGENERATION: return 0.2;

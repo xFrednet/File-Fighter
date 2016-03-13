@@ -121,6 +121,22 @@ public abstract class Entity {
 	public double getAngleTo(double x, double y) {
 		return info.getAngle(x, y);
 	}
+	protected Entity getClosestEntity(List<Entity> entities) {
+		if (entities.size() <= 0) return null;
+		
+		//setup
+		Entity closestEntity = entities.get(0);
+		double distance = getDistance(closestEntity.getInfo().getCenterX(), closestEntity.getInfo().getCenterY());
+		
+		for (int i = 1; i < entities.size(); i++) {
+			if (distance > getDistance(entities.get(i))) {
+				closestEntity = entities.get(i);
+				distance = getDistance(closestEntity.getInfo().getCenterX(), closestEntity.getInfo().getCenterY());
+			}
+		}
+		
+		return closestEntity;
+	}
 	/*
 	* getters
 	* */
@@ -130,7 +146,9 @@ public abstract class Entity {
 	public int getID() {
 		return entityID;
 	}
-	
+	public String getName() {
+		return name;
+	}
 	/*
 	* Setters
 	* */
@@ -141,6 +159,9 @@ public abstract class Entity {
 	
 	public double getDistance(double x, double y) {
 		return info.getDistance(x, y);
+	}
+	public double getDistance(Entity entity) {
+		return info.getDistance(entity.getInfo().getCenterX(), entity.getInfo().getCenterY());
 	}
 	
 	public boolean isColliding(Entity entity) {
@@ -166,6 +187,11 @@ public abstract class Entity {
 	public Sprite getCurrentSprite() {
 		return currentSprite;
 	}
+	
+	public void remove() {
+		removed = true;
+	}
+	
 	
 	/*
 	* Class

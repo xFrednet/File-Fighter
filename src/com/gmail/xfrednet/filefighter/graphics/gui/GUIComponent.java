@@ -1,5 +1,6 @@
 package com.gmail.xfrednet.filefighter.graphics.gui;
 
+import com.gmail.xfrednet.filefighter.Main;
 import com.gmail.xfrednet.filefighter.graphics.Screen;
 
 import java.awt.*;
@@ -12,6 +13,20 @@ public class GUIComponent {
 	public static final int NO_BOUNDS_GIVEN = 0;
 	public static final int MATCH_PARENT = -1;
 	public static final int GRAVITY_CENTER = -1000000;
+	
+	//font
+	public static final Font HEADLINE_FONT = new Font(Main.gameFont.getName(), Font.BOLD, 32);
+	public static final Font SMALL_HEADLINE_FONT = new Font(Main.gameFont.getName(), Font.BOLD, 24);
+	public static final Font FONT = new Font(Main.gameFont.getName(), Font.BOLD, Main.gameFont.getSize());
+	public static final Font INFO_FONT = new Font(Main.gameFont.getName(), Font.PLAIN, (int) (Main.gameFont.getSize() * 0.9));
+	
+	//colors
+	public static final Color BACKGROUND_COLOR = new Color(0xffacacac, true);
+	public static final Color TEXT_COLOR = new Color(0xff606060, true);
+	public static final Color SEPARATOR_COLOR = new Color(0xff757575, true);
+	
+	//size
+	public static final int PADDING = 6;
 	
 	private static int current_ID = Integer.MIN_VALUE;
 	

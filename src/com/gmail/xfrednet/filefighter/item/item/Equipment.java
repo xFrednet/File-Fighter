@@ -6,11 +6,15 @@ import com.gmail.xfrednet.filefighter.item.Item;
  * Created by xFrednet on 20.02.2016.
  */
 public abstract class Equipment extends Item {
-	protected Equipment(String name) {
-		this(name, 1);
+	protected Equipment() {
+		super();
 	}
 	
-	protected Equipment(String name, int count) {
-		super(name, count);
+	protected int getMaxStackSize() {
+		return 1;
+	}
+	
+	public double getAttributeModifier(int attribute) {
+		return 0;
 	}
 }

@@ -1,9 +1,12 @@
 package com.gmail.xfrednet.filefighter.item;
 
+import com.gmail.xfrednet.filefighter.Main;
 import com.gmail.xfrednet.filefighter.entity.Entity;
 import com.gmail.xfrednet.filefighter.entity.ItemEntity;
 import com.gmail.xfrednet.filefighter.entity.LivingEntity;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
+import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponentGroup;
+import com.gmail.xfrednet.filefighter.graphics.gui.groups.GUIItemInfoFrame;
 import com.gmail.xfrednet.filefighter.level.Level;
 
 import java.util.Random;
@@ -15,7 +18,6 @@ public abstract class Item {
 	
 	protected static final Random random = new Random();
 	
-	protected String name;
 	protected int count;
 	protected int useTimer = 0;
 	protected int maxStackSize = 1;
@@ -23,13 +25,16 @@ public abstract class Item {
 	/*
 	* Constructor
 	* */
-	protected Item(String name) {
-		this(name, 1);
+	protected Item() {
+		this(1);
 	}
-	protected Item(String name, int count) {
-		this.name = name;
+	protected Item(int count) {
 		this.count = count;
+		maxStackSize = getMaxStackSize();
 	}
+	
+	
+	
 	/*
 	* abstract
 	* */
@@ -63,12 +68,16 @@ public abstract class Item {
 	* getters
 	* */
 	public ItemEntity getItemEntity(Level level) {
-		return new ItemEntity(0, 0,level, this);
+		return new ItemEntity(0, 0, level, this);
+	}
+	public GUIItemInfoFrame getGUIItemInfoFrame(GUIComponentGroup parent, int x, int y) {
+		return new GUIItemInfoFrame(parent, x, y, this);
 	}
 	
-	public String getName() {
-		return name;
-	}
-	
+	/*
+	* abstract
+	* */
+	abstract public String getName();
+	abstract protected int getMaxStackSize();
 	
 }

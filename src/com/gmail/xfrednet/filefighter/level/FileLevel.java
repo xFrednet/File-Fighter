@@ -1,6 +1,8 @@
 package com.gmail.xfrednet.filefighter.level;
 
 import com.gmail.xfrednet.filefighter.entity.Entity;
+import com.gmail.xfrednet.filefighter.entity.ItemEntity;
+import com.gmail.xfrednet.filefighter.entity.LivingEntity;
 import com.gmail.xfrednet.filefighter.entity.Player;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.Dummy;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.TestEntity;
@@ -8,6 +10,7 @@ import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.JPGFileEntity;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.TextFileEntity;
 import com.gmail.xfrednet.filefighter.graphics.GUIManager;
 import com.gmail.xfrednet.filefighter.graphics.Screen;
+import com.gmail.xfrednet.filefighter.level.tileentity.Chest;
 import com.gmail.xfrednet.filefighter.util.Input;
 
 import java.io.File;
@@ -65,7 +68,10 @@ public class FileLevel extends Level {
 				spawn(getFileEntity(files[i]));
 		}
 		
+		spawn(new ItemEntity(50, 75, this, player.getWeapon()));
 		
+		tileEntities.add(new Chest(3, 2));
+		tileEntities.add(new Chest(4, 2, "Chest 2"));
 		
 	}
 	
