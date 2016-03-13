@@ -14,4 +14,7 @@ public abstract class Equipment extends Item {
 		return 1;
 	}
 	
+	public double getAttributeModifier(int attribute) {
+		return 0;
+	}
 }

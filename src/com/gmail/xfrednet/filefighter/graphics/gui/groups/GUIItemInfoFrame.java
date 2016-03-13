@@ -20,7 +20,7 @@ public class GUIItemInfoFrame extends GUIComponentGroup {
 	public static final Color TEXT_COLOR = new Color(0xff606060, true);
 	public static final Color SKILL_POINT_CATEGORY_SEPARATOR_COLOR = new Color(0xff757575, true);
 	public static final int PADDING = 2 * Main.scale;
-	public static final int GUI_WIDTH = 250;
+	public static final int GUI_WIDTH = 300;
 	
 	static BufferedImage rIcon;
 	
@@ -60,13 +60,11 @@ public class GUIItemInfoFrame extends GUIComponentGroup {
 		final int ICON_X = GUI_WIDTH - ICON_WIDTH - PADDING * 2;
 		final int ICON_Y = 0;
 		
-		
-		
 		String title;
 		boolean showRButtonIcon;
 		
 		public Title(GUIComponent parent, int x, int y, int padding, String title) {
-			this(parent, x, y ,padding, title, false);
+			this(parent, x, y, padding, title, false);
 		}
 		public Title(GUIComponent parent, int x, int y, int padding, String title, boolean showRButtonIcon) {
 			super(parent, x, y, MATCH_PARENT, SMALL_HEADLINE_FONT.getSize() + padding * 2, padding);
@@ -85,7 +83,7 @@ public class GUIItemInfoFrame extends GUIComponentGroup {
 		@Override
 		public void render(Graphics g) {
 			g.setColor(TEXT_COLOR);
-			g.setFont(SMALL_HEADLINE_FONT);
+			g.setFont(FONT);
 			g.drawString(title, screenX, screenY - padding + SMALL_HEADLINE_FONT.getSize());
 			
 			if (showRButtonIcon) {

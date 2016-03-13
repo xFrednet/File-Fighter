@@ -38,9 +38,7 @@ public abstract class Item {
 	/*
 	* abstract
 	* */
-	public Sprite getItemSprite() {
-		return Sprite.null_sprite;
-	}
+	abstract public Sprite getItemSprite();
 	
 	/*
 	* Use methods

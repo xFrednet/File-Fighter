@@ -6,15 +6,20 @@ import com.gmail.xfrednet.filefighter.graphics.Sprite;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponent;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponentGroup;
 import com.gmail.xfrednet.filefighter.graphics.gui.groups.GUIItemInfoFrame;
+import com.gmail.xfrednet.filefighter.graphics.gui.groups.GUILivingEntityAttributes;
 import com.gmail.xfrednet.filefighter.graphics.gui.groups.GUILivingEntityEquipment;
 import com.gmail.xfrednet.filefighter.graphics.gui.groups.GUILivingEntityStatusBar;
 import com.gmail.xfrednet.filefighter.item.Item;
 import com.gmail.xfrednet.filefighter.item.ItemStorage;
 import com.gmail.xfrednet.filefighter.item.item.equipment.Armor;
-import com.gmail.xfrednet.filefighter.item.item.equipment.armor.LeatherBoots;
-import com.gmail.xfrednet.filefighter.item.item.equipment.armor.LeatherChestplate;
-import com.gmail.xfrednet.filefighter.item.item.equipment.armor.LeatherHelmet;
-import com.gmail.xfrednet.filefighter.item.item.equipment.armor.LeatherPents;
+import com.gmail.xfrednet.filefighter.item.item.equipment.accessory.bracelet.GoldBracelet;
+import com.gmail.xfrednet.filefighter.item.item.equipment.accessory.necklace.GoldDiamondNecklace;
+import com.gmail.xfrednet.filefighter.item.item.equipment.accessory.ring.SilverDiamondRing;
+import com.gmail.xfrednet.filefighter.item.item.equipment.accessory.ring.BronzeRing;
+import com.gmail.xfrednet.filefighter.item.item.equipment.armor.boots.LeatherBoots;
+import com.gmail.xfrednet.filefighter.item.item.equipment.armor.chestplates.LeatherChestplate;
+import com.gmail.xfrednet.filefighter.item.item.equipment.armor.helmets.LeatherHelmet;
+import com.gmail.xfrednet.filefighter.item.item.equipment.armor.pents.LeatherPents;
 import com.gmail.xfrednet.filefighter.item.item.weapon.gun.PaperGun;
 import com.gmail.xfrednet.filefighter.item.itemstorage.Backpack;
 import com.gmail.xfrednet.filefighter.level.Level;
@@ -77,20 +82,23 @@ public class Player extends LivingEntity {
 		
 		this.input = input;
 		
-		
 		backpack = new Backpack();
 		
 		/*
 		* Testing
 		* */
 		//equipment
-		equipment[EQUIPMENT_PHYSICAL_ARMOR_HELMET] = new LeatherHelmet();
-		equipment[EQUIPMENT_PHYSICAL_ARMOR_CHESTPLATE] = new LeatherChestplate();
-		equipment[EQUIPMENT_PHYSICAL_ARMOR_PENTS] = new LeatherPents();
-		equipment[EQUIPMENT_PHYSICAL_ARMOR_SHOES] = new LeatherBoots();
+		backpack.switchItem(new LeatherHelmet(), 0);
+		backpack.switchItem(new LeatherChestplate(), 4);
+		backpack.switchItem(new LeatherPents(), 8);
+		backpack.switchItem(new LeatherBoots(), 12);
+		backpack.switchItem(new GoldDiamondNecklace(), 1);
+		backpack.switchItem(new BronzeRing(), 5);
+		backpack.switchItem(new SilverDiamondRing(), 9);
+		backpack.switchItem(new GoldBracelet(), 13);
 		
 		parent.addComponent(playerHud = new PlayerHud(parent));
-		
+		updateAttributes();
 	}
 	
 	@Override
@@ -99,13 +107,13 @@ public class Player extends LivingEntity {
 		if (isStanding) {
 			spriteIndex = STILL_STANDING_SPRITE_INDEX;
 		} else {
-			spriteIndex = (direction * ANIMATION_SPRITES) + ((int)(animation / ANIMATION_SPEED) % ANIMATION_SPRITES);
+			spriteIndex = (direction * ANIMATION_SPRITES) + ((animation / ANIMATION_SPEED) % ANIMATION_SPRITES);
 		}
 		
-		currentSprite = Sprite.player_entity_sprites[spriteIndex];
+		currentSprite = new Sprite(Sprite.player_entity_sprites[spriteIndex]);
 		for (int i = 0; i < EQUIPMENT_COUNT; i++) {
-			if (equipment[i] != null && equipment[i] instanceof Armor) {
-				currentSprite.add(((Armor) equipment[i]).getAnimatedSprite(spriteIndex));
+			if (getEquipment(i) != null && getEquipment(i) instanceof Armor) {
+				currentSprite.add(((Armor) getEquipment(i)).getAnimatedSprite(spriteIndex));
 			}
 		}
 		
@@ -118,8 +126,8 @@ public class Player extends LivingEntity {
 			case ATTRIBUTE_MAX_STAMINA: return 100;
 			case ATTRIBUTE_PHYSICAL_DEFENCE: return 1;
 			case ATTRIBUTE_MENTAL_DEFENCE: return 1;
-			case ATTRIBUTE_STRENGTH: return 1;
-			case ATTRIBUTE_INTELLIGENCE: return 1;
+			case ATTRIBUTE_PHYSICAL_DAMAGE: return 1;
+			case ATTRIBUTE_MENTAL_DAMAGE: return 1;
 			case ATTRIBUTE_LUCK: return 1;
 			case ATTRIBUTE_HEALTH_REGENERATION: return 0.01;
 			case ATTRIBUTE_STAMINA_REGENERATION: return 0.2;
@@ -172,6 +180,10 @@ public class Player extends LivingEntity {
 			if (backpackButtonPressed) {
 				playerHud.toggleBackpackGUI();
 			}
+		}
+		
+		if (input.isKeyDown(KeyEvent.VK_P)) {
+			playerHud.addComponent(new GUILivingEntityAttributes(playerHud, 0, 100, this));
 		}
 		
 	}
@@ -232,8 +244,9 @@ public class Player extends LivingEntity {
 		}
 		
 		if (pickupTimer <= 0 && !backpack.isStorageFull()) {
-			backpack.switchItem(item);
-			itemEntity.remove();
+			if (backpack.switchItem(item) == null) {
+				itemEntity.remove();
+			}
 		}
 		
 	}
@@ -329,7 +342,6 @@ public class Player extends LivingEntity {
 			}
 			
 			equipmentGUI.setVisible(isEquipmentGUIShown);
-			
 		}
 		
 		/*
@@ -409,7 +421,6 @@ public class Player extends LivingEntity {
 				g.drawImage(s.getImage(), input.getMouseX(), input.getMouseY(), input.getMouseX() + s.WIDTH * Main.scale, input.getMouseY() + s.HEIGHT * Main.scale, s.getImageX(), s.getImageY(), s.getImageMaxX(), s.getImageMaxY(), null);
 			}
 		}
-		
 		
 	}
 	

@@ -68,7 +68,6 @@ public class FileLevel extends Level {
 				spawn(getFileEntity(files[i]));
 		}
 		
-		spawn(new ItemEntity(50, 50, this, player.getEquipment(LivingEntity.EQUIPMENT_PHYSICAL_ARMOR_HELMET)));
 		spawn(new ItemEntity(50, 75, this, player.getWeapon()));
 		
 		tileEntities.add(new Chest(3, 2));

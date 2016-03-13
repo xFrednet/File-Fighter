@@ -2,12 +2,11 @@ package com.gmail.xfrednet.filefighter.entity;
 
 import com.gmail.xfrednet.filefighter.Main;
 import com.gmail.xfrednet.filefighter.entity.entitytask.Behavior;
-import com.gmail.xfrednet.filefighter.graphics.Screen;
-import com.gmail.xfrednet.filefighter.graphics.gui.groups.GUILivingEntityEquipment;
-import com.gmail.xfrednet.filefighter.item.Item;
 import com.gmail.xfrednet.filefighter.item.item.Equipment;
 import com.gmail.xfrednet.filefighter.item.item.Weapon;
 import com.gmail.xfrednet.filefighter.item.item.Damage;
+import com.gmail.xfrednet.filefighter.item.itemstorage.StorageAccessories;
+import com.gmail.xfrednet.filefighter.item.itemstorage.StorageArmor;
 import com.gmail.xfrednet.filefighter.level.Level;
 
 /**
@@ -23,14 +22,14 @@ public abstract class LivingEntity extends Entity {
 	/*
 	* attributes
 	* */
-	private static final int ATTRIBUTE_COUNT = 9;
+	public static final int ATTRIBUTE_COUNT = 9;
 	
 	public static final int ATTRIBUTE_MAX_HEALTH = 0;
 	public static final int ATTRIBUTE_MAX_STAMINA = 1;
 	public static final int ATTRIBUTE_PHYSICAL_DEFENCE = 2;
 	public static final int ATTRIBUTE_MENTAL_DEFENCE = 3;
-	public static final int ATTRIBUTE_STRENGTH = 4;
-	public static final int ATTRIBUTE_INTELLIGENCE = 5;
+	public static final int ATTRIBUTE_PHYSICAL_DAMAGE = 4;
+	public static final int ATTRIBUTE_MENTAL_DAMAGE = 5;
 	public static final int ATTRIBUTE_LUCK = 6;
 	public static final int ATTRIBUTE_HEALTH_REGENERATION = 7;
 	public static final int ATTRIBUTE_STAMINA_REGENERATION = 8;
@@ -70,24 +69,20 @@ public abstract class LivingEntity extends Entity {
 	/*
 	* Equipment
 	* */
-	public static final int EQUIPMENT_COUNT = 4 + 4 + 5;
+	public static final int EQUIPMENT_COUNT = 4 + 5;
 	
-	public static final int EQUIPMENT_PHYSICAL_ARMOR_HELMET = 0;
-	public static final int EQUIPMENT_PHYSICAL_ARMOR_CHESTPLATE = 1;
-	public static final int EQUIPMENT_PHYSICAL_ARMOR_PENTS = 2;
-	public static final int EQUIPMENT_PHYSICAL_ARMOR_SHOES = 3;
+	public static final int EQUIPMENT_HELMET = 0;
+	public static final int EQUIPMENT_CHESTPLATE = 1;
+	public static final int EQUIPMENT_PENTS = 2;
+	public static final int EQUIPMENT_SHOES = 3;
 	
-	public static final int EQUIPMENT_MENTAL_ARMOR_HELMET = 4;
-	public static final int EQUIPMENT_MENTAL_ARMOR_CHESTPLATE = 5;
-	public static final int EQUIPMENT_MENTAL_ARMOR_PENTS = 6;
-	public static final int EQUIPMENT_MENTAL_ARMOR_SHOES = 7;
+	public static final int EQUIPMENT_RING_1 = 4;
+	public static final int EQUIPMENT_RING_2 = 5;
+	public static final int EQUIPMENT_NECKLACE = 6;
+	public static final int EQUIPMENT_BRACELET = 7;
 	
-	public static final int EQUIPMENT_RING_1 = 8;
-	public static final int EQUIPMENT_RING_2 = 9;
-	public static final int EQUIPMENT_NECKLACE = 10;
-	public static final int EQUIPMENT_BRACELET = 11;
-	public static final int EQUIPMENT_IMPLANT = 12;
-	
+	protected StorageArmor armor = new StorageArmor();
+	protected StorageAccessories accessories = new StorageAccessories();
 	protected Equipment[] equipment = new Equipment[EQUIPMENT_COUNT];
 	
 	public Weapon weapon;
@@ -315,23 +310,47 @@ public abstract class LivingEntity extends Entity {
 	//attributes
 	public void updateAttributes() {
 		//health
-		attributes[ATTRIBUTE_MAX_HEALTH] = getBaseAttribute(ATTRIBUTE_MAX_HEALTH) + skillPoints[SKILL_POINT_HEALTH] * ATTRIBUTE_HEALTH_PER_POINT;
-		attributes[ATTRIBUTE_MAX_STAMINA] = getBaseAttribute(ATTRIBUTE_MAX_STAMINA);
+		attributes[ATTRIBUTE_MAX_HEALTH] = getBaseAttribute(ATTRIBUTE_MAX_HEALTH) 
+				+ getEquipmentAttributes(ATTRIBUTE_MAX_HEALTH) 
+				+ skillPoints[SKILL_POINT_HEALTH] * ATTRIBUTE_HEALTH_PER_POINT;
+		attributes[ATTRIBUTE_MAX_STAMINA] = getBaseAttribute(ATTRIBUTE_MAX_STAMINA)
+				+ getEquipmentAttributes(ATTRIBUTE_MAX_STAMINA);
 		
 		//defence
-		attributes[ATTRIBUTE_PHYSICAL_DEFENCE] = getBaseAttribute(ATTRIBUTE_PHYSICAL_DEFENCE) + skillPoints[SKILL_POINT_DEFENCE] * ATTRIBUTE_PHYSICAL_DEFENCE_PER_POINT;
-		attributes[ATTRIBUTE_MENTAL_DEFENCE] = getBaseAttribute(ATTRIBUTE_MENTAL_DEFENCE) + skillPoints[SKILL_POINT_DEFENCE] * ATTRIBUTE_MENTAL_DEFENCE_PER_POINT;
+		attributes[ATTRIBUTE_PHYSICAL_DEFENCE] = getBaseAttribute(ATTRIBUTE_PHYSICAL_DEFENCE) 
+				+ getEquipmentAttributes(ATTRIBUTE_PHYSICAL_DEFENCE) 
+				+ skillPoints[SKILL_POINT_DEFENCE] * ATTRIBUTE_PHYSICAL_DEFENCE_PER_POINT;
+		attributes[ATTRIBUTE_MENTAL_DEFENCE] = getBaseAttribute(ATTRIBUTE_MENTAL_DEFENCE) 
+				+ getEquipmentAttributes(ATTRIBUTE_MENTAL_DEFENCE) 
+				+ skillPoints[SKILL_POINT_DEFENCE] * ATTRIBUTE_MENTAL_DEFENCE_PER_POINT;
 		
 		//strength / intelligence
-		attributes[ATTRIBUTE_STRENGTH] = getBaseAttribute(ATTRIBUTE_STRENGTH) + skillPoints[SKILL_POINT_STRENGTH] * ATTRIBUTE_STRENGTH_PER_POINT;
-		attributes[ATTRIBUTE_INTELLIGENCE] = getBaseAttribute(ATTRIBUTE_INTELLIGENCE) + skillPoints[SKILL_POINT_INTELLIGENCE] * ATTRIBUTE_INTELLIGENCE_PER_POINT;
+		attributes[ATTRIBUTE_PHYSICAL_DAMAGE] = getBaseAttribute(ATTRIBUTE_PHYSICAL_DAMAGE) 
+				+ getEquipmentAttributes(ATTRIBUTE_PHYSICAL_DAMAGE) 
+				+ skillPoints[SKILL_POINT_STRENGTH] * ATTRIBUTE_STRENGTH_PER_POINT;
+		attributes[ATTRIBUTE_MENTAL_DAMAGE] = getBaseAttribute(ATTRIBUTE_MENTAL_DAMAGE) 
+				+ getEquipmentAttributes(ATTRIBUTE_MENTAL_DAMAGE) 
+				+ skillPoints[SKILL_POINT_INTELLIGENCE] * ATTRIBUTE_INTELLIGENCE_PER_POINT;
 		
 		//luck
-		attributes[ATTRIBUTE_LUCK] = getBaseAttribute(ATTRIBUTE_LUCK) + skillPoints[SKILL_POINT_LUCK] * ATTRIBUTE_LUCK_PER_POINT;
+		attributes[ATTRIBUTE_LUCK] = getBaseAttribute(ATTRIBUTE_LUCK) 
+				+ getEquipmentAttributes(ATTRIBUTE_LUCK) 
+				+ skillPoints[SKILL_POINT_LUCK] * ATTRIBUTE_LUCK_PER_POINT;
 		
 		//regeneration
-		attributes[ATTRIBUTE_HEALTH_REGENERATION] = getBaseAttribute(ATTRIBUTE_HEALTH_REGENERATION);
-		attributes[ATTRIBUTE_STAMINA_REGENERATION] = getBaseAttribute(ATTRIBUTE_STAMINA_REGENERATION);
+		attributes[ATTRIBUTE_HEALTH_REGENERATION] = getBaseAttribute(ATTRIBUTE_HEALTH_REGENERATION) 
+				+ getEquipmentAttributes(ATTRIBUTE_HEALTH_REGENERATION) ;
+		attributes[ATTRIBUTE_STAMINA_REGENERATION] = getBaseAttribute(ATTRIBUTE_STAMINA_REGENERATION) 
+				+ getEquipmentAttributes(ATTRIBUTE_STAMINA_REGENERATION);
+	}
+	private double getEquipmentAttributes(int attribute) {
+		double returnValue = 0;
+		for (int i = 0; i < EQUIPMENT_COUNT; i++) {
+			if (getEquipment(i) != null) {
+				returnValue += getEquipment(i).getAttributeModifier(attribute);
+			}
+		}
+		return returnValue;
 	}
 	
 	//regeneration 
@@ -368,6 +387,30 @@ public abstract class LivingEntity extends Entity {
 		if (attribute < 0 || attribute >= ATTRIBUTE_COUNT) return 0;
 		return attributes[attribute];
 	}
+	public String getAttributeName(int attribute) {
+		switch (attribute) {
+			case ATTRIBUTE_MAX_HEALTH:
+				return "Max Health";
+			case ATTRIBUTE_MAX_STAMINA:
+				return "Max Stamina";
+			case ATTRIBUTE_PHYSICAL_DEFENCE:
+				return "Physical Defence";
+			case ATTRIBUTE_MENTAL_DEFENCE:
+				return "Mental Defence";
+			case ATTRIBUTE_PHYSICAL_DAMAGE:
+				return "Physical Damage";
+			case ATTRIBUTE_MENTAL_DAMAGE:
+				return "Mental Damage";
+			case ATTRIBUTE_LUCK:
+				return "Luck";
+			case ATTRIBUTE_HEALTH_REGENERATION:
+				return "Health Regeneration";
+			case ATTRIBUTE_STAMINA_REGENERATION:
+				return "Stamina Regeneration";
+			default:
+				return "Error";
+		}
+	}
 	public double getHealth() {
 		return health;
 	}
@@ -375,11 +418,37 @@ public abstract class LivingEntity extends Entity {
 		return stamina;
 	}
 	
+	//equipment
 	public Equipment getEquipment(int equipment) {
 		if (equipment < 0 || equipment >= EQUIPMENT_COUNT) return null;
-		return this.equipment[equipment];
+		
+		switch (equipment) {
+			case EQUIPMENT_HELMET:
+				return armor.get(EQUIPMENT_HELMET);
+			case EQUIPMENT_CHESTPLATE:
+				return armor.get(EQUIPMENT_CHESTPLATE);
+			case EQUIPMENT_PENTS:
+				return armor.get(EQUIPMENT_PENTS);
+			case EQUIPMENT_SHOES:
+				return armor.get(EQUIPMENT_SHOES);
+			case EQUIPMENT_NECKLACE:
+				return accessories.get(EQUIPMENT_NECKLACE);
+			case EQUIPMENT_RING_1:
+				return accessories.get(EQUIPMENT_RING_1);
+			case EQUIPMENT_RING_2:
+				return accessories.get(EQUIPMENT_RING_2);
+			case EQUIPMENT_BRACELET:
+				return accessories.get(EQUIPMENT_BRACELET);
+			default:
+				return this.equipment[equipment];
+		}
 	}
-	
+	public StorageArmor getArmor() {
+		return armor;
+	}
+	public StorageAccessories getAccessories() {
+		return accessories;
+	}
 	
 	//skill points
 	public boolean hasUnspentSkillPoints() {

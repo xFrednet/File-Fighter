@@ -1,14 +1,16 @@
-package com.gmail.xfrednet.filefighter.item.item.equipment.armor;
+package com.gmail.xfrednet.filefighter.item.item.equipment.armor.helmets;
 
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
 import com.gmail.xfrednet.filefighter.item.item.equipment.Armor;
+import com.gmail.xfrednet.filefighter.item.item.equipment.armor.Helmet;
 
 /**
  * Created by xFrednet on 01.03.2016.
  */
-public class LeatherHelmet extends Armor {
+public class LeatherHelmet extends Helmet {
+	
 	public LeatherHelmet() {
-		super();
+		super(new ArmorStats(1.0, 0.2));
 	}
 	
 	@Override
@@ -25,4 +27,5 @@ public class LeatherHelmet extends Armor {
 	public Sprite getItemSprite() {
 		return Sprite.Item.leather_helmet;
 	}
+	
 }

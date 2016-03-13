@@ -19,9 +19,9 @@ public class Damage {
 		this.damageAmount = baseDamage;
 		if (entity instanceof LivingEntity) {
 			if (damageType == PHYSICAL_DAMAGE) {
-				this.damageAmount += ((LivingEntity)entity).getAttribute(LivingEntity.ATTRIBUTE_STRENGTH);
+				this.damageAmount += ((LivingEntity)entity).getAttribute(LivingEntity.ATTRIBUTE_PHYSICAL_DAMAGE);
 			} else {
-				this.damageAmount += ((LivingEntity)entity).getAttribute(LivingEntity.ATTRIBUTE_INTELLIGENCE);
+				this.damageAmount += ((LivingEntity)entity).getAttribute(LivingEntity.ATTRIBUTE_MENTAL_DAMAGE);
 			}
 		}
 	}

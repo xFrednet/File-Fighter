@@ -1,9 +1,7 @@
 package com.gmail.xfrednet.filefighter.entity.livingentitys;
 
 import com.gmail.xfrednet.filefighter.LeitsTestClass;
-import com.gmail.xfrednet.filefighter.entity.Entity;
 import com.gmail.xfrednet.filefighter.entity.LivingEntity;
-import com.gmail.xfrednet.filefighter.entity.entitytask.behavior.MoveToTarget;
 import com.gmail.xfrednet.filefighter.entity.entitytask.behavior.RandomMovement;
 import com.gmail.xfrednet.filefighter.level.Level;
 
@@ -33,8 +31,8 @@ public class TestEntity extends LivingEntity {
 			case ATTRIBUTE_MAX_STAMINA: return 25;
 			case ATTRIBUTE_PHYSICAL_DEFENCE: return 1;
 			case ATTRIBUTE_MENTAL_DEFENCE: return 1;
-			case ATTRIBUTE_STRENGTH: return 1;
-			case ATTRIBUTE_INTELLIGENCE: return 1;
+			case ATTRIBUTE_PHYSICAL_DAMAGE: return 1;
+			case ATTRIBUTE_MENTAL_DAMAGE: return 1;
 			case ATTRIBUTE_LUCK: return 1;
 			case ATTRIBUTE_HEALTH_REGENERATION: return 0;
 			case ATTRIBUTE_STAMINA_REGENERATION: return 0.2;

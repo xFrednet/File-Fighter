@@ -3,10 +3,12 @@ package com.gmail.xfrednet.filefighter.graphics.gui.groups;
 import com.gmail.xfrednet.filefighter.Main;
 
 import com.gmail.xfrednet.filefighter.entity.LivingEntity;
+import com.gmail.xfrednet.filefighter.entity.Player;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponent;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponentGroup;
 import com.gmail.xfrednet.filefighter.graphics.gui.components.*;
+import com.gmail.xfrednet.filefighter.item.ItemStorage;
 import com.gmail.xfrednet.filefighter.util.MouseInteraction;
 
 import javax.imageio.ImageIO;
@@ -41,13 +43,13 @@ public class GUILivingEntityEquipment extends GUIComponentGroup {
 	GUIText headline;
 	
 	//armor
-	ArmorBanner physicalArmor;
-	ArmorBanner mentalArmor;
+	ItemStorage.GUIItemStorage armor;
+	ItemStorage.GUIItemStorage accessories;
+	SkillPointBanner skills;
 	
 	public GUILivingEntityEquipment(GUIComponent parent, LivingEntity livingEntity) {
 		this(parent, GUI_X, GUI_Y, livingEntity);
 	}
-	
 	public GUILivingEntityEquipment(GUIComponent parent, int x, int y, LivingEntity livingEntity) {
 		super(parent, x, y, GUI_WIDTH, GUI_HEIGHT);
 		this.livingEntity = livingEntity;
@@ -61,85 +63,36 @@ public class GUILivingEntityEquipment extends GUIComponentGroup {
 		int contentY = HEADLINE_FONT.getSize();
 		
 		//armors
-		physicalArmor = new ArmorBanner(this, 0, contentY, 1, ArmorBanner.PHYSICAL_ARMOR, PADDING);
-		addComponent(physicalArmor);
-		mentalArmor = new ArmorBanner(this, GUI_WIDTH - ArmorBanner.SCALE1_WIDTH, contentY, 1, ArmorBanner.MENTAL_ARMOR, PADDING);
-		addComponent(mentalArmor);
+		armor = livingEntity.getArmor().getGUI(this, 0, contentY, (Player) livingEntity);
+		addComponent(armor);
+		accessories = livingEntity.getAccessories().getGUI(this, width - armor.getWidth() - PADDING * 2, contentY, (Player) livingEntity);
+		addComponent(accessories);
 		
 		//Entity
-		int entityY = ((ArmorBanner.SCALE1_HEIGHT) - (Sprite.ENTITY_SPRITE_SIZE * ENTITY_SCALE)) / 2 + contentY;
-		guiEntitySprite = new GUIEntitySprite(this, ArmorBanner.SCALE1_WIDTH + PADDING, entityY / Main.scale, livingEntity, ENTITY_SCALE);
+		guiEntitySprite = new GUIEntitySprite(this, armor.getWidth() + PADDING, contentY + PADDING * 3, livingEntity, ENTITY_SCALE);
 		components.add(guiEntitySprite);
-		contentY += ArmorBanner.SCALE1_HEIGHT;
+		contentY += armor.getHeight();
 		
-		SkillPointBanner skills = new SkillPointBanner(this, -PADDING, contentY, PADDING);
+		skills = new SkillPointBanner(this, -PADDING, contentY, PADDING);
 		addComponent(skills);
 	}
 	
+	/*
+	* util
+	* */
 	private void addHeadline() {
 		headline = new GUIText(this, 0, 0, FRAME_NAME, false, HEADLINE_FONT);
 		headline.setColor(TEXT_COLOR, Color.BLACK);
 		addComponent(headline);
 	}
-	
-	//gui components
-	private class ArmorBanner extends GUIComponentGroup {
-		
-		public static final int SCALE1_WIDTH = PADDING * 2 + GUIItemFrame.SIZE;
-		public static final int SCALE1_HEIGHT = PADDING * 2 + GUIItemFrame.SIZE * 4;
-		public static final int PHYSICAL_ARMOR = 0;
-		public static final int MENTAL_ARMOR = 1;
-		
-		private final static int HELMET_SLOT = 0;
-		private final static int CHESTPLATE_SLOT = 1;
-		private final static int PENTS_SLOT = 2;
-		private final static int SHOES_SLOT = 3;
-		
-		int scale;
-		int armorType;
-		int[] armorSlots;
-		GUIItemFrame[] itemFrames;
-		
-		public ArmorBanner(GUIComponent parent, int x, int y, int scale, int armorType, int padding) {
-			super(parent, x, y, SCALE1_WIDTH * scale, SCALE1_HEIGHT * scale, padding);
-			this.scale = scale;
-			this.armorType = armorType;
-			armorSlots = getArmorSlots(armorType);
-			init();
+	public void setVisible(boolean show) {
+		super.setVisible(show);
+		if (armor != null) {
+			armor.setVisible(show);
 		}
-		
-		private int[] getArmorSlots(int armorType) {
-			if (armorType == PHYSICAL_ARMOR) {
-				return new int[] {EQUIPMENT_PHYSICAL_ARMOR_HELMET, EQUIPMENT_PHYSICAL_ARMOR_CHESTPLATE, EQUIPMENT_PHYSICAL_ARMOR_PENTS, EQUIPMENT_PHYSICAL_ARMOR_SHOES};
-			} else {
-				return new int[] {EQUIPMENT_MENTAL_ARMOR_HELMET, EQUIPMENT_MENTAL_ARMOR_CHESTPLATE, EQUIPMENT_MENTAL_ARMOR_PENTS, EQUIPMENT_MENTAL_ARMOR_SHOES};
-			}
-		}
-		
-		private void init() {
-			itemFrames = new GUIItemFrame[4];
-			int y = 0;
-			int x = 0;
-			
-			itemFrames[HELMET_SLOT] = new GUIItemFrame(this, x, y, livingEntity.getEquipment(armorSlots[HELMET_SLOT]), GUIItemFrame.TYPE_HELMET);
-			y += GUIItemFrame.SIZE * scale;
-			//chestplate
-			itemFrames[CHESTPLATE_SLOT] = new GUIItemFrame(this, x, y, livingEntity.getEquipment(armorSlots[CHESTPLATE_SLOT]), GUIItemFrame.TYPE_CHESTPLATE);
-			y += GUIItemFrame.SIZE * scale;
-			//pents
-			itemFrames[PENTS_SLOT] = new GUIItemFrame(this, x, y, livingEntity.getEquipment(armorSlots[PENTS_SLOT]), GUIItemFrame.TYPE_PENTS);
-			y += GUIItemFrame.SIZE * scale;
-			//shoes
-			itemFrames[SHOES_SLOT] = new GUIItemFrame(this, x, y, livingEntity.getEquipment(armorSlots[SHOES_SLOT]), GUIItemFrame.TYPE_SHOES);
-			
-			for (int i = 0; i < itemFrames.length; i++) {
-				addComponent(itemFrames[i]);
-			}
-			
-		}
-		
 	}
 	
+	//gui components
 	public static final int SKILL_POINT_ROW_HEIGHT = FONT.getSize() + PADDING * 2;
 	public static final int SKILL_POINT_ROW_WIDTH = GUI_WIDTH - PADDING * 4;
 	public static final int SKILL_BANNER_HEIGHT = SKILL_POINT_ROW_HEIGHT * SKILL_POINT_CATEGORY_COUNT;
