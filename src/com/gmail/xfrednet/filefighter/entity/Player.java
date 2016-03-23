@@ -1,6 +1,7 @@
 package com.gmail.xfrednet.filefighter.entity;
 
 import com.gmail.xfrednet.filefighter.Main;
+import com.gmail.xfrednet.filefighter.entity.livingentitys.TestEntity;
 import com.gmail.xfrednet.filefighter.graphics.Camera;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponent;
@@ -41,6 +42,7 @@ public class Player extends LivingEntity {
 	private static final int MOVEMENT_LEFT_KEY = KeyEvent.VK_A;
 	private static final int MOVEMENT_RIGHT_KEY = KeyEvent.VK_D;
 	private static final int MOVEMENT_SPEED_KEY = KeyEvent.VK_SHIFT;
+	private static final int MOVEMENT_SLOW_KEY = KeyEvent.VK_CONTROL;
 	private static final int DISCONNECT_CAMERA = KeyEvent.VK_NUMPAD0;
 	//GUI
 	private static final int TOGGLE_EQUIPMENT_GUI = KeyEvent.VK_C;
@@ -53,7 +55,7 @@ public class Player extends LivingEntity {
 	
 	Input input;
 	Camera camera;
-	double speed = 1.5;
+	double speed = 1.5 * 10;
 	double speedBoost = 1.5;
 	double runningStaminaUsage = 0.2;
 	
@@ -70,13 +72,15 @@ public class Player extends LivingEntity {
 	//ItemStorage
 	Backpack backpack;
 	Item inHandItem = null;
+	boolean test = false;
 	
 	/*
 	* constructor
 	* */
 	public Player(int x, int y, Input input, String name, GUIComponentGroup parent) {
 		super(null, name, 200);
-		setInfo(x, y, 18, 32, 7, 0);
+		setInfo(x, y);
+		//setInfo(x, y, 18, 32, 7, 0);
 		weapon = new PaperGun();
 		team = PLAYER_TEAM;
 		
@@ -88,20 +92,19 @@ public class Player extends LivingEntity {
 		* Testing
 		* */
 		//equipment
-		backpack.switchItem(new LeatherHelmet(), 0);
-		backpack.switchItem(new LeatherChestplate(), 4);
-		backpack.switchItem(new LeatherPents(), 8);
-		backpack.switchItem(new LeatherBoots(), 12);
-		backpack.switchItem(new GoldDiamondNecklace(), 1);
-		backpack.switchItem(new BronzeRing(), 5);
-		backpack.switchItem(new SilverDiamondRing(), 9);
-		backpack.switchItem(new GoldBracelet(), 13);
+		backpack.setItem(this, new LeatherHelmet(), 0);
+		backpack.setItem(this, new LeatherChestplate(), 4);
+		backpack.setItem(this, new LeatherPents(), 8);
+		backpack.setItem(this, new LeatherBoots(), 12);
+		backpack.setItem(this, new GoldDiamondNecklace(), 1);
+		backpack.setItem(this, new BronzeRing(), 5);
+		backpack.setItem(this, SilverDiamondRing.newSpeedRing(), 9);
+		backpack.setItem(this, new GoldBracelet(), 13);
 		
 		parent.addComponent(playerHud = new PlayerHud(parent));
 		updateAttributes();
 	}
 	
-	@Override
 	protected void updateCurrentSprite() {
 		int spriteIndex;
 		if (isStanding) {
@@ -110,10 +113,10 @@ public class Player extends LivingEntity {
 			spriteIndex = (direction * ANIMATION_SPRITES) + ((animation / ANIMATION_SPEED) % ANIMATION_SPRITES);
 		}
 		
-		currentSprite = new Sprite(Sprite.player_entity_sprites[spriteIndex]);
+		sprite = new Sprite(Sprite.player_entity_sprites[spriteIndex]);
 		for (int i = 0; i < EQUIPMENT_COUNT; i++) {
 			if (getEquipment(i) != null && getEquipment(i) instanceof Armor) {
-				currentSprite.add(((Armor) getEquipment(i)).getAnimatedSprite(spriteIndex));
+				sprite.add(((Armor) getEquipment(i)).getAnimatedSprite(spriteIndex));
 			}
 		}
 		
@@ -131,6 +134,7 @@ public class Player extends LivingEntity {
 			case ATTRIBUTE_LUCK: return 1;
 			case ATTRIBUTE_HEALTH_REGENERATION: return 0.01;
 			case ATTRIBUTE_STAMINA_REGENERATION: return 0.2;
+			case ATTRIBUTE_SPEED: return 1;
 			default: return 0;
 		}
 	}
@@ -156,9 +160,16 @@ public class Player extends LivingEntity {
 		movement(level);
 		attack(level);
 		showGUI();
+		updateCurrentSprite();
 		
 		if (input.isKeyDown(KeyEvent.VK_F)) {
 			level.spawnParticles(getInfo().getCenterX(), getInfo().getCenterY(), 10, Sprite.smoke_particles);
+		}
+		if (input.isKeyDown(KeyEvent.VK_V) != test) {
+			test = input.isKeyDown(KeyEvent.VK_V);
+			if (test) {
+				level.spawn(new TestEntity(info.getCenterX(), info.getCenterY(), level, "Test", 27, 2));
+			}
 		}
 		
 		itemPickup(level);
@@ -200,9 +211,11 @@ public class Player extends LivingEntity {
 		if (xm != 0 || ym != 0) {
 			
 			if (input.isKeyDown(MOVEMENT_SPEED_KEY) && useStamina(runningStaminaUsage)) {
-				move(Math.atan2(xm, ym), level, speed * speedBoost);
+				move(Math.atan2(xm, ym), level, getAttribute(ATTRIBUTE_SPEED) * speedBoost);
+			} else if (input.isKeyDown(MOVEMENT_SLOW_KEY)) {
+				move(Math.atan2(xm, ym), level, 1);
 			} else {
-				move(Math.atan2(xm, ym), level, speed);
+				move(Math.atan2(xm, ym), level, getAttribute(ATTRIBUTE_SPEED));
 			}
 			
 			if (camera != null)
@@ -244,7 +257,7 @@ public class Player extends LivingEntity {
 		}
 		
 		if (pickupTimer <= 0 && !backpack.isStorageFull()) {
-			if (backpack.switchItem(item) == null) {
+			if (backpack.switchItem(this, item) == null) {
 				itemEntity.remove();
 			}
 		}

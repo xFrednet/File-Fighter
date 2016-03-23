@@ -11,6 +11,7 @@ import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.TextFileEntity;
 import com.gmail.xfrednet.filefighter.graphics.GUIManager;
 import com.gmail.xfrednet.filefighter.graphics.Screen;
 import com.gmail.xfrednet.filefighter.level.tileentity.Chest;
+import com.gmail.xfrednet.filefighter.util.FileHelper;
 import com.gmail.xfrednet.filefighter.util.Input;
 
 import java.io.File;
@@ -25,7 +26,7 @@ public class FileLevel extends Level {
 	public Random random;
 	
 	public FileLevel(Player player, Input input, Screen screen, File file, GUIManager guiManager) {
-		super(player, input, screen, guiManager);
+		super(player, screen, guiManager);
 		
 		random = new Random();
 		
@@ -64,8 +65,9 @@ public class FileLevel extends Level {
 		
 		File[] files = file.listFiles();
 		for (int i = 0; i < files.length; i++) {
-			if (files[i].isFile()) 
-				spawn(getFileEntity(files[i]));
+			if (files[i].isFile()) {
+				spawn(FileHelper.getFileEntity(this, files[i], random.nextInt(10) * 32 + 32, random.nextInt(10) * 32 + 32));
+			}
 		}
 		
 		spawn(new ItemEntity(50, 75, this, player.getWeapon()));
@@ -73,53 +75,6 @@ public class FileLevel extends Level {
 		tileEntities.add(new Chest(3, 2));
 		tileEntities.add(new Chest(4, 2, "Chest 2"));
 		
-	}
-	
-	private Entity getFileEntity(File file) {
-		String fileName = file.getName();
-		
-		//file ending
-		String fileEnding = "";
-		int i = fileName.lastIndexOf('.');
-		if (i > 0) {
-			fileEnding = fileName.substring(i + 1);
-		}
-		fileEnding = fileEnding.toLowerCase();
-		
-		//spawn location
-		int x = (random.nextInt(WIDTH - 2) + 1) * TILE_SIZE + TILE_SIZE / 2;
-		int y = (random.nextInt(HEIGHT - 2) + 1) * TILE_SIZE + TILE_SIZE / 2;
-		
-		//entity choice
-		Entity fileEntity = null;
-		switch (fileEnding) {
-			case "lnk": fileEntity = getEntityByName(x, y, fileName); break;
-			//text files
-			case "txt": return new TextFileEntity(x, y, this, getPlayer(), fileName);
-			
-			//JGP
-			case "jpg": return new JPGFileEntity(x, y, this, getPlayer(), fileName);
-			case "jpeg": return new JPGFileEntity(x, y, this, getPlayer(), fileName);
-			case "jpe": return new JPGFileEntity(x, y, this, getPlayer(), fileName);
-			
-			//Test code
-			case "dummy": return new Dummy(250, 250, this, "dummy");
-		}
-		if (fileEntity == null) {
-			return new TestEntity(x, y, this, "KNOWN ERROR");
-		} else {
-			return fileEntity;
-		}
-		
-	}
-	
-	private Entity getEntityByName(double x, double y, String fileName) {
-		fileName.toLowerCase();
-		
-		if (fileName.contains("mozilla firefox")) {
-			return new TestEntity(x, y, this, "Mozilla Firefox");
-		}
-		return null;
 	}
 	
 }

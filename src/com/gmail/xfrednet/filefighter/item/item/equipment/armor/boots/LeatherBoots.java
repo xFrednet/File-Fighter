@@ -1,6 +1,7 @@
 package com.gmail.xfrednet.filefighter.item.item.equipment.armor.boots;
 
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
+import com.gmail.xfrednet.filefighter.item.item.EquipmentAttributeModifiers;
 import com.gmail.xfrednet.filefighter.item.item.equipment.armor.Shoes;
 
 /**

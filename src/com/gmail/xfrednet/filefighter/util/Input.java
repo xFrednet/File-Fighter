@@ -61,7 +61,7 @@ public class Input implements KeyListener, MouseMotionListener, MouseListener {
 	}
 	
 	public void setDefaultCursor() {
-		setCursor(DEFAULT_CURSOR);
+		//setCursor(DEFAULT_CURSOR);
 	}
 	public void setCursor(int cursor) {
 		Toolkit toolkit = Toolkit.getDefaultToolkit();

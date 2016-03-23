@@ -2,7 +2,12 @@ package com.gmail.xfrednet.filefighter.graphics;
 
 import com.gmail.xfrednet.filefighter.graphics.gui.components.GUIItemFrame;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+
+import static sun.awt.shell.ShellFolder.getShellFolder;
 
 /**
  * Created by xFrednet on 06.02.2016.
@@ -112,7 +117,7 @@ public class Sprite {
 	/*
 	* Constructor
 	* */
-	protected Sprite(int width, int height, int color) {
+	public Sprite(int width, int height, int color) {
 		this.HEIGHT = height;
 		this.WIDTH = width;
 		
@@ -122,17 +127,26 @@ public class Sprite {
 			pixels[i] = color;
 		}
 	}
-	protected Sprite(int xOffset, int yOffset, SpriteSheet spriteSheet, int size) {
+	public Sprite(int[] pixels, int width, int height) {
+		this.pixels = pixels;
+		WIDTH = width;
+		HEIGHT = height;
+		
+		spriteSheet = null;
+		x = 0;
+		y = 0;
+	}
+	public Sprite(int xOffset, int yOffset, SpriteSheet spriteSheet, int size) {
 		this(xOffset, yOffset, spriteSheet, size, size);
 	}
-	protected Sprite(int xOffset, int yOffset, Sprite sprite, int size) {
+	public Sprite(int xOffset, int yOffset, Sprite sprite, int size) {
 		WIDTH = size;
 		HEIGHT = size;
 		pixels = new int[WIDTH * HEIGHT];
 		
 		load(xOffset, yOffset, sprite);
 	}
-	protected Sprite(int xOffset, int yOffset, SpriteSheet spriteSheet, int width, int height) {
+	public Sprite(int xOffset, int yOffset, SpriteSheet spriteSheet, int width, int height) {
 		WIDTH = width;
 		HEIGHT = height;
 		pixels = new int[WIDTH * HEIGHT];
@@ -328,4 +342,5 @@ public class Sprite {
 		
 		return itemFrames;
 	}
+	
 }

@@ -3,13 +3,15 @@ package com.gmail.xfrednet.filefighter.level;
 import com.gmail.xfrednet.filefighter.Main;
 import com.gmail.xfrednet.filefighter.entity.*;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.TestEntity;
-import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.Slime;
 import com.gmail.xfrednet.filefighter.graphics.*;
 import com.gmail.xfrednet.filefighter.graphics.cameras.ControllableCamera;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponentGroup;
 import com.gmail.xfrednet.filefighter.util.Input;
+import com.gmail.xfrednet.filefighter.level.path.Node;
+import com.sun.javafx.beans.annotations.NonNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -32,23 +34,8 @@ public class Level {
 	protected Camera camera;
 	protected GUIComponentGroup levelGUI;
 	
-	public Level(int width, int height, Player player, Input input, Screen screen, GUIManager guiManager) {
-		WIDTH = width;
-		HEIGHT = height;
-		
-		tileIDs = new int[WIDTH * HEIGHT];
-		
-		camera = new ControllableCamera(this, screen, input);
-		
-		//player
-		this.player = player;
-		player.setCamera(camera);
-		levelGUI = new GUIComponentGroup(guiManager, 0, 0);
-		
-		generate();
-	}
-	public Level(Player player, Input input, Screen screen, GUIManager guiManager) {
-		camera = new ControllableCamera(this, screen, input);
+	public Level(Player player, Screen screen, GUIManager guiManager) {
+		camera = new ControllableCamera(this, screen, player.getInput());
 		
 		//player
 		this.player = player;
@@ -73,8 +60,6 @@ public class Level {
 			tileIDs[x] = Tile.List.WALL_ID;
 			tileIDs[x + (HEIGHT - 1) * WIDTH] = Tile.List.WALL_ID;
 		}
-		
-		spawn(new Slime(32 * 4, 32 * 4, this, player, "xFrednet"));
 		
 		spawn(new TestEntity(32 * 10, 32 * 10, this, "TestEntity"));
 		spawn(new TestEntity(32 * 20, 32 * 10, this, "TestEntity"));
@@ -172,9 +157,9 @@ public class Level {
 	}
 	
 	public void updateEntities() {
-		for (Entity entity : entityList) {
-			entity.update(this);
-			entity.endUpdate(this);
+		for (int i = 0; i < entityList.size(); i++) {
+			entityList.get(i).update(this);
+			entityList.get(i).endUpdate(this);
 		}
 		for (int i = 0; i < entityList.size(); i++) {
 			if (entityList.get(i).isRemoved()) {
@@ -232,20 +217,6 @@ public class Level {
 		return player;
 	}
 	
-	public List<Entity> getEntities() {
-		return entityList;
-	}
-	public List<Entity> getEntities(double x, double y, double maxDistance) {
-		List<Entity> returnEntities = new ArrayList<>();
-		
-		for (int i = 0; i < entityList.size(); i++) {
-			if (entityList.get(i).getDistance(x, y) < maxDistance) {
-				returnEntities.add(entityList.get(i));
-			}
-		}
-		
-		return returnEntities;
-	}
 	public List<Entity> getItemEntities(double x, double y, double maxDistance) {
 		List<Entity> returnEntities = new ArrayList<>();
 		
