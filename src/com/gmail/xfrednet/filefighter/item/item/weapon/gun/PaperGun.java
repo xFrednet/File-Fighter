@@ -23,11 +23,15 @@ public class PaperGun extends ShootingWeapon {
 		
 		if (executingEntity.useStamina(getStaminaUsage())) {
 			level.spawn(new PaperProjectile(level, getModifiedAngle(angle), getProjectileSpeed(), getRange(), getDamage(executingEntity), executingEntity));
+			useTimer += getShootSpeed();
+			return true;
 		}
 		
-		useTimer += getShootSpeed();
-		
-		return true;
+		return false;		
+	}
+	
+	public boolean isUsable(LivingEntity executingEntity) {
+		return executingEntity.hasEnoughStamina(getStaminaUsage());
 	}
 	
 	/*

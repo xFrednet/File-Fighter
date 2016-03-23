@@ -17,7 +17,6 @@ public class GUIEntityNameTag extends GUIComponent {
 	public static final int PADDING = 1;
 	
 	protected String name;
-	protected boolean updateBounds = true;
 	
 	public GUIEntityNameTag(GUIComponent parent, int x, int y, String name) {
 		super(parent, x - PADDING, y - PADDING + NAME_TAG_FONT.getSize());
@@ -43,7 +42,7 @@ public class GUIEntityNameTag extends GUIComponent {
 		Rectangle2D bounds = fm.getStringBounds(name, g);
 		
 		g.setColor(NAME_TAG_TEXT_COLOR);
-		g.drawString(name, (int)(screenX - (bounds.getWidth() / 2)) + PADDING, screenY + PADDING +  fm.getAscent());
+		g.drawString(name, (int)(screenX - (bounds.getWidth() / 2)) + PADDING, screenY + NAME_TAG_FONT.getSize());
 		
 	}
 	

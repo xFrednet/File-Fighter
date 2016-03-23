@@ -25,7 +25,7 @@ public abstract class Entity {
 	
 	protected final int entityID;
 	protected EntityInfo info;
-	protected Sprite currentSprite;
+	protected Sprite sprite;
 	protected String name;
 	protected boolean removed = false;
 	protected int team = ENEMY_TEAM;
@@ -52,6 +52,9 @@ public abstract class Entity {
 			level.getLevelGUI().addComponent(nameTag);
 		}
 	}
+	protected void setInfo(double x, double y) {
+		info = new EntityInfo(x, y, 32, 32, 0, 0);
+	}
 	protected void setInfo(double x, double y, int width, int height, int spriteXOffset, int spriteYOffset) {
 		info = new EntityInfo(x, y, width, height, spriteXOffset, spriteYOffset);
 	}
@@ -66,17 +69,14 @@ public abstract class Entity {
 		}
 	}
 	public void render(Screen screen) {
-		screen.drawSprite(info.getSpriteX(), info.getSpriteY(), currentSprite, false);
+		if (sprite != null) {
+			screen.drawSprite(info.getSpriteX(), info.getSpriteY(), sprite, false);
+		}
 		if (showBoundingBoxes) drawBoundingBox(screen);
 	}
-	public void render(Graphics g) {
-		if (showNameTag) {
-			if (nameTag != null)
-				nameTag.render(g);
-		}
-	}
+	
 	public void render(Screen screen, int x, int y, boolean fixed, int scale) {
-		screen.drawSprite(x, y, currentSprite, fixed, scale);
+		screen.drawSprite(x, y, sprite, fixed, scale);
 	}
 	
 	/*
@@ -184,8 +184,15 @@ public abstract class Entity {
 		return team;
 	}
 	
-	public Sprite getCurrentSprite() {
-		return currentSprite;
+	//sprite
+	public Sprite getSprite() {
+		if (sprite == null) {
+			return Sprite.null_sprite;
+		}
+		return sprite;
+	}
+	public void setSprite(Sprite sprite) {
+		this.sprite = sprite;
 	}
 	
 	public void remove() {
@@ -231,7 +238,6 @@ public abstract class Entity {
 		/*
 		* getters
 		* */
-		
 		public double getX() {
 			return x;
 		}
@@ -286,13 +292,21 @@ public abstract class Entity {
 					|| contains(info.x, info.getMaxY())
 					|| contains(info.getMaxX(), info.getMaxY());
 		}
-		
 		private boolean contains(double x, double y) {
 			return (x >= this.x &&
 					y >= this.y &&
 					x < getMaxX() &&
 					y < getMaxY());
 		}
+		
+		/*
+		* Setters
+		* */
+		public void setPosition(double x, double y) {
+			this.x = x;
+			this.y = y;
+		}
+		
 	}
 	
 }

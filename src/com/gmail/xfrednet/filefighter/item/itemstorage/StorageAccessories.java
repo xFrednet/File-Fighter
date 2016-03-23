@@ -1,5 +1,8 @@
 package com.gmail.xfrednet.filefighter.item.itemstorage;
 
+import com.gmail.xfrednet.filefighter.entity.Entity;
+import com.gmail.xfrednet.filefighter.entity.LivingEntity;
+import com.gmail.xfrednet.filefighter.item.Item;
 import com.gmail.xfrednet.filefighter.item.ItemContainer;
 import com.gmail.xfrednet.filefighter.item.ItemStorage;
 import com.gmail.xfrednet.filefighter.item.item.Equipment;
@@ -33,5 +36,16 @@ public class StorageAccessories extends ItemStorage {
 			default:
 				return null;
 		}
+	}
+	
+	@Override
+	public Item switchItem(Entity entity, Item item, int slot) {
+		Item rItem = super.switchItem(entity, item, slot);
+		
+		if (entity instanceof LivingEntity) {
+			((LivingEntity) entity).updateAttributes();
+		}
+		
+		return rItem;
 	}
 }

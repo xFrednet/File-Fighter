@@ -1,5 +1,6 @@
 package com.gmail.xfrednet.filefighter.item;
 
+import com.gmail.xfrednet.filefighter.entity.Entity;
 import com.gmail.xfrednet.filefighter.entity.Player;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponent;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponentGroup;
@@ -58,17 +59,20 @@ public class ItemStorage {
 			System.out.println("Player = null");
 			return;
 		}
-		player.setInHandItem(switchItem(player.getInHandItem(), slot));
+		player.setInHandItem(switchItem(player, player.getInHandItem(), slot));
 		
 	}
 	
 	/*
 	* setters
 	* */
-	public Item switchItem(Item item) {
-		return switchItem(item, getFirstFreeSlot(item));
+	public void setItem(Entity entity, Item item, int slot) {
+		switchItem(entity, item, slot);
 	}
-	public Item switchItem(Item item, int slot) {
+	public Item switchItem(Entity entity, Item item) {
+		return switchItem(entity, item, getFirstFreeSlot(item));
+	}
+	public Item switchItem(Entity entity, Item item, int slot) {
 		if (slot < 0 || slot >= items.length) return item;
 		
 		Item returnItem = items[slot].switchItem(item);
@@ -79,6 +83,7 @@ public class ItemStorage {
 		
 		return returnItem;
 	}
+	
 	
 	/*
 	* getters
