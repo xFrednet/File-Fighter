@@ -61,10 +61,8 @@ public class GUIProgressBar extends GUIComponent {
 		g.fillRect(screenX + backgroundPadding, screenY + backgroundPadding, width - backgroundPadding * 2, height - backgroundPadding * 2);
 		
 		//actual progressBar
-		if (progress > 0) {
-			g.setColor(progressColor);
-			g.fillRect(screenX + backgroundPadding, screenY + backgroundPadding, (int) ((double)(width - backgroundPadding * 2) * percentage), height - backgroundPadding * 2);
-		}
+		g.setColor(progressColor);
+		g.fillRect(screenX + backgroundPadding, screenY + backgroundPadding, (int) ((double)(width - backgroundPadding * 2) * percentage), height - backgroundPadding * 2);
 		
 		//info text
 		if (showInfo || showNumbers) {

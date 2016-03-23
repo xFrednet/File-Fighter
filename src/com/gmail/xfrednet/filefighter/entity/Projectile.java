@@ -34,7 +34,7 @@ public abstract class Projectile extends Entity {
 		this.shootingEntityID = shootingEntity.getID();
 		team = shootingEntity.getTeam();
 		
-		this.sprite = sprite;
+		this.currentSprite = sprite;
 	}
 	
 	/*
@@ -44,7 +44,7 @@ public abstract class Projectile extends Entity {
 		move(direction, level, speed);
 	}
 	public void render(Screen screen) {
-		screen.drawProjectile(info.getSpriteX(), info.getSpriteY(), sprite, direction);
+		screen.drawProjectile(info.getSpriteX(), info.getSpriteY(), currentSprite, direction);
 		if (showBoundingBoxes) drawBoundingBox(screen);
 	}
 	
@@ -66,6 +66,9 @@ public abstract class Projectile extends Entity {
 		move(speed * Math.sin(angle), speed * Math.cos(angle), level);
 		range += speed;
 	}
+	
+	protected void projectileMoved(Level level) {}
+	
 	private boolean move(double xm, double ym, Level level) {
 		LivingEntity collidingEntities = null;
 		if (!levelCollision(xm, ym, level) && (collidingEntities = entityCollision(xm, ym, level)) == null && range < maxRange) {
@@ -78,7 +81,7 @@ public abstract class Projectile extends Entity {
 			if (collidingEntities != null) {
 				Entity damageSource;
 				
-				if ((damageSource = level.getEntity(shootingEntityID)) == null)
+				if ((damageSource = level.getEntity(shootingEntityID)) == null) 
 					damageSource = this;
 				
 				collidingEntities.damage(damageSource, damage);
@@ -87,8 +90,6 @@ public abstract class Projectile extends Entity {
 			return false;
 		}
 	}
-	
-	protected void projectileMoved(Level level) {}
 	
 	public LivingEntity  entityCollision(double xm, double ym, Level level) {
 		List<LivingEntity> entities = level.livingEntityMotionCollision(xm ,ym, this);
@@ -112,5 +113,5 @@ public abstract class Projectile extends Entity {
 	* abstract
 	* */
 	abstract protected Sprite[] getParticleSprites();
-	abstract public Sprite getSprite();
+	abstract protected Sprite getSprite();
 }

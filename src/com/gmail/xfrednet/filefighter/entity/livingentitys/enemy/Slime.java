@@ -9,21 +9,22 @@ import com.gmail.xfrednet.filefighter.level.Level;
 /**
  * Created by xFrednet on 08.02.2016.
  */
-public class TextFileEntity extends EnemyEntity {
+public class Slime extends EnemyEntity {
 	
-	public static final int ANIMATION_SPRITES = 6;
+	public static final int ANIMATION_SPRITES = 16;
+	public static final int ANIMATION_SPEED = 1;
 	
-	public TextFileEntity(int x, int y, Level level, Entity target, String name) {
+	public Slime(int x, int y, Level level, Entity target, String name) {
 		super(level, name, 0, new MoveToTarget(target.getID(), 1, 30)/*behavior*/);
-		super.setInfo(x, y, 26/*width*/, 27/*height*/, 3/*spriteXOffset*/, 4/*spriteXOffset*/);
+		super.setInfo(x, y, 27/*width*/, 17/*height*/, 3/*spriteXOffset*/, 15/*spriteXOffset*/);
 	}
 	
 	@Override
 	protected void updateCurrentSprite() {
 		if (isStanding) {
-			currentSprite = Sprite.textFile_entity_sprites[STILL_STANDING_SPRITE_INDEX];
+			currentSprite = Sprite.slime_entity_sprites[STILL_STANDING_SPRITE_INDEX];
 		} else {
-			currentSprite = Sprite.textFile_entity_sprites[(direction * ANIMATION_SPRITES) + ((int)(animation / ANIMATION_SPEED) % ANIMATION_SPRITES)];
+			currentSprite = Sprite.slime_entity_sprites[(direction * ANIMATION_SPRITES) + ((int)(animation / ANIMATION_SPEED) % ANIMATION_SPRITES)];
 		}
 	}
 	
@@ -31,7 +32,7 @@ public class TextFileEntity extends EnemyEntity {
 	protected double getBaseAttribute(int attribute) {
 		switch (attribute) {
 			case ATTRIBUTE_MAX_HEALTH: return 10;
-			case ATTRIBUTE_MAX_STAMINA: return 25;
+			case ATTRIBUTE_MAX_STAMINA: return 20;
 			case ATTRIBUTE_PHYSICAL_DEFENCE: return 1;
 			case ATTRIBUTE_MENTAL_DEFENCE: return 1;
 			case ATTRIBUTE_PHYSICAL_DAMAGE: return 1;
@@ -42,5 +43,4 @@ public class TextFileEntity extends EnemyEntity {
 			default: return 0;
 		}
 	}
-	
 }

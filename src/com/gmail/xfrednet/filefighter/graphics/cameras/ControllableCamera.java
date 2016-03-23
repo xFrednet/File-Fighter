@@ -18,6 +18,7 @@ public class ControllableCamera extends Camera {
 	private static final int CAMERA_SPEED_KEY = KeyEvent.VK_CONTROL;
 	
 	private Input input;
+	private int speed = 1;
 	
 	/*
 	* Constructor
@@ -37,7 +38,6 @@ public class ControllableCamera extends Camera {
 		int xm = 0;
 		int ym = 0;
 		
-		int speed = 1;
 		if (input.isKeyDown(CAMERA_UP_KEY)) ym -= speed;
 		if (input.isKeyDown(CAMERA_DOWN_KEY)) ym += speed;
 		if (input.isKeyDown(CAMERA_LEFT_KEY)) xm -= speed;

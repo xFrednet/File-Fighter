@@ -20,6 +20,11 @@ public class Dummy extends LivingEntity {
 	}
 	
 	@Override
+	protected void updateCurrentSprite() {
+		currentSprite = Sprite.dummy_entity_sprite;
+	}
+	
+	@Override
 	public void update(Level level) {
 		super.update(level);
 		nameTag.setName(name);

@@ -19,6 +19,15 @@ public class JPGFileEntity extends EnemyEntity {
 	}
 	
 	@Override
+	protected void updateCurrentSprite() {
+		if (isStanding) {
+			currentSprite = Sprite.jpgFile_entity_sprites[STILL_STANDING_SPRITE_INDEX];
+		} else {
+			currentSprite = Sprite.jpgFile_entity_sprites[(direction * ANIMATION_SPRITES) + ((int)(animation / ANIMATION_SPEED) % ANIMATION_SPRITES)];
+		}
+	}
+	
+	@Override
 	protected double getBaseAttribute(int attribute) {
 		switch (attribute) {
 			case ATTRIBUTE_MAX_HEALTH: return 10;

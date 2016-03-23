@@ -26,10 +26,6 @@ public class SpriteSheet {
 	public int[] pixels;
 	private BufferedImage image;
 	
-	public SpriteSheet(BufferedImage image) {
-		this.image = image;
-		load(null);
-	}
 	public SpriteSheet(String path) {
 		load(path);
 	}

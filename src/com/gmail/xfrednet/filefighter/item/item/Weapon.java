@@ -3,7 +3,6 @@ package com.gmail.xfrednet.filefighter.item.item;
 import com.gmail.xfrednet.filefighter.entity.Entity;
 import com.gmail.xfrednet.filefighter.entity.LivingEntity;
 import com.gmail.xfrednet.filefighter.item.Item;
-import com.gmail.xfrednet.filefighter.item.item.weapon.ShootingWeapon;
 import com.gmail.xfrednet.filefighter.level.Level;
 
 /**
@@ -29,14 +28,4 @@ public abstract class Weapon extends Item {
 	* */
 	abstract public boolean attack(Level level, LivingEntity executingEntity, double angle);
 	abstract public int getDamageType();
-	abstract public boolean isUsable(LivingEntity executingEntity);
-	
-	public double getRange() {
-		if (this instanceof ShootingWeapon) {
-			ShootingWeapon w = (ShootingWeapon) this;
-			return w.getRange();
-		} else {
-			return 0;
-		}
-	}
 }

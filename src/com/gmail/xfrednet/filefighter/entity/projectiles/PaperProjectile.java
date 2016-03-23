@@ -16,7 +16,7 @@ public class PaperProjectile extends Projectile {
 	public static final String NAME = "Paper ball";
 	public static final int PARTICLE_TRACE_TIME = 10;
 	public static final double PARTICLE_TRACE_SPEED = 0.5;
-	public static final int TRACE_PARTICLE_CHANCE = 4; // 1/4
+	public static final int TRACE_PARTICLE_CHANCE = 5; // 1/5
 	
 	/*
 	* Constructor
@@ -44,7 +44,7 @@ public class PaperProjectile extends Projectile {
 	}
 	
 	@Override
-	public Sprite getSprite() {
+	protected Sprite getSprite() {
 		return Sprite.paper_projectile_sprite;
 	}
 	

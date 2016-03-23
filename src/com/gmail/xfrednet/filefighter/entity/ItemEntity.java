@@ -15,7 +15,7 @@ public class ItemEntity extends Entity {
 	public ItemEntity(double x, double y, Level level, Item item) {
 		super(level, item.getName());
 		this.item = item;
-		sprite = item.getItemSprite();
+		currentSprite = item.getItemSprite();
 		setInfo(x, y, Sprite.ITEM_ENTITY_SPRITE_SIZE, Sprite.ITEM_ENTITY_SPRITE_SIZE, 0, 0);
 	}
 	
@@ -26,7 +26,7 @@ public class ItemEntity extends Entity {
 	
 	@Override
 	public void render(Screen screen) {
-		screen.drawItemEntity((int)info.x, (int)info.y, sprite);
+		screen.drawItemEntity((int)info.x, (int)info.y, currentSprite);
 	}
 	
 	public Item getItem() {
