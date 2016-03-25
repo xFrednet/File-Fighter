@@ -28,7 +28,6 @@ public class Node {
 		this.parent = parent;
 	}
 	
-	
 	/*
 	* Util
 	* */
@@ -42,16 +41,15 @@ public class Node {
 		return false;
 	}
 	
-	public void setUpFScore(Node node) {
-		setFScore(calculateFScore(node));
-	}
-	
 	public int calculateFScore(Node node) {
 		int a = x - node.x;
 		int b = y - node.y;
 		//distance between two nodes 
 		//no sqrt to save some calculations
 		return a * a + b * b;
+	}
+	public void setUpFScore(Node node) {
+		setFScore(calculateFScore(node));
 	}
 	
 	public Node[] getNeighbors() {
@@ -66,19 +64,14 @@ public class Node {
 		};
 	}
 	
-	public double getAngleTo(Node node) {
-		return Math.atan2(node.x - x, node.y - y);
-	}
-	
-	public void nullParent() {
-		parent = null;
-	}
-	
 	/*
 	* setter
 	* */
 	public void setFScore(int fScore) {
 		this.fScore = fScore;
+	}
+	public void nullParent() {
+		parent = null;
 	}
 	
 	/*
@@ -103,6 +96,12 @@ public class Node {
 		Entity.EntityInfo info = entity.getInfo();
 		return Math.atan2((x * Level.TILE_SIZE) - info.getX(), (y * Level.TILE_SIZE) - info.getY());
 	}
+	public double getAngleToParent() {
+		return getAngleTo(parent);
+	}
+	public double getAngleTo(Node node) {
+		return Math.atan2(node.x - x, node.y - y);
+	}
 	
 	public double getMapDistanceTo(Node node) {
 		double a = (x - node.x) * Level.TILE_SIZE;
@@ -117,10 +116,5 @@ public class Node {
 		
 		return Math.sqrt(a * a + b * b);
 	}
-	
-	public double getAngleToParent() {
-		return getAngleTo(parent);
-	}
-	
 	
 }

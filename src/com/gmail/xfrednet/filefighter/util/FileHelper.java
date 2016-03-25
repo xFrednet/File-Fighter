@@ -10,6 +10,7 @@ import com.gmail.xfrednet.filefighter.graphics.Screen;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
 import com.gmail.xfrednet.filefighter.graphics.SpriteSheet;
 import com.gmail.xfrednet.filefighter.level.Level;
+import com.sun.istack.internal.Nullable;
 import com.sun.javafx.beans.annotations.NonNull;
 
 import java.awt.*;
@@ -39,14 +40,13 @@ public class FileHelper {
 	/*
 	* File Entities
 	* */
-	public static Entity getFileEntity(Level level, File file, int x, int y) {
+	public static Entity getFileEntity(@NonNull Level level, @Nullable File file, int x, int y) {
 		if (file != null) {
-			System.out.println(file.getAbsoluteFile());
 			Entity fileEntity = getBlankFileEntity(level, file, x, y);
 			fileEntity.setSprite(getFileSprite(file));
 			return fileEntity;
 		} else {
-			System.out.println("[ERROR] file == null");
+			System.out.println("[ERROR] FileHelper: file == null");
 			return null;
 		}
 	}

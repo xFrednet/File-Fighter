@@ -29,11 +29,11 @@ public class Main extends Canvas implements Runnable {
     
     public static final String NAME = "File Fighter";
     public static final String PLAYER_NAME = "xFrednet";
-    public static final int WIDTH = 480;
+    public static final int WIDTH = 720;
     public static final int HEIGHT = WIDTH * 9 / 16;
-    public static final int scale = 3;
+    public static final int scale = 2;
     public static final int UPS = 30;
-    public static final String LEVEL_LOCATION = (System.getProperty("user.home").endsWith("xFrednaet")) ? "C:\\Users\\xFrednet\\IdeaProjects\\File-Fighter\\level" : System.clearProperty("user.home") + "\\Desktop";
+    public static final String LEVEL_LOCATION = (System.getProperty("user.home").endsWith("xFrednset")) ? "C:\\Users\\xFrednet\\IdeaProjects\\File-Fighter\\level" : System.clearProperty("user.home") + "\\Desktop";
     /*"Alter ich Psycholog(y)ier dich gleich mal"*/
 	
 	public static final Font gameFont = new Font("Lucida Console", Font.PLAIN, 16);
@@ -106,9 +106,9 @@ public class Main extends Canvas implements Runnable {
 	* Game loop 
 	* */
     public void start() {
-	    
-        //level = new FileLevel(player, input, screen, new File(LEVEL_LOCATION), guiManager);
-        level = new ImageLevel(player, input, screen, new File("C:\\Users\\xFrednet\\IdeaProjects\\File-Fighter\\level\\level.png"), guiManager);
+	    //LEVEL_LOCATION
+        level = new FileLevel(player, screen, new File(LEVEL_LOCATION), guiManager);
+        //level = new ImageLevel(player, screen, new File("C:\\Users\\xFrednet\\IdeaProjects\\File-Fighter\\level\\level.png"), guiManager);
         camera = level.getCamera();
         
         thread = new Thread(this);
@@ -169,13 +169,13 @@ public class Main extends Canvas implements Runnable {
         input.update();
         camera.update();
         player.update(level);
-        level.update();
+        level =  level.update();
         guiManager.update();
         debugUpdate();
         
-        if (input.isKeyDown(KeyEvent.VK_ESCAPE)) {
-            running = false;
-        }
+        //if (input.isKeyDown(KeyEvent.VK_ESCAPE)) {
+         //   running = false;
+        //}
         
     }
     private void debugUpdate() {

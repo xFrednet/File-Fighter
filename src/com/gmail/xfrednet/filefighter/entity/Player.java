@@ -55,7 +55,6 @@ public class Player extends LivingEntity {
 	
 	Input input;
 	Camera camera;
-	double speed = 1.5 * 10;
 	double speedBoost = 1.5;
 	double runningStaminaUsage = 0.2;
 	
@@ -78,7 +77,7 @@ public class Player extends LivingEntity {
 	* constructor
 	* */
 	public Player(int x, int y, Input input, String name, GUIComponentGroup parent) {
-		super(null, name, 200);
+		super(null, name, 0);
 		setInfo(x, y);
 		//setInfo(x, y, 18, 32, 7, 0);
 		weapon = new PaperGun();
@@ -100,6 +99,8 @@ public class Player extends LivingEntity {
 		backpack.setItem(this, new BronzeRing(), 5);
 		backpack.setItem(this, SilverDiamondRing.newSpeedRing(), 9);
 		backpack.setItem(this, new GoldBracelet(), 13);
+		
+		accessories.switchItem(this, SilverDiamondRing.newSpeedRing(), 2);
 		
 		parent.addComponent(playerHud = new PlayerHud(parent));
 		updateAttributes();
@@ -134,7 +135,7 @@ public class Player extends LivingEntity {
 			case ATTRIBUTE_LUCK: return 1;
 			case ATTRIBUTE_HEALTH_REGENERATION: return 0.01;
 			case ATTRIBUTE_STAMINA_REGENERATION: return 0.2;
-			case ATTRIBUTE_SPEED: return 1;
+			case ATTRIBUTE_SPEED: return 5;
 			default: return 0;
 		}
 	}
@@ -157,13 +158,13 @@ public class Player extends LivingEntity {
 	* */
 	public void update(Level level) {
 		super.update(level);
-		movement(level);
 		attack(level);
+		movement(level);
 		showGUI();
 		updateCurrentSprite();
 		
 		if (input.isKeyDown(KeyEvent.VK_F)) {
-			level.spawnParticles(getInfo().getCenterX(), getInfo().getCenterY(), 10, Sprite.smoke_particles);
+			level.spawnParticles(getInfo().getCenterX(), getInfo().getCenterY(), 10, Sprite.Particles.smoke_particles);
 		}
 		if (input.isKeyDown(KeyEvent.VK_V) != test) {
 			test = input.isKeyDown(KeyEvent.VK_V);
@@ -297,13 +298,13 @@ public class Player extends LivingEntity {
 		public static final int ITEM_INFO_X = 0;
 		public static final int ITEM_INFO_Y = Main.HEIGHT * Main.scale - 200;
 		
-		public static final int EQUIPMENT_X = 400;
-		public static final int EQUIPMENT_Y = 99;
+		public static final int EQUIPMENT_X = 402;
+		public static final int EQUIPMENT_Y = 100;
 		
-		public static final int BACKPACK_X = 727;
+		public static final int BACKPACK_X = 731;
 		public static final int BACKPACK_Y = 99;
 		
-		public static final int EXTRA_STORAGE_X = 727;
+		public static final int EXTRA_STORAGE_X = 731;
 		public static final int EXTRA_STORAGE_Y = 355;
 		
 		GUILivingEntityStatusBar statusBar;

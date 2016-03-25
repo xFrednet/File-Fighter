@@ -63,7 +63,9 @@ public class Particle {
 		WIDTH = sprite.WIDTH;
 		HEIGHT = sprite.HEIGHT;
 		
-		spawnPosition(level, x, y);
+		//spawnPosition(level, x, y);
+		this.x = x - WIDTH / 2;
+		this.y = y - HEIGHT / 2;
 		
 	}
 	

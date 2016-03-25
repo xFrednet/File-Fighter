@@ -27,13 +27,14 @@ public class TextFileEntity extends EnemyEntity {
 	@Override
 	protected double getBaseAttribute(int attribute) {
 		switch (attribute) {
-			case ATTRIBUTE_MAX_HEALTH: return 10;
+			case ATTRIBUTE_MAX_HEALTH: return 4;
 			case ATTRIBUTE_MAX_STAMINA: return 25;
 			case ATTRIBUTE_PHYSICAL_DEFENCE: return 1;
 			case ATTRIBUTE_MENTAL_DEFENCE: return 1;
-			case ATTRIBUTE_PHYSICAL_DAMAGE: return 1;
-			case ATTRIBUTE_MENTAL_DAMAGE: return 1;
+			case ATTRIBUTE_PHYSICAL_DAMAGE: return 0;
+			case ATTRIBUTE_MENTAL_DAMAGE: return 0;
 			case ATTRIBUTE_LUCK: return 1;
+			case ATTRIBUTE_SPEED: return 4;
 			case ATTRIBUTE_HEALTH_REGENERATION: return 0;
 			case ATTRIBUTE_STAMINA_REGENERATION: return 0.2;
 			default: return 0;

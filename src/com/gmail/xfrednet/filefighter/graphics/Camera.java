@@ -92,4 +92,7 @@ public abstract class Camera {
 		this.screen = screen;
 	}
 	
+	public Screen getScreen() {
+		return screen;
+	}
 }

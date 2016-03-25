@@ -123,6 +123,11 @@ public class GUIComponent {
 			}
 		}
 	}
+	public void remove() {
+		if (parent instanceof GUIComponentGroup) {
+			((GUIComponentGroup) parent).removeComponent(this);
+		}
+	}
 	
 	/*
 	* Game Loop Util
@@ -198,4 +203,7 @@ public class GUIComponent {
 		return height + padding * 2;
 	}
 	
+	public GUIComponent getParent() {
+		return parent;
+	}
 }

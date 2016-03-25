@@ -16,7 +16,6 @@ import com.gmail.xfrednet.filefighter.level.Level;
 public abstract class LivingEntity extends Entity {
 	
 	public static final int MAX_ANIMATION_VALUE = 10000;
-	public static final int ANIMATION_SPEED =  ((int) (Main.UPS * 0.2) == 0) ? 1 : (int) (Main.UPS * 0.2);
 	public static final int STILL_STANDING_SPRITE_INDEX = 0;
 	public static final double XP_LEVEL_INCREASE = 1.1;
 	
@@ -35,15 +34,12 @@ public abstract class LivingEntity extends Entity {
 	public static final int ATTRIBUTE_HEALTH_REGENERATION = 7;
 	public static final int ATTRIBUTE_STAMINA_REGENERATION = 8;
 	public static final int ATTRIBUTE_SPEED = 9;
-	/*
-	* Speed !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	* */
 	
 	private static final double ATTRIBUTE_HEALTH_PER_POINT = 10;
-	private static final double ATTRIBUTE_PHYSICAL_DEFENCE_PER_POINT = 2;
-	private static final double ATTRIBUTE_MENTAL_DEFENCE_PER_POINT = 2;
-	private static final double ATTRIBUTE_STRENGTH_PER_POINT = 3;
-	private static final double ATTRIBUTE_INTELLIGENCE_PER_POINT = 3;
+	private static final double ATTRIBUTE_PHYSICAL_DEFENCE_PER_POINT = 1;
+	private static final double ATTRIBUTE_MENTAL_DEFENCE_PER_POINT = 1;
+	private static final double ATTRIBUTE_STRENGTH_PER_POINT = 2;
+	private static final double ATTRIBUTE_INTELLIGENCE_PER_POINT = 2;
 	private static final double ATTRIBUTE_LUCK_PER_POINT = 1;
 	
 	protected double[] attributes = new double[ATTRIBUTE_COUNT];

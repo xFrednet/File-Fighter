@@ -11,11 +11,16 @@ import com.gmail.xfrednet.filefighter.level.Tile;
 public class NullTile extends Tile {
 	@Override
 	public void render(int x, int y, Screen screen, Level level) {
-		screen.drawTile(x << 5, y << 5, Sprite.null_tile_sprite);
+		screen.drawTile(x << 5, y << 5, Sprite.Tiles.null_tile_sprite);
 	}
 	
 	@Override
 	public int getID() {
 		return List.NULL_TILE_ID;
+	}
+	
+	@Override
+	public boolean isSolid() {
+		return true;
 	}
 }

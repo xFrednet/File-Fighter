@@ -10,11 +10,18 @@ import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.JPGFileEntity;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.TextFileEntity;
 import com.gmail.xfrednet.filefighter.graphics.GUIManager;
 import com.gmail.xfrednet.filefighter.graphics.Screen;
+import com.gmail.xfrednet.filefighter.level.tile.WallTile;
 import com.gmail.xfrednet.filefighter.level.tileentity.Chest;
+import com.gmail.xfrednet.filefighter.level.tileentity.FolderTileEntity;
 import com.gmail.xfrednet.filefighter.util.FileHelper;
 import com.gmail.xfrednet.filefighter.util.Input;
 
 import java.io.File;
+import java.io.FileFilter;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -22,59 +29,285 @@ import java.util.Random;
  */
 public class FileLevel extends Level {
 	
-	public File file;
-	public Random random;
+	final File FILE;
+	final long SEED;
 	
-	public FileLevel(Player player, Input input, Screen screen, File file, GUIManager guiManager) {
+	public FileLevel(Player player, Screen screen, File file, GUIManager guiManager) {
 		super(player, screen, guiManager);
 		
-		random = new Random();
+		WIDTH = 49;
+		HEIGHT = 49;
+		tiles = new Tile[WIDTH * HEIGHT];
 		
-		if (!file.isDirectory()) {
-			System.out.println("[ERROR] FileLevel: given File is a File not a directory: " + file.getPath());
+		
+		if (file == null) {
+			System.out.println("[ERROR] FileLevel: given File is null");
 			
-			WIDTH = 25;
-			HEIGHT = 25;
-			tileIDs = new int[WIDTH * HEIGHT];
+			SEED = 0;
+			FILE = new File(System.getProperty("user.home"));
+			
 			return;
 		}
 		
-		generate(file);
+		SEED = stringToLong(file.getName());
+		FILE = file;
+		
+		System.out.println("[INFO] FileLevel: dir: " + file.getAbsolutePath());
+		System.out.println("[INFO] FileLevel: Seed: " + SEED);
+		
+		if (!file.isDirectory()) {
+			System.out.println("[ERROR] FileLevel: given File is a File not a directory: " + file.getPath());
+			return;
+		}
+		
+		generate();
+		
+		initClearProgress();
 	}
 	
-	private void generate(File file) {
-		this.file = file;
-		WIDTH = 25;
-		HEIGHT = 25;
-		
-		tileIDs = new int[WIDTH * HEIGHT];
-		
-		for (int i = 0; i < tileIDs.length; i++) {
-			tileIDs[i] = Tile.List.SPACE_TILE_ID;
+	private void generate() {
+		generateMaze();
+		spawnFileEntities();
+		spawnFolderTileEntities();
+	}
+	
+	/*
+	* Entity spawning
+	* */
+	private void spawnFolderTileEntities() {
+		File file = FILE.getParentFile();
+		if (file != null) {
+			tileEntities.add(new FolderTileEntity(2, 2, file));
 		}
+	}
+	private void spawnFileEntities() {
+		Random random = new Random(SEED);
+		File[] files = FILE.listFiles(new FileFilter() {
+			@Override
+			public boolean accept(File pathname) {
+				return !pathname.isDirectory();
+			}
+		});
 		
-		//Walls
-		for (int y = 0; y < HEIGHT; y++) {
-			tileIDs[y * WIDTH] = Tile.List.WALL_ID;
-			tileIDs[WIDTH - 1 + y * WIDTH] = Tile.List.WALL_ID;
-		}
-		for (int x = 0; x < WIDTH; x++) {
-			tileIDs[x] = Tile.List.WALL_ID;
-			tileIDs[x + (HEIGHT - 1) * WIDTH] = Tile.List.WALL_ID;
-		}
-		
-		File[] files = file.listFiles();
+		Node spawnLocation;
+		int x;
+		int y;
 		for (int i = 0; i < files.length; i++) {
-			if (files[i].isFile()) {
-				spawn(FileHelper.getFileEntity(this, files[i], random.nextInt(10) * 32 + 32, random.nextInt(10) * 32 + 32));
+			spawnLocation = getValidSpawnLocation(random);
+			x = spawnLocation.getMapX() + TILE_SIZE / 2;
+			y = spawnLocation.getMapY() + TILE_SIZE / 2;
+			
+			spawn(FileHelper.getFileEntity(this, files[i], x, y));
+		}
+		
+	}
+	private Node getValidSpawnLocation(Random random) {
+		Node location = new Node();
+		do {
+			location.setX(random.nextInt(WIDTH));
+			location.setY(random.nextInt(HEIGHT));
+		} while (isSolid(location.getX(), location.getY()));
+		
+		return location;
+	}
+	
+	/*
+	* Maze generation
+	* */
+	private void generateMaze() {
+		Random r = new Random(SEED);
+		int distance = 4;
+		
+		for (int i = 0; i < tiles.length; i++) {
+			tiles[i] = Tile.List.spaceTile;
+		}
+		
+		//generation walls same will be remove
+		for (int y = 0; y < HEIGHT; y += distance) {
+			for (int x = 0; x < WIDTH; x++) {
+				tiles[x + y * WIDTH] = new WallTile();
+			}
+		}
+		for (int x = 0; x < WIDTH; x += distance) {
+			for (int y = 0; y < HEIGHT; y++) {
+				tiles[x + y * WIDTH] = new WallTile();
 			}
 		}
 		
-		spawn(new ItemEntity(50, 75, this, player.getWeapon()));
+		//creating values
+		int cNodeX = 2;
+		int cNodeY = 2;
+		Node cNode;
+		int loopTimes;
+		List<Node> neighbors;
 		
-		tileEntities.add(new Chest(3, 2));
-		tileEntities.add(new Chest(4, 2, "Chest 2"));
+		for (cNodeY = 2; cNodeY < HEIGHT; cNodeY += distance) {
+			for (cNodeX = 2; cNodeX < WIDTH; cNodeX += distance) {
+				
+				cNode = new Node(cNodeX, cNodeY);
+				neighbors = cNode.getNeighbors(distance);
+				
+				if (!neighbors.isEmpty()) {
+					if (neighbors.size() > 1) {
+						loopTimes = (int) (1 + (neighbors.size() * r.nextDouble()) / 2);
+						
+						for (; loopTimes > 0; loopTimes--) {
+							clearTiles(neighbors.get(r.nextInt(neighbors.size())), cNode, distance);
+						}
+					} else {
+						clearTiles(neighbors.get(0), cNode, distance);
+					}
+				}
+			}
+		}
+		
+		for (int y = 0; y < HEIGHT; y += 4) {
+			for (int x = 0; x < WIDTH; x += 4) {
+				if (!isAWallPart(x, y)) {
+					tiles[x + y * WIDTH] = Tile.List.spaceTile;
+				}
+			}
+		}
+		
+	}
+	private boolean isAWallPart(int x, int y) {
+		//    1
+		//  2   3
+		//    4
+		return getTile(x, y - 1).getID() == Tile.List.WALL_ID  
+				|| getTile(x - 1, y    ).getID() == Tile.List.WALL_ID 
+				|| getTile(x + 1, y    ).getID() == Tile.List.WALL_ID
+				|| getTile(x    , y + 1).getID() == Tile.List.WALL_ID;
+	}
+	private void clearTiles(Node node, Node parent, int distance) {
+		//    1
+		//  2 3 4
+		//    5
+		int xn = (node.x - parent.getX()) / distance;
+		int yn = (node.y - parent.getY()) / distance;
+		Node n = new Node(parent.x + xn * distance / 2, parent.y + yn * distance / 2);
+		
+		// 1
+		int x = n.getX();
+		int y = n.getY() - 1;
+		tiles[x + y * WIDTH] = Tile.List.spaceTile;
+		// 2
+		x = n.getX() - 1;
+		y = n.getY();
+		tiles[x + y * WIDTH] = Tile.List.spaceTile;
+		// 3
+		x = n.getX();
+		y = n.getY();
+		tiles[x + y * WIDTH] = Tile.List.spaceTile;
+		// 4
+		x = n.getX() + 1;
+		y = n.getY();
+		tiles[x + y * WIDTH] = Tile.List.spaceTile;
+		// 5
+		x = n.getX();
+		y = n.getY() + 1;
+		tiles[x + y * WIDTH] = Tile.List.spaceTile;
 		
 	}
 	
+	/*
+	* Util
+	* */
+	private long stringToLong(String string) {
+		if (string.length() < 8) {
+			string += "        ";
+		}
+		return ByteBuffer.wrap(string.getBytes()).getLong();
+	}
+	
+	
+	/*
+	* Util Class
+	* */
+	private class Node {
+		
+		int x;
+		int y;
+		
+		/*
+		* Constructor
+		* */
+		public Node() {}
+		public Node(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+		
+		/*
+		* Util
+		* */
+		public List<Node> getNeighbors(int distance) {
+			List<Node> n = new ArrayList<>();
+			
+			//    1
+			//  2   3
+			//    4
+			
+			// 1
+			Node node = new Node(x, y - distance);
+			if (node.isValid(this, distance)) {
+				n.add(node);
+			}
+			// 2
+			node = new Node(x - distance, y);
+			if (node.isValid(this, distance)) {
+				n.add(node);
+			}
+			// 3
+			node = new Node(x + distance, y);
+			if (node.isValid(this, distance)) {
+				n.add(node);
+			}
+			// 4
+			node = new Node(x, y + distance);
+			if (node.isValid(this, distance)) {
+				n.add(node);
+			}
+			
+			return n;
+		}
+		
+		/*
+		* setters
+		* */
+		public void setX(int x) {
+			this.x = x;
+		}
+		public void setY(int y) {
+			this.y = y;
+		}
+		
+		/*
+		* getters
+		* */
+		public int getX() {
+			return x;
+		}
+		public int getY() {
+			return y;
+		}
+		public int getMapX() {
+			return getX() * TILE_SIZE;
+		}
+		public int getMapY() {
+			return getY() * TILE_SIZE;
+		}
+		
+		public boolean isValid(Node parent, int distance) {
+			if (FileLevel.this.contains(x, y)) return false;
+			
+			int x = (this.x - parent.getX()) / distance;
+			int y = (this.y - parent.getY()) / distance;
+			
+			return isSolid(parent.getX() + (x * distance / 2), parent.getY() + (y * distance / 2));
+		}
+		
+	}
 }
+
+

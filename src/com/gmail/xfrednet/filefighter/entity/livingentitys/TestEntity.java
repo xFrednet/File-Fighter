@@ -26,7 +26,7 @@ public class TestEntity extends LivingEntity {
 		super(level, name, 0, null);
 		super.setInfo(x, y);
 		path = new Path(level, this, level.getPlayer());
-		setSprite(Sprite.wall_tile_sprite[0]);
+		setSprite(Sprite.Tiles.wall_tile_sprite[0]);
 		weapon = new PaperGun();
 		team = ENEMY_TEAM;
 	}

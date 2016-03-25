@@ -18,6 +18,7 @@ public abstract class Entity {
 	public static final int POSITION_COLOR = 0xffff0000;
 	public static final int NAME_TAG_SPAWN_X = -100;
 	public static final int NAME_TAG_SPAWN_Y = -100;
+	public static final int NO_TEAM = -1;
 	public static final int PLAYER_TEAM = 1;
 	public static final int ENEMY_TEAM = 0;
 	public static boolean showBoundingBoxes = false;

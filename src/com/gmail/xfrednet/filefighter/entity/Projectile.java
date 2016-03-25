@@ -90,7 +90,7 @@ public abstract class Projectile extends Entity {
 	
 	protected void projectileMoved(Level level) {}
 	
-	public LivingEntity  entityCollision(double xm, double ym, Level level) {
+	public LivingEntity entityCollision(double xm, double ym, Level level) {
 		List<LivingEntity> entities = level.livingEntityMotionCollision(xm ,ym, this);
 		
 		if (entities.size() == 0) return null;
