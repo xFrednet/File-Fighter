@@ -25,7 +25,13 @@ public class EquipmentAttributeModifiers {
 	double healthRegeneration = 0;
 	double staminaRegeneration = 0;
 	
-	public double getAttributeModifiers(int attribute) {
+	//speed
+	double speed = 0;
+	
+	/*
+	* Getters
+	* */
+	public double getAttributeModifier(int attribute) {
 		switch (attribute) {
 			case ATTRIBUTE_MAX_HEALTH: return maxHealth;
 			case ATTRIBUTE_MAX_STAMINA: return maxStamina;
@@ -40,6 +46,8 @@ public class EquipmentAttributeModifiers {
 			//regeneration
 			case ATTRIBUTE_HEALTH_REGENERATION: return healthRegeneration;
 			case ATTRIBUTE_STAMINA_REGENERATION: return staminaRegeneration;
+			//speed
+			case ATTRIBUTE_SPEED: return speed;
 			//default
 			default: return 0;
 		}
@@ -48,39 +56,54 @@ public class EquipmentAttributeModifiers {
 	/*
 	* setters
 	* */
-	public void setMaxHealth(double maxHealth) {
+	public EquipmentAttributeModifiers setMaxHealth(double maxHealth) {
 		this.maxHealth = maxHealth;
+		return this;
 	}
-	public void setMaxStamina(double maxStamina) {
+	public EquipmentAttributeModifiers setMaxStamina(double maxStamina) {
 		this.maxStamina = maxStamina;
+		return this;
 	}
 	
 	//defence
-	public void setPhysicalDefence(double physicalDefence) {
+	public EquipmentAttributeModifiers setPhysicalDefence(double physicalDefence) {
 		this.physicalDefence = physicalDefence;
+		return this;
 	}
-	public void setMentalDefence(double mentalDefence) {
+	public EquipmentAttributeModifiers setMentalDefence(double mentalDefence) {
 		this.mentalDefence = mentalDefence;
+		return this;
 	}
 	
 	//damage
-	public void setPhysicalDamage(double physicalDamage) {
+	public EquipmentAttributeModifiers setPhysicalDamage(double physicalDamage) {
 		this.physicalDamage = physicalDamage;
+		return this;
 	}
-	public void setMentalDamage(double mentalDamage) {
+	public EquipmentAttributeModifiers setMentalDamage(double mentalDamage) {
 		this.mentalDamage = mentalDamage;
+		return this;
 	}
 	
 	//luck
-	public void setLuck(double luck) {
+	public EquipmentAttributeModifiers setLuck(double luck) {
 		this.luck = luck;
+		return this;
 	}
 	
 	//regeneration
-	public void setHealthRegeneration(double healthRegeneration) {
+	public EquipmentAttributeModifiers setHealthRegeneration(double healthRegeneration) {
 		this.healthRegeneration = healthRegeneration;
+		return this;
 	}
-	public void setStaminaRegeneration(double staminaRegeneration) {
+	public EquipmentAttributeModifiers setStaminaRegeneration(double staminaRegeneration) {
 		this.staminaRegeneration = staminaRegeneration;
+		return this;
+	}
+	
+	//speed
+	public EquipmentAttributeModifiers setSpeed(double speed) {
+		this.speed = speed;
+		return this;
 	}
 }

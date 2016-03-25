@@ -15,7 +15,7 @@ import java.awt.*;
  */
 public class GUIItemFrame extends GUIComponent implements MouseInteraction {
 	
-	public static final int SIZE = 18 * Main.scale;
+	public static final int SIZE = (int) (18 * Main.scale * 1.5);
 	public static final int SPRITE_SIZE = 18;
 	
 	//types

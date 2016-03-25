@@ -17,7 +17,7 @@ public class GUIEntitySprite extends GUIComponent {
 		this(parent, x, y, entity, 1);
 	}
 	public GUIEntitySprite(GUIComponent parent, int x, int y, Entity entity, int scale) {
-		super(parent, x, y, entity.getCurrentSprite().WIDTH * scale, entity.getCurrentSprite().HEIGHT * scale);
+		super(parent, x, y, entity.getSprite().WIDTH * scale, entity.getSprite().HEIGHT * scale);
 		this.scale = scale;
 		this.entity = entity;
 	}

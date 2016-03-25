@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +62,8 @@ public class Input implements KeyListener, MouseMotionListener, MouseListener {
 	}
 	
 	public void setDefaultCursor() {
-		setCursor(DEFAULT_CURSOR);
+		//setCursor(DEFAULT_CURSOR);
+		
 	}
 	public void setCursor(int cursor) {
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -71,25 +73,28 @@ public class Input implements KeyListener, MouseMotionListener, MouseListener {
 		Point point = null;
 		
 		switch (cursor) {
-			case DEFAULT_CURSOR: 
-				image = toolkit.getImage("res/cursors/scope3.png");
+			case DEFAULT_CURSOR:
+				image = toolkit.getImage("C:\\Users\\xFrednet\\IdeaProjects\\File-Fighter\\res\\cursors\\scope3.png");
 				point = new Point(Main.jframe.getX() + 15, Main.jframe.getY() + 15);
 				break;
 			case CURSOR_2:
-				image = toolkit.getImage("res/cursors/scope2.png");
+				image = toolkit.getImage("/res/cursors/scope2.png");
 				point = new Point(Main.jframe.getX() + 15, Main.jframe.getY() + 15);
 				break;
 			case CURSOR_3:
-				image = toolkit.getImage("res/cursors/scope1.png");
+				image = toolkit.getImage("/res/cursors/scope1.png");
 				point = new Point(Main.jframe.getX() + 15, Main.jframe.getY() + 15);
 				break;
 			default:
-				image = toolkit.getImage("res/cursors/scope1.png");
+				image = toolkit.getImage("/res/cursors/scope1.png");
 				point = new Point(Main.jframe.getX() + 15, Main.jframe.getY() + 15);
 				break;
 		}
 		
-		
+		if (image == null) {
+			System.out.println("[ERROR] Input: cursorImage = null");
+			return;
+		}
 		
 		Cursor c = toolkit.createCustomCursor(image, point, "img");
 		Main.jframe.setCursor(c);

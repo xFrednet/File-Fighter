@@ -25,11 +25,10 @@ public class GUILivingEntityEquipment extends GUIComponentGroup {
 	
 	//colors
 	public static final int BACKGROUND_COLOR = 0xffacacac;
-	public static final Color TEXT_COLOR = new Color(0xff606060, true);		
-	public static final Color SKILL_POINT_CATEGORY_SEPARATOR_COLOR = new Color(0xff757575, true);
+	public static final Color TEXT_COLOR = new Color(0xff606060, true);
 	//sizes
 	public static final int PADDING = 2 * Main.scale;
-	public static final int ENTITY_SCALE = 2;
+	public static final int ENTITY_SCALE = 3;
 	public static final int GUI_WIDTH = 336;
 	public static final int GUI_HEIGHT = 471;
 	public static final int GUI_X = 552;
@@ -94,7 +93,7 @@ public class GUILivingEntityEquipment extends GUIComponentGroup {
 	
 	//gui components
 	public static final int SKILL_POINT_ROW_HEIGHT = FONT.getSize() + PADDING * 2;
-	public static final int SKILL_POINT_ROW_WIDTH = GUI_WIDTH - PADDING * 4;
+	public static final int SKILL_POINT_ROW_WIDTH = GUI_WIDTH - PADDING * 6;
 	public static final int SKILL_BANNER_HEIGHT = SKILL_POINT_ROW_HEIGHT * SKILL_POINT_CATEGORY_COUNT;
 	private class SkillPointBanner extends GUIComponentGroup {
 		
@@ -179,7 +178,6 @@ public class GUILivingEntityEquipment extends GUIComponentGroup {
 			final int BUTTON_SIZE = FONT.getSize();
 			final int buttonX = SKILL_POINT_ROW_WIDTH - BUTTON_SIZE;
 			final int SPENT_SKILL_POINT_COUNT_X = SKILL_POINT_ROW_WIDTH - 50;
-
 			
 			int skillPointCategory;
 			String skillName;
@@ -190,7 +188,7 @@ public class GUILivingEntityEquipment extends GUIComponentGroup {
 				this.skillPointCategory = skillPoint;
 				skillName = livingEntity.getSkillPointName(skillPoint);
 				
-				buttonY = screenY + padding;
+				buttonY = screenY + 4;
 				
 				Main.input.addMouseInteraction(this, screenX, screenY, width, height);
 			}
@@ -212,8 +210,8 @@ public class GUILivingEntityEquipment extends GUIComponentGroup {
 				}
 				
 				g.setColor(TEXT_COLOR);
-				g.drawString(skillName, screenX + padding, screenY + FONT.getSize() + padding);
-				g.drawString(livingEntity.getSpentSkillPoint(skillPointCategory) + " ", screenX + SPENT_SKILL_POINT_COUNT_X, screenY + FONT.getSize() + padding);
+				g.drawString(skillName, screenX + padding, screenY + FONT.getSize() + padding / 2);
+				g.drawString(livingEntity.getSpentSkillPoint(skillPointCategory) + " ", screenX + SPENT_SKILL_POINT_COUNT_X, screenY + FONT.getSize() + padding / 2);
 				
 			}
 			

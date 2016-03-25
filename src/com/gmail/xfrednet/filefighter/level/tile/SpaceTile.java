@@ -11,7 +11,7 @@ import com.gmail.xfrednet.filefighter.level.Tile;
 public class SpaceTile extends Tile {
 	@Override
 	public void render(int x, int y, Screen screen, Level level) {
-		screen.drawTile(x << 5, y << 5, Sprite.space_tile_sprite);
+		screen.drawTile(x << 5, y << 5, Sprite.Tiles.space_tile_sprite);
 	}
 	
 	@Override

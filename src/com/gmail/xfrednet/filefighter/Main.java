@@ -12,7 +12,9 @@ import com.gmail.xfrednet.filefighter.graphics.gui.components.*;
 import com.gmail.xfrednet.filefighter.graphics.gui.groups.GUILivingEntityEquipment;
 import com.gmail.xfrednet.filefighter.graphics.gui.groups.GUILivingEntityStatusBar;
 import com.gmail.xfrednet.filefighter.level.FileLevel;
+import com.gmail.xfrednet.filefighter.level.ImageLevel;
 import com.gmail.xfrednet.filefighter.level.Level;
+import com.gmail.xfrednet.filefighter.util.FileHelper;
 import com.gmail.xfrednet.filefighter.util.Input;
 import com.sun.glass.events.KeyEvent;
 
@@ -27,9 +29,9 @@ public class Main extends Canvas implements Runnable {
     
     public static final String NAME = "File Fighter";
     public static final String PLAYER_NAME = "xFrednet";
-    public static final int WIDTH = 480;
+    public static final int WIDTH = 720;
     public static final int HEIGHT = WIDTH * 9 / 16;
-    public static final int scale = 3;
+    public static final int scale = 2;
     public static final int UPS = 30;
     public static final String LEVEL_LOCATION = (System.getProperty("user.home").endsWith("xFrednset")) ? "C:\\Users\\xFrednet\\IdeaProjects\\File-Fighter\\level" : System.clearProperty("user.home") + "\\Desktop";
     /*"Alter ich Psycholog(y)ier dich gleich mal"*/
@@ -76,7 +78,7 @@ public class Main extends Canvas implements Runnable {
 	    hud = new GameHud(guiManager);
 	    guiManager.addComponent(hud);
 	    player = new Player(60, 60, input, PLAYER_NAME, guiManager);
-	    
+        
     }
     
     /*
@@ -104,9 +106,9 @@ public class Main extends Canvas implements Runnable {
 	* Game loop 
 	* */
     public void start() {
-        
-    
-        level = new FileLevel(player, input, screen, new File(LEVEL_LOCATION), guiManager);
+	    //LEVEL_LOCATION
+        level = new FileLevel(player, screen, new File(LEVEL_LOCATION), guiManager);
+        //level = new ImageLevel(player, screen, new File("C:\\Users\\xFrednet\\IdeaProjects\\File-Fighter\\level\\level.png"), guiManager);
         camera = level.getCamera();
         
         thread = new Thread(this);
@@ -167,13 +169,13 @@ public class Main extends Canvas implements Runnable {
         input.update();
         camera.update();
         player.update(level);
-        level.update();
+        level =  level.update();
         guiManager.update();
         debugUpdate();
         
-        if (input.isKeyDown(KeyEvent.VK_ESCAPE)) {
-            running = false;
-        }
+        //if (input.isKeyDown(KeyEvent.VK_ESCAPE)) {
+         //   running = false;
+        //}
         
     }
     private void debugUpdate() {

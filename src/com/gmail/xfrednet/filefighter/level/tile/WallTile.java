@@ -10,9 +10,12 @@ import com.gmail.xfrednet.filefighter.level.Tile;
  */
 public class WallTile extends Tile {
 	
+	int index = -1;
+	
 	@Override
 	public void render(int x, int y, Screen screen, Level level) {
-		screen.drawTile(x << 5, y << 5, Sprite.wall_tile_sprite[getSpriteArrayIndex(x, y, level)]);
+		if (index == -1) index = getSpriteArrayIndex(x, y, level);
+		screen.drawTile(x << 5, y << 5, Sprite.Tiles.wall_tile_sprite[index]);
 	}
 	
 	@Override

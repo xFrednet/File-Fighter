@@ -9,10 +9,23 @@ import com.gmail.xfrednet.filefighter.item.item.equipment.accessory.Ring;
  */
 public class SilverDiamondRing extends Ring {
 	
+	/*
+	* Constructors
+	* */
 	public SilverDiamondRing() {
 		super(null);
 	}
+	private SilverDiamondRing(EquipmentAttributeModifiers modifiers) {
+		super(modifiers);
+	}
 	
+	public static SilverDiamondRing newSpeedRing() {
+		return new SilverDiamondRing(new EquipmentAttributeModifiers().setSpeed(10));
+	}
+	
+	/*
+	* getters
+	* */
 	@Override
 	public Sprite getItemSprite() {
 		return Sprite.Item.silver_diamond_ring;

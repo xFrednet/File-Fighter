@@ -65,8 +65,8 @@ public abstract class Tile {
 		* Tiles
 		* */
 		public static Tile nullTile = new NullTile();
-		private static Tile wallTile = new WallTile();
-		private static Tile spaceTile = new SpaceTile();
+		public static Tile wallTile = new WallTile();
+		public static Tile spaceTile = new SpaceTile();
 		
 		/*
 		* Methods

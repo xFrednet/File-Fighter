@@ -1,26 +1,48 @@
 package com.gmail.xfrednet.filefighter.entity.livingentitys;
 
-import com.gmail.xfrednet.filefighter.LeitsTestClass;
 import com.gmail.xfrednet.filefighter.entity.LivingEntity;
 import com.gmail.xfrednet.filefighter.entity.entitytask.behavior.RandomMovement;
+import com.gmail.xfrednet.filefighter.graphics.Sprite;
+import com.gmail.xfrednet.filefighter.item.item.weapon.gun.PaperGun;
 import com.gmail.xfrednet.filefighter.level.Level;
+import com.gmail.xfrednet.filefighter.level.path.Node;
+import com.gmail.xfrednet.filefighter.level.path.Path;
+
+import java.util.List;
 
 /**
  * Created by xFrednet on 07.02.2016.
  */
 public class TestEntity extends LivingEntity {
 	
+	Path path;
+	
 	public TestEntity(double x, double y, Level level, String name) {
 		super(level, name, 0, new RandomMovement(1));
 		super.setInfo(x, y, 16, 30, 8, 1);
 	}
 	
+	public TestEntity(double x, double y, Level level, String name, int i, int i1) {
+		super(level, name, 0, null);
+		super.setInfo(x, y);
+		path = new Path(level, this, level.getPlayer());
+		setSprite(Sprite.Tiles.wall_tile_sprite[0]);
+		weapon = new PaperGun();
+		team = ENEMY_TEAM;
+	}
+	
 	@Override
-	protected void updateCurrentSprite() {
-		if (isStanding) {
-			currentSprite = LeitsTestClass.testEntity_entity_sprite[STILL_STANDING_SPRITE_INDEX];
+	public void update(Level level) {
+		super.update(level);
+		
+		if (path.hasFinished()) {
+			path = new Path(level, this, level.getPlayer());
 		} else {
-			currentSprite = LeitsTestClass.testEntity_entity_sprite[(direction * LeitsTestClass.TEST_ENTITY_ANIMATED_SPRITE_COUNT) + ((int)(animation / LeitsTestClass.TEST_ENTITY_ANIMATION_SPEED) % LeitsTestClass.TEST_ENTITY_ANIMATED_SPRITE_COUNT)];
+			path.followPath(this, level, 1);
+		}
+		if (getDistance(level.getPlayer()) <= 90 && getWeapon().isUsable(this)) {
+			weapon.attack(level, this, getAngleTo(level.getPlayer()));
+			System.out.println("You'll die");
 		}
 	}
 	

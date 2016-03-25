@@ -22,47 +22,49 @@ public class Sprite {
 	* Test Code
 	* */
 	public static Sprite null_sprite = new Sprite(16, 16, 0xffff03ff);
-	public static Sprite dummy_entity_sprite = new Sprite(ENTITY_SPRITE_SIZE * 8, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE);
-	
-	/*
-	* Tile Sprites
-	* */
-	public static Sprite null_tile_sprite = new Sprite(0, 0, SpriteSheet.tiles, TILE_SPRITE_SIZE);
-	public static Sprite space_tile_sprite = new Sprite(TILE_SPRITE_SIZE, 0, SpriteSheet.tiles, TILE_SPRITE_SIZE);
-	public static Sprite[] wall_tile_sprite = loadConnectedTileSprites(0, TILE_SPRITE_SIZE * 4, SpriteSheet.tiles, TILE_SPRITE_SIZE);
 	
 	/*
 	* Entity Sprites
 	* */
-	public static Sprite[] slime_entity_sprites = loadEntityAnimation(0, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 16);
 	public static Sprite[] player_entity_sprites = loadEntityAnimation(0, 0, SpriteSheet.player, ENTITY_SPRITE_SIZE, 8);
-	
-	//File Sprites
-	public static Sprite[] textFile_entity_sprites = loadEntityAnimation(ENTITY_SPRITE_SIZE * 4, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 6);
-	public static Sprite[] jpgFile_entity_sprites = loadEntityAnimation(ENTITY_SPRITE_SIZE * 6, 0, SpriteSheet.entities, ENTITY_SPRITE_SIZE, 16);
 	
 	/*
 	* Projectiles
 	* */
-	public static Sprite paper_projectile_sprite = new Sprite(0, 0, SpriteSheet.projectiles, PROJECTILE_SPRITE_SIZE);
-	public static Sprite[] paper_projectile_particles = loadParticlesFromSprites(paper_projectile_sprite);
-	
-	/*
-	* Particles
-	* */
-	public static Sprite[] smoke_particles = loadSplitSprite(new Sprite(0, 0, SpriteSheet.particles, 16), 3);
-	
+	public static class Projectiles {
+		public static Sprite paper_projectile = new Sprite(0, 0, SpriteSheet.projectiles, PROJECTILE_SPRITE_SIZE);
+	}
 	/*
 	* GUIComponents
 	* */
 	public static Sprite[] itemFrame = loadItemFrames();
 	
 	/*
+	* Particles
+	* */
+	public static class Particles {
+		public static Sprite[] smoke_particles = loadSplitSprite(new Sprite(0, 0, SpriteSheet.particles, 16), 3);
+		public static Sprite[] paper_projectile_particles = loadParticlesFromSprites(Projectiles.paper_projectile);
+	}
+	
+	/*
+	* Tiles
+	* */
+	public static class Tiles {
+		public static Sprite null_tile_sprite = new Sprite(0, 0, SpriteSheet.tiles, TILE_SPRITE_SIZE);
+		public static Sprite space_tile_sprite = new Sprite(TILE_SPRITE_SIZE, 0, SpriteSheet.tiles, TILE_SPRITE_SIZE);
+		public static Sprite[] wall_tile_sprite = loadConnectedTileSprites(0, TILE_SPRITE_SIZE * 4, SpriteSheet.tiles, TILE_SPRITE_SIZE);
+	}
+	
+	/*
 	* Tile Entities
 	* */
 	public static class TileEntities {
 		public static Sprite chest_sprite = new Sprite(0, 0, SpriteSheet.tileEntities, TILE_SPRITE_SIZE);
+		public static Sprite folder_sprite = new Sprite(TILE_SPRITE_SIZE, 0, SpriteSheet.tileEntities, TILE_SPRITE_SIZE);
+		public static Sprite back_folder_sprite = new Sprite(TILE_SPRITE_SIZE * 2, 0, SpriteSheet.tileEntities, TILE_SPRITE_SIZE);
 	}
+	
 	/*
 	* Items
 	* */
@@ -112,7 +114,7 @@ public class Sprite {
 	/*
 	* Constructor
 	* */
-	protected Sprite(int width, int height, int color) {
+	public Sprite(int width, int height, int color) {
 		this.HEIGHT = height;
 		this.WIDTH = width;
 		
@@ -122,17 +124,26 @@ public class Sprite {
 			pixels[i] = color;
 		}
 	}
-	protected Sprite(int xOffset, int yOffset, SpriteSheet spriteSheet, int size) {
+	public Sprite(int[] pixels, int width, int height) {
+		this.pixels = pixels;
+		WIDTH = width;
+		HEIGHT = height;
+		
+		spriteSheet = null;
+		x = 0;
+		y = 0;
+	}
+	public Sprite(int xOffset, int yOffset, SpriteSheet spriteSheet, int size) {
 		this(xOffset, yOffset, spriteSheet, size, size);
 	}
-	protected Sprite(int xOffset, int yOffset, Sprite sprite, int size) {
+	public Sprite(int xOffset, int yOffset, Sprite sprite, int size) {
 		WIDTH = size;
 		HEIGHT = size;
 		pixels = new int[WIDTH * HEIGHT];
 		
 		load(xOffset, yOffset, sprite);
 	}
-	protected Sprite(int xOffset, int yOffset, SpriteSheet spriteSheet, int width, int height) {
+	public Sprite(int xOffset, int yOffset, SpriteSheet spriteSheet, int width, int height) {
 		WIDTH = width;
 		HEIGHT = height;
 		pixels = new int[WIDTH * HEIGHT];
@@ -328,4 +339,5 @@ public class Sprite {
 		
 		return itemFrames;
 	}
+	
 }

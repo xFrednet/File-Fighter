@@ -3,26 +3,32 @@ package com.gmail.xfrednet.filefighter.level;
 import com.gmail.xfrednet.filefighter.Main;
 import com.gmail.xfrednet.filefighter.entity.*;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.TestEntity;
-import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.Slime;
 import com.gmail.xfrednet.filefighter.graphics.*;
 import com.gmail.xfrednet.filefighter.graphics.cameras.ControllableCamera;
+import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponent;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponentGroup;
+import com.gmail.xfrednet.filefighter.graphics.gui.components.GUIProgressBar;
 import com.gmail.xfrednet.filefighter.util.Input;
+import com.gmail.xfrednet.filefighter.level.path.Node;
+import com.sun.javafx.beans.annotations.NonNull;
 
+import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by xFrednet on 06.02.2016.
  */
-public class Level {
+public abstract class Level {
 	
 	public static final int TILE_SIZE = 32;
 	public static final int SPAWN_PARTICLE_COUNT = 60;
 	
 	public int WIDTH;
 	public int HEIGHT;
-	public int[] tileIDs;
+	protected boolean cleared = false;
+	protected Tile[] tiles;
 	
 	public List<Entity> entityList = new ArrayList<>();
 	public List<TileEntity> tileEntities = new ArrayList<>(); 
@@ -31,24 +37,11 @@ public class Level {
 	protected Player player;
 	protected Camera camera;
 	protected GUIComponentGroup levelGUI;
+	protected GUIProgressBar clearProgress;
+	protected Level returnLevel = null;
 	
-	public Level(int width, int height, Player player, Input input, Screen screen, GUIManager guiManager) {
-		WIDTH = width;
-		HEIGHT = height;
-		
-		tileIDs = new int[WIDTH * HEIGHT];
-		
-		camera = new ControllableCamera(this, screen, input);
-		
-		//player
-		this.player = player;
-		player.setCamera(camera);
-		levelGUI = new GUIComponentGroup(guiManager, 0, 0);
-		
-		generate();
-	}
-	public Level(Player player, Input input, Screen screen, GUIManager guiManager) {
-		camera = new ControllableCamera(this, screen, input);
+	public Level(Player player, Screen screen, GUIManager guiManager) {
+		camera = new ControllableCamera(this, screen, player.getInput());
 		
 		//player
 		this.player = player;
@@ -59,28 +52,26 @@ public class Level {
 		
 	}
 	
-	private void generate() {
-		for (int i = 0; i < tileIDs.length; i++) {
-			tileIDs[i] = Tile.List.SPACE_TILE_ID;
+	protected void initClearProgress() {
+		clearProgress = new GUIProgressBar(levelGUI, 0, 0, Main.WIDTH * Main.scale, 3);
+		clearProgress.setProgressColor(new Color(0xff0094ff, true));
+		
+		int enemies = 0;
+		for (int i = 0; i < entityList.size(); i++) {
+			if (entityList.get(i) instanceof EnemyEntity) {
+				enemies++;
+			}
 		}
 		
-		//Walls
-		for (int y = 0; y < HEIGHT; y++) {
-			tileIDs[y * WIDTH] = Tile.List.WALL_ID;
-			tileIDs[WIDTH - 1 + y * WIDTH] = Tile.List.WALL_ID;
-		}
-		for (int x = 0; x < WIDTH; x++) {
-			tileIDs[x] = Tile.List.WALL_ID;
-			tileIDs[x + (HEIGHT - 1) * WIDTH] = Tile.List.WALL_ID;
-		}
+		clearProgress.setMaxProgress(enemies);
+		clearProgress.setProgress(enemies);
 		
-		spawn(new Slime(32 * 4, 32 * 4, this, player, "xFrednet"));
+		levelGUI.addComponent(clearProgress);
 		
-		spawn(new TestEntity(32 * 10, 32 * 10, this, "TestEntity"));
-		spawn(new TestEntity(32 * 20, 32 * 10, this, "TestEntity"));
-		spawn(new TestEntity(32 * 10, 32 * 20, this, "TestEntity"));
-		spawn(new TestEntity(32 * 20, 32 * 20, this, "TestEntity"));
-		
+	}
+	
+	public void delete() {
+		levelGUI.remove();
 	}
 	
 	/*
@@ -101,7 +92,7 @@ public class Level {
 	public void spawn(Entity entity, boolean showSpawnParticles) {
 		entityList.add(entity);
 		if (showSpawnParticles) {
-			spawnParticles(entity.getInfo().getCenterX(), entity.getInfo().getCenterY(), SPAWN_PARTICLE_COUNT, Sprite.smoke_particles);
+			spawnParticles(entity.getInfo().getCenterX(), entity.getInfo().getCenterY(), SPAWN_PARTICLE_COUNT, Sprite.Particles.smoke_particles);
 		}
 	}
 	public void addParticle(Particle particle) {
@@ -114,10 +105,36 @@ public class Level {
 	}
 	
 	/*
+	* Util
+	* */
+	public void changeLevel(Level level) {
+		returnLevel = level;
+	}
+	
+	public void clicked(int mouseX, int mouseY, int button, Player player) {
+		int tileX = (camera.getXOffset() + mouseX / Main.scale) >> 5;
+		int tileY = (camera.getYOffset() + mouseY / Main.scale) >> 5;
+		
+		for (int i = 0; i < tileEntities.size(); i++) {
+			if (tileEntities.get(i).getX() == tileX && tileEntities.get(i).getY() == tileY) {
+				tileEntities.get(i).mouseInteraction(mouseX, mouseY, button, this, player);
+			}
+		}
+	}
+	
+	private void sendLevelClearedMessage() {
+		cleared = true;
+		for (int i = 0; i < tileEntities.size(); i++) {
+			tileEntities.get(i).levelCleared(this, player);
+		}
+	}
+	/*
 	* Game loop util 
 	* */
 	
-	//Render
+	/*
+	* Render
+	* */
 	public void render(Screen screen) {
 		screen.setOffset(camera.getXOffset(), camera.getYOffset());
 		
@@ -153,7 +170,7 @@ public class Level {
 				if (x < 0 || y < 0 || x >= WIDTH || y >= HEIGHT) {
 					Tile.List.nullTile.render(x, y, screen, this);
 				} else {
-					Tile.List.getTileByID(tileIDs[x + y * WIDTH]).render(x, y, screen, this);
+					tiles[x + y * WIDTH].render(x, y, screen, this);
 				}
 			}
 		}
@@ -164,56 +181,92 @@ public class Level {
 		}
 	}
 	
-	//Update
-	public void update() {
+	/*
+	* Update
+	* */
+	public Level update() {
 		updateTileEntities();
 		updateEntities();
 		updateParticles();
+		
+		if (returnLevel == null) {
+			return this;
+		} else {
+			delete();
+			return returnLevel;
+		}
 	}
 	
-	public void updateEntities() {
-		for (Entity entity : entityList) {
-			entity.update(this);
-			entity.endUpdate(this);
+	private void updateEntities() {
+		for (int i = 0; i < entityList.size(); i++) {
+			entityList.get(i).update(this);
+			entityList.get(i).endUpdate(this);
 		}
+		
+		int enemyCount = 0;
 		for (int i = 0; i < entityList.size(); i++) {
 			if (entityList.get(i).isRemoved()) {
 				levelGUI.removeComponent(entityList.get(i).getNameTag());
 				entityList.remove(i);
+				i--;
+			} else {
+				if (!cleared && (entityList.get(i) instanceof EnemyEntity)) {
+					enemyCount++;
+				}
 			}
 		}
+		
+		if (enemyCount == 0 && !cleared) {
+			sendLevelClearedMessage();
+		}
+		clearProgress.setProgress(enemyCount);
 	}
-	public void updateParticles() {
+	private void updateParticles() {
 		for (int i = 0; i < particles.size(); i++) {
 			particles.get(i).update(this);
 			
 			if (particles.get(i).isRemoved()) {
 				particles.remove(i);
+				i--;
 			}
 		}
 	}
-	public void updateTileEntities() {
-		for (int i = 0; i < tileEntities.size(); i++) {
-			tileEntities.get(i).update(this);
+	private void updateTileEntities() {
+		int tileX = ((int) player.getInfo().getCenterX()) >> 5;
+		int tileY = ((int) player.getInfo().getCenterY()) >> 5;
+		for (TileEntity entity : tileEntities) {
+			entity.update(this);
 			
+			entity.test(tileX, tileY, this, player);
+			
+		}
+		
+		for (int i = 0; i < tileEntities.size(); i++) {
 			if (tileEntities.get(i).isRemoved()) {
 				tileEntities.remove(i);
+				i--;
 			}
 		}
+		
 	}
-	
 	/*
 	* Getters
 	* */
+	public boolean contains(int x, int y) {
+		return (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT);
+	}
+	
 	//tiles
 	public int getTileID(int x, int y) {
 		if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) return 0;
-		return tileIDs[x + y * WIDTH];
+		return tiles[x + y * WIDTH].getID();
 	}
 	public Tile getTile(int x, int y) {
-		return Tile.List.getTileByID(getTileID(x, y));
+		if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) return Tile.List.nullTile;
+		return tiles[x + y * WIDTH];
 	}
 	public boolean isSolid(int x, int y) {
+		if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) return true; 
 		return getTile(x, y).isSolid();
 	}
 	
@@ -232,20 +285,6 @@ public class Level {
 		return player;
 	}
 	
-	public List<Entity> getEntities() {
-		return entityList;
-	}
-	public List<Entity> getEntities(double x, double y, double maxDistance) {
-		List<Entity> returnEntities = new ArrayList<>();
-		
-		for (int i = 0; i < entityList.size(); i++) {
-			if (entityList.get(i).getDistance(x, y) < maxDistance) {
-				returnEntities.add(entityList.get(i));
-			}
-		}
-		
-		return returnEntities;
-	}
 	public List<Entity> getItemEntities(double x, double y, double maxDistance) {
 		List<Entity> returnEntities = new ArrayList<>();
 		
@@ -280,15 +319,8 @@ public class Level {
 	public Camera getCamera() {
 		return camera;
 	}
-	
-	public void clicked(int mouseX, int mouseY, int button, Player player) {
-		int tileX = (camera.getXOffset() + mouseX / Main.scale) >> 5;
-		int tileY = (camera.getYOffset() + mouseY / Main.scale) >> 5;
-		
-		for (int i = 0; i < tileEntities.size(); i++) {
-			if (tileEntities.get(i).getX() == tileX && tileEntities.get(i).getY() == tileY) {
-				tileEntities.get(i).mouseInteraction(mouseX, mouseY, button, this, player);
-			}
-		}
+	public Screen getScreen() {
+		return camera.getScreen();
 	}
+	
 }

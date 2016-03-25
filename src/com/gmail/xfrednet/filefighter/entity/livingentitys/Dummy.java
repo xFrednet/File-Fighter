@@ -17,11 +17,7 @@ public class Dummy extends LivingEntity {
 	public Dummy(double x, double y, Level level, String name) {
 		super(level, name, 0);
 		super.setInfo(x, y, 28, 25, 2, 6);
-	}
-	
-	@Override
-	protected void updateCurrentSprite() {
-		currentSprite = Sprite.dummy_entity_sprite;
+		team = NO_TEAM;
 	}
 	
 	@Override
