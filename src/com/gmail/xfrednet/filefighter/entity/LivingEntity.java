@@ -1,7 +1,6 @@
 package com.gmail.xfrednet.filefighter.entity;
 
 import com.gmail.xfrednet.filefighter.Main;
-import com.gmail.xfrednet.filefighter.entity.entitytask.Behavior;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
 import com.gmail.xfrednet.filefighter.item.item.Equipment;
 import com.gmail.xfrednet.filefighter.item.item.Weapon;
@@ -18,6 +17,7 @@ public abstract class LivingEntity extends Entity {
 	public static final int MAX_ANIMATION_VALUE = 10000;
 	public static final int STILL_STANDING_SPRITE_INDEX = 0;
 	public static final double XP_LEVEL_INCREASE = 1.1;
+	private static final double PLAYER_DAMAGE_REDUCTION = 0.1;
 	
 	/*
 	* attributes
@@ -41,6 +41,7 @@ public abstract class LivingEntity extends Entity {
 	private static final double ATTRIBUTE_STRENGTH_PER_POINT = 2;
 	private static final double ATTRIBUTE_INTELLIGENCE_PER_POINT = 2;
 	private static final double ATTRIBUTE_LUCK_PER_POINT = 1;
+	
 	
 	protected double[] attributes = new double[ATTRIBUTE_COUNT];
 	
@@ -67,6 +68,10 @@ public abstract class LivingEntity extends Entity {
 	//the Entity only generates if the hurtTimer is 0
 	protected int hurtTimer = 0;
 	
+	//behavior 
+	double behaviorDirection = 0;
+	int behaviorTimer = 0;
+	
 	/*
 	* Equipment
 	* */
@@ -87,7 +92,6 @@ public abstract class LivingEntity extends Entity {
 	protected Equipment[] equipment = new Equipment[EQUIPMENT_COUNT];
 	
 	public Weapon weapon;
-	public Behavior behavior;
 	
 	//texture related
 	protected int direction = 0;
@@ -98,12 +102,8 @@ public abstract class LivingEntity extends Entity {
 	* Constructor
 	* */
 	protected LivingEntity(Level level, String name, int xp) {
-		this(level, name, xp, null);
-	}
-	protected LivingEntity(Level level, String name, int xp, Behavior behavior) {
 		super(level, name);
 		gainXP(xp);
-		this.behavior = behavior;
 		init();
 	}
 	
@@ -135,6 +135,7 @@ public abstract class LivingEntity extends Entity {
 	private void init() {
 		updateAttributes();
 		setHealth(attributes[ATTRIBUTE_MAX_HEALTH]);
+		gainStamina(attributes[ATTRIBUTE_MAX_STAMINA]);
 	}
 	
 	//skill point
@@ -206,7 +207,6 @@ public abstract class LivingEntity extends Entity {
 	public void update(Level level) {
 		if (weapon != null) weapon.update(level);
 		if (unspentSkillPoints > 0) autoApplySkillPoints();
-		updateAnimation();
 		regenerate();
 	}
 	
@@ -241,12 +241,6 @@ public abstract class LivingEntity extends Entity {
 		
 	}
 	
-	protected void updateAnimation() {
-		animation++;
-		if (animation > MAX_ANIMATION_VALUE) {
-			animation = animation % MAX_ANIMATION_VALUE;
-		}
-	}
 	private void regenerate() {
 		gainStamina(attributes[ATTRIBUTE_STAMINA_REGENERATION]);
 		
@@ -263,15 +257,24 @@ public abstract class LivingEntity extends Entity {
 		}
 	}
 	
+	protected int getDropChance(Entity damageSource, int chance) {
+		//formula chance + damageSource->luck - this->luck
+		if (damageSource == null || !(damageSource instanceof LivingEntity)) {
+			return (int) (chance - getAttribute(ATTRIBUTE_LUCK));
+		} else {
+			LivingEntity entity = (LivingEntity) damageSource;
+			return (int) (chance + entity.getAttribute(ATTRIBUTE_LUCK) - getAttribute(ATTRIBUTE_LUCK));
+		}
+	}
+	
 	//damage
-	public void damage(Entity damageSource, Damage damage) {
+	public void damage(Level level, Entity damageSource, Damage damage) {
 		health -= getCalculatedDamage(damage);
 		if (health <= 0) {
-			died(damageSource);
+			died(level, damageSource);
 		}
-		hurtTimer = getHurtTime();
 	}
-	protected void died(Entity damageSource) {
+	protected void died(Level level, Entity damageSource) {
 		removed = true;
 	}
 	protected double getCalculatedDamage(Damage damage) {
@@ -282,11 +285,18 @@ public abstract class LivingEntity extends Entity {
 		} else {
 			resultingDamage -= getAttribute(ATTRIBUTE_MENTAL_DEFENCE);
 		}
-		
-		if (resultingDamage >= 0) {
-			return resultingDamage;
+		if (this instanceof Player) {
+			if (resultingDamage >= 0) {
+				return resultingDamage * PLAYER_DAMAGE_REDUCTION;
+			} else {
+				return 0.5 * PLAYER_DAMAGE_REDUCTION;
+			}
 		} else {
-			return 0;
+			if (resultingDamage >= 0) {
+				return resultingDamage;
+			} else {
+				return 0.5;
+			}
 		}
 	}
 	
@@ -452,15 +462,43 @@ public abstract class LivingEntity extends Entity {
 	public double getStamina() {
 		return stamina;
 	}
+	protected double getBaseAttribute(int attribute) {
+		switch (attribute) {
+			case ATTRIBUTE_MAX_HEALTH: return 100;
+			case ATTRIBUTE_MAX_STAMINA: return 100;
+			case ATTRIBUTE_PHYSICAL_DEFENCE: return 1;
+			case ATTRIBUTE_MENTAL_DEFENCE: return 1;
+			case ATTRIBUTE_PHYSICAL_DAMAGE: return 1;
+			case ATTRIBUTE_MENTAL_DAMAGE: return 1;
+			case ATTRIBUTE_LUCK: return 1;
+			case ATTRIBUTE_HEALTH_REGENERATION: return 0.05;
+			case ATTRIBUTE_STAMINA_REGENERATION: return 0.2;
+			case ATTRIBUTE_SPEED: return 3;
+			default: return 0;
+		}
+	}
 	
+	/*
+	* Behavior
+	* */
+	protected void moveRandom(Level level) {
+		if (behaviorTimer <= 0) {
+			behaviorTimer = random.nextInt(Main.UPS);
+			behaviorDirection = getRandomAngle();
+		} else {
+			behaviorTimer--;	
+		}
+		
+		move(behaviorDirection, level, getAttribute(ATTRIBUTE_SPEED) / 2);
+	}
+	protected double getRandomAngle() {
+		return ((Math.PI * 2) * random.nextDouble()) - Math.PI;
+	}
 	/*
 	* getters
 	* */
 	public Weapon getWeapon() {
 		return weapon;
-	}
-	protected int getHurtTime() {
-		return Main.UPS;
 	}
 	
 	//equipment
@@ -501,10 +539,5 @@ public abstract class LivingEntity extends Entity {
 	public void setSprite(Sprite sprite) {
 		this.sprite = sprite;
 	}
-	
-	/*
-	* abstract Getters
-	* */
-	abstract protected double getBaseAttribute(int attribute);
 	
 }

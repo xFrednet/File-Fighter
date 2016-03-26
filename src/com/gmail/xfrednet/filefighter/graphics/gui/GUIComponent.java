@@ -170,6 +170,12 @@ public class GUIComponent {
 	public int getHeight() {
 		return height;
 	}
+	public int getCenterX() {
+		return screenX + width / 2;
+	}
+	public int getCenterY() {
+		return screenY + height / 2;
+	}
 	
 	public boolean isShown() {
 		return show;
@@ -206,4 +212,6 @@ public class GUIComponent {
 	public GUIComponent getParent() {
 		return parent;
 	}
+	
+	
 }

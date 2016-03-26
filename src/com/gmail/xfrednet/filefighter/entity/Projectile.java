@@ -25,7 +25,7 @@ public abstract class Projectile extends Entity {
 	/*
 	* Constructor
 	* */
-	protected Projectile(Level level, String name, double direction, double speed, double maxRange, Damage damage, Entity shootingEntity, Sprite sprite) {
+	protected Projectile(Level level, String name, double direction, double speed, double maxRange, Damage damage, Entity shootingEntity) {
 		super(level, name, false);
 		this.direction = direction;
 		this.speed = speed;
@@ -34,7 +34,7 @@ public abstract class Projectile extends Entity {
 		this.shootingEntityID = shootingEntity.getID();
 		team = shootingEntity.getTeam();
 		
-		this.sprite = sprite;
+		this.sprite = getSprite();
 	}
 	
 	/*
@@ -81,7 +81,7 @@ public abstract class Projectile extends Entity {
 				if ((damageSource = level.getEntity(shootingEntityID)) == null)
 					damageSource = this;
 				
-				collidingEntities.damage(damageSource, damage);
+				collidingEntities.damage(level, damageSource, damage);
 			}
 			
 			return false;
@@ -105,7 +105,7 @@ public abstract class Projectile extends Entity {
 	//destroy
 	public void destroy(Level level) {
 		removed = true;
-		level.spawnParticles(info.getCenterX(), info.getCenterY(), PARTICLES_ON_DESTROY, getParticleSprites());
+		level.spawnParticles(info.getCenterX(), info.getCenterY(), getParticlesOnDestroy(), getParticleSprites());
 	}
 	
 	/*
@@ -113,4 +113,8 @@ public abstract class Projectile extends Entity {
 	* */
 	abstract protected Sprite[] getParticleSprites();
 	abstract public Sprite getSprite();
+	
+	protected int getParticlesOnDestroy() {
+		return PARTICLES_ON_DESTROY;
+	}
 }

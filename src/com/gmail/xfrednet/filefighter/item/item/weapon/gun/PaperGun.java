@@ -55,7 +55,7 @@ public class PaperGun extends ShootingWeapon {
 	//shootingWeapon 
 	@Override
 	public double getDamageAmount() {
-		return 3.5;
+		return 20;
 	}
 	
 	@Override
@@ -70,7 +70,7 @@ public class PaperGun extends ShootingWeapon {
 	
 	@Override
 	public double getAccuracy() {
-		return 40d;
+		return 60d;
 	}
 	
 	@Override

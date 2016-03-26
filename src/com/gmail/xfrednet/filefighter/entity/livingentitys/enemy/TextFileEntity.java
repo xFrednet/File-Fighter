@@ -2,7 +2,6 @@ package com.gmail.xfrednet.filefighter.entity.livingentitys.enemy;
 
 import com.gmail.xfrednet.filefighter.entity.EnemyEntity;
 import com.gmail.xfrednet.filefighter.entity.Entity;
-import com.gmail.xfrednet.filefighter.entity.entitytask.behavior.MoveToTarget;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
 import com.gmail.xfrednet.filefighter.item.item.weapon.gun.PaperGun;
 import com.gmail.xfrednet.filefighter.level.Level;
@@ -25,30 +24,13 @@ public class TextFileEntity extends EnemyEntity {
 	}
 	
 	@Override
-	protected double getBaseAttribute(int attribute) {
-		switch (attribute) {
-			case ATTRIBUTE_MAX_HEALTH: return 4;
-			case ATTRIBUTE_MAX_STAMINA: return 25;
-			case ATTRIBUTE_PHYSICAL_DEFENCE: return 1;
-			case ATTRIBUTE_MENTAL_DEFENCE: return 1;
-			case ATTRIBUTE_PHYSICAL_DAMAGE: return 0;
-			case ATTRIBUTE_MENTAL_DAMAGE: return 0;
-			case ATTRIBUTE_LUCK: return 1;
-			case ATTRIBUTE_SPEED: return 4;
-			case ATTRIBUTE_HEALTH_REGENERATION: return 0;
-			case ATTRIBUTE_STAMINA_REGENERATION: return 0.2;
-			default: return 0;
-		}
-	}
-	
-	@Override
 	public void update(Level level) {
 		super.update(level);
 		
 		if (path.hasFinished()) {
 			path = new Path(level, this, level.getPlayer());
 		} else {
-			path.followPath(this, level, 1);
+			path.followPath(this, level, getAttribute(ATTRIBUTE_SPEED));
 		}
 		if (getDistance(level.getPlayer()) <= weapon.getRange() && getWeapon().isUsable(this)) {
 			weapon.attack(level, this, getAngleTo(level.getPlayer()));

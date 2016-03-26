@@ -21,8 +21,10 @@ import com.gmail.xfrednet.filefighter.item.item.equipment.armor.boots.LeatherBoo
 import com.gmail.xfrednet.filefighter.item.item.equipment.armor.chestplates.LeatherChestplate;
 import com.gmail.xfrednet.filefighter.item.item.equipment.armor.helmets.LeatherHelmet;
 import com.gmail.xfrednet.filefighter.item.item.equipment.armor.pents.LeatherPents;
+import com.gmail.xfrednet.filefighter.item.item.weapon.gun.FirefoxFlameThrower;
 import com.gmail.xfrednet.filefighter.item.item.weapon.gun.PaperGun;
 import com.gmail.xfrednet.filefighter.item.itemstorage.Backpack;
+import com.gmail.xfrednet.filefighter.item.itemstorage.ToolBar;
 import com.gmail.xfrednet.filefighter.level.Level;
 import com.gmail.xfrednet.filefighter.util.Input;
 import com.sun.glass.events.KeyEvent;
@@ -51,7 +53,8 @@ public class Player extends LivingEntity {
 	public static final int PICKUP_WAIT_TIME = Main.UPS / 4;
 	public static final int PICKUP_KEY = KeyEvent.VK_R;
 	
-	private static final int MOUSE_ATTACK_BUTTON = Input.LEFT_MOUSE_BUTTON;
+	private static final int MOUSE_PRIMARY_ACTION_BUTTON = Input.LEFT_MOUSE_BUTTON;
+	private static final int MOUSE_SECONDARY_ACTION_BUTTON = Input.RIGHT_MOUSE_BUTTON;
 	
 	Input input;
 	Camera camera;
@@ -70,6 +73,7 @@ public class Player extends LivingEntity {
 	
 	//ItemStorage
 	Backpack backpack;
+	ToolBar toolbar;
 	Item inHandItem = null;
 	boolean test = false;
 	
@@ -78,14 +82,19 @@ public class Player extends LivingEntity {
 	* */
 	public Player(int x, int y, Input input, String name, GUIComponentGroup parent) {
 		super(null, name, 0);
-		setInfo(x, y);
-		//setInfo(x, y, 18, 32, 7, 0);
-		weapon = new PaperGun();
+		//setInfo(x, y);
+		setInfo(x, y, 18, 32, 7, 0);
+		//weapon = new PaperGun();
+		//weapon = new FirefoxFlameThrower();
 		team = PLAYER_TEAM;
 		
 		this.input = input;
 		
 		backpack = new Backpack();
+		toolbar = new ToolBar(input);
+		
+		toolbar.switchItem(this, new FirefoxFlameThrower());
+		toolbar.switchItem(this, new PaperGun());
 		
 		/*
 		* Testing
@@ -100,7 +109,7 @@ public class Player extends LivingEntity {
 		backpack.setItem(this, SilverDiamondRing.newSpeedRing(), 9);
 		backpack.setItem(this, new GoldBracelet(), 13);
 		
-		accessories.switchItem(this, SilverDiamondRing.newSpeedRing(), 2);
+		//accessories.switchItem(this, SilverDiamondRing.newSpeedRing(), 2);
 		
 		parent.addComponent(playerHud = new PlayerHud(parent));
 		updateAttributes();
@@ -123,23 +132,6 @@ public class Player extends LivingEntity {
 		
 	}
 	
-	@Override
-	protected double getBaseAttribute(int attribute) {
-		switch (attribute) {
-			case ATTRIBUTE_MAX_HEALTH: return 100;
-			case ATTRIBUTE_MAX_STAMINA: return 100;
-			case ATTRIBUTE_PHYSICAL_DEFENCE: return 1;
-			case ATTRIBUTE_MENTAL_DEFENCE: return 1;
-			case ATTRIBUTE_PHYSICAL_DAMAGE: return 1;
-			case ATTRIBUTE_MENTAL_DAMAGE: return 1;
-			case ATTRIBUTE_LUCK: return 1;
-			case ATTRIBUTE_HEALTH_REGENERATION: return 0.01;
-			case ATTRIBUTE_STAMINA_REGENERATION: return 0.2;
-			case ATTRIBUTE_SPEED: return 5;
-			default: return 0;
-		}
-	}
-	
 	public void setCamera(Camera camera) {
 		this.camera = camera;
 	}
@@ -152,15 +144,23 @@ public class Player extends LivingEntity {
 	/*
 	* Util
 	* */
+	protected void updateAnimation() {
+		animation++;
+		if (animation > MAX_ANIMATION_VALUE) {
+			animation = animation % MAX_ANIMATION_VALUE;
+		}
+	}
 	
 	/*
 	* Update & Update Util
 	* */
 	public void update(Level level) {
 		super.update(level);
-		attack(level);
+		toolbar.update(level);
+		toolBarUse(level);
 		movement(level);
 		showGUI();
+		updateAnimation();
 		updateCurrentSprite();
 		
 		if (input.isKeyDown(KeyEvent.VK_F)) {
@@ -169,7 +169,7 @@ public class Player extends LivingEntity {
 		if (input.isKeyDown(KeyEvent.VK_V) != test) {
 			test = input.isKeyDown(KeyEvent.VK_V);
 			if (test) {
-				level.spawn(new TestEntity(info.getCenterX(), info.getCenterY(), level, "Test", 27, 2));
+				level.spawn(new TestEntity(info.getCenterX(), info.getCenterY(), level, "Test"));
 			}
 		}
 		
@@ -230,10 +230,14 @@ public class Player extends LivingEntity {
 			isStanding = true;
 		}
 	}
-	private void attack(Level level) {
-		if (input.isMouseButtonDown(MOUSE_ATTACK_BUTTON)) {
-			level.clicked(input.getMouseX(), input.getMouseY(), MOUSE_ATTACK_BUTTON, this);
-			getWeapon().attack(level, this, getAngleTo(input.getMouseLevelX(level), input.getMouseLevelY(level)));
+	private void toolBarUse(Level level) {
+		if (input.isMouseButtonDown(MOUSE_PRIMARY_ACTION_BUTTON)) {
+			level.clicked(input.getMouseX(), input.getMouseY(), MOUSE_PRIMARY_ACTION_BUTTON, this);
+			toolbar.useItemPrimaryAction(level, this, getAngleTo(input.getMouseLevelX(level), input.getMouseLevelY(level)));
+		}
+		if (input.isMouseButtonDown(MOUSE_SECONDARY_ACTION_BUTTON)) {
+			level.clicked(input.getMouseX(), input.getMouseY(), MOUSE_SECONDARY_ACTION_BUTTON, this);
+			toolbar.useItemSecondaryAction(level, this, getAngleTo(input.getMouseLevelX(level), input.getMouseLevelY(level)));
 		}
 	}
 	private void itemPickup(Level level) {
@@ -271,7 +275,6 @@ public class Player extends LivingEntity {
 	public Input getInput() {
 		return input;
 	}
-	
 	public Item getInHandItem() {
 		return inHandItem;
 	}
@@ -282,9 +285,19 @@ public class Player extends LivingEntity {
 	public void setInHandItem(Item inHandItem) {
 		this.inHandItem = inHandItem;
 	}
-	
 	public void addStorageGUI(ItemStorage storage) {
 		playerHud.addExtraStorageGUI(storage);
+	}
+	
+	/*
+	* Overridden
+	* */
+	@Override
+	public double getBaseAttribute(int attribute) {
+		if (attribute == ATTRIBUTE_SPEED) {
+			return super.getBaseAttribute(attribute) + 2;
+		}
+		return super.getBaseAttribute(attribute);
 	}
 	
 	/*
@@ -307,6 +320,9 @@ public class Player extends LivingEntity {
 		public static final int EXTRA_STORAGE_X = 731;
 		public static final int EXTRA_STORAGE_Y = 355;
 		
+		public static final int TOOLBAR_X = (Main.WIDTH * Main.scale - ToolBar.GUI_WIDTH) / 2;
+		public static final int TOOLBAR_Y = (Main.HEIGHT * Main.scale) - ToolBar.GUI_HEIGHT;
+		
 		GUILivingEntityStatusBar statusBar;
 		
 		//Equipment
@@ -322,6 +338,9 @@ public class Player extends LivingEntity {
 		//Extra StorageGUI
 		ItemStorage.GUIItemStorage extraStorageGUI = null;
 		
+		//Toolbar
+		ItemStorage.GUIItemStorage toolbarGUI;
+		
 		/*
 		* constructor
 		* */
@@ -330,17 +349,17 @@ public class Player extends LivingEntity {
 			
 			addComponent(statusBar = new GUILivingEntityStatusBar(this, STATUS_BAR_X, STATUS_BAR_Y, Player.this));
 			
-			if (equipmentGUI == null) {
-				equipmentGUI = new GUILivingEntityEquipment(this, EQUIPMENT_X, EQUIPMENT_Y + 6, Player.this);
-				this.addComponent(equipmentGUI);
-				equipmentGUI.setVisible(false);
-			}
+			equipmentGUI = new GUILivingEntityEquipment(this, EQUIPMENT_X, EQUIPMENT_Y + 6, Player.this);
+			this.addComponent(equipmentGUI);
+			equipmentGUI.setVisible(false);
 			
-			if (backpackGUI == null) {
-				backpackGUI = backpack.getGUI(this, BACKPACK_X, BACKPACK_Y, Player.this);
-				addComponent(backpackGUI);
-				backpackGUI.setVisible(false);
-			}
+			backpackGUI = backpack.getGUI(this, BACKPACK_X, BACKPACK_Y, Player.this);
+			addComponent(backpackGUI);
+			backpackGUI.setVisible(false);
+			
+			toolbarGUI = toolbar.getGUI(this, TOOLBAR_X, TOOLBAR_Y, Player.this);
+			addComponent(toolbarGUI);
+			toolbar.setItemFrameLock(true);
 			
 		}
 		
@@ -387,21 +406,20 @@ public class Player extends LivingEntity {
 		* Backpack
 		* */
 		public void toggleBackpackGUI() {
-			if (backpackGUI == null) {
-				backpackGUI = backpack.getGUI(this, BACKPACK_X, BACKPACK_Y, Player.this);
-				addComponent(backpackGUI);
-			}
-			
-			if (backpackGUI.getVisibility()) {
+			setBackpackGUIVisibility(!backpackGUI.getVisibility());
+		} 
+		public void setBackpackGUIVisibility(boolean visibility) {
+			if (visibility) {
+				backpackGUI.setVisible(true);
+				toolbar.setItemFrameLock(false);
+			} else {
 				backpackGUI.setVisible(false);
+				toolbar.setItemFrameLock(true);
 				if (extraStorageGUI != null) {
 					extraStorageGUI.setVisible(false);
 				}
-			} else {
-				backpackGUI.setVisible(true);
 			}
-			
-		} 
+		}
 		
 		/*
 		* Extra Storage GUI
@@ -416,11 +434,7 @@ public class Player extends LivingEntity {
 			extraStorageGUI.setVisible(true);
 			addComponent(extraStorageGUI);
 			
-			if (backpackGUI == null) {
-				backpackGUI = backpack.getGUI(this, BACKPACK_X, BACKPACK_Y, Player.this);
-				addComponent(backpackGUI);
-			}
-			backpackGUI.setVisible(true);
+			setBackpackGUIVisibility(true);
 			
 		}
 		

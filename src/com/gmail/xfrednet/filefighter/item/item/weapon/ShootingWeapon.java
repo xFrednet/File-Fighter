@@ -20,7 +20,7 @@ public abstract class ShootingWeapon extends Weapon {
 	* getters
 	* */
 	protected double getModifiedAngle(double angle) {
-		double rad = ((100 - getAccuracy()) / 2000) * Math.PI / 180;
+		double rad = ((100 - getAccuracy()) / 3) * Math.PI / 180;
 		return angle + ((rad * random.nextDouble()) - rad / 2);  
 	}
 	
@@ -50,4 +50,5 @@ public abstract class ShootingWeapon extends Weapon {
 	abstract public double getAccuracy();
 	abstract public double getProjectileSpeed();
 	abstract public double getStaminaUsage();
+	
 }

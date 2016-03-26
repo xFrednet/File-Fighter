@@ -7,6 +7,7 @@ import com.gmail.xfrednet.filefighter.graphics.*;
 import com.gmail.xfrednet.filefighter.graphics.cameras.ControllableCamera;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponent;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponentGroup;
+import com.gmail.xfrednet.filefighter.graphics.gui.components.GUILevelClearedMessage;
 import com.gmail.xfrednet.filefighter.graphics.gui.components.GUIProgressBar;
 import com.gmail.xfrednet.filefighter.util.Input;
 import com.gmail.xfrednet.filefighter.level.path.Node;
@@ -127,6 +128,9 @@ public abstract class Level {
 		for (int i = 0; i < tileEntities.size(); i++) {
 			tileEntities.get(i).levelCleared(this, player);
 		}
+		
+		levelGUI.addComponent(new GUILevelClearedMessage(levelGUI));
+		
 	}
 	/*
 	* Game loop util 

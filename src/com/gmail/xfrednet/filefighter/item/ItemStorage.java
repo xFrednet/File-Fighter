@@ -64,6 +64,25 @@ public class ItemStorage {
 	}
 	
 	/*
+	* GUI
+	* */
+	public GUIItemStorage getGUI(GUIComponent parent, int x, int y, Player player) {
+		if (gui == null) {
+			this.player = player;
+			gui = new GUIItemStorage(parent, x, y, player.getInput());
+		} else {
+			gui.updateItemFrames();
+		}
+		
+		return gui;
+	}
+	public void setItemFrameLock(boolean locked) {
+		if (gui != null) {
+			gui.setItemFrameLock(locked);
+		}
+	}
+	
+	/*
 	* setters
 	* */
 	public void setItem(Entity entity, Item item, int slot) {
@@ -92,7 +111,6 @@ public class ItemStorage {
 		if (slot < 0 || slot >= items.length) return null;
 		return items[slot].getItem();
 	}
-	
 	private int getItemFrameType(int slot) {
 		if (slot < 0 || slot >= items.length) return 0;
 		return items[slot].getItemFrameType();
@@ -111,16 +129,10 @@ public class ItemStorage {
 		return STORAGE_FULL;
 	}
 	
-	public GUIItemStorage getGUI(GUIComponent parent, int x, int y, Player player) {
-		if (gui == null) {
-			this.player = player;
-			gui = new GUIItemStorage(parent, x, y, player.getInput());
-		} else {
-			gui.updateItemFrames();
-		}
-		
-		return gui;
+	protected boolean getDefaultLock() {
+		return false;
 	}
+	
 	
 	/*
 	* Util class
@@ -133,10 +145,14 @@ public class ItemStorage {
 		GUIItemInfoFrame itemInfo;
 		
 		public GUIItemStorage(GUIComponent parent, int x, int y, Input input) {
-			super(parent, x, y, GUIItemFrame.SIZE * ItemStorage.this.width + PADDING * 2, (name != NO_NAME) ? GUIItemFrame.SIZE * ItemStorage.this.height + PADDING + GUITitle.HEIGHT : GUIItemFrame.SIZE * ItemStorage.this.height + PADDING * 2, PADDING);
+			super(parent, x, y, GUIItemFrame.SIZE * ItemStorage.this.width + PADDING * 2, (!Objects.equals(name, NO_NAME)) ? GUIItemFrame.SIZE * ItemStorage.this.height + PADDING + GUITitle.HEIGHT : GUIItemFrame.SIZE * ItemStorage.this.height + PADDING * 2, PADDING);
 			
 			init(input);
 			input.addMouseInteraction(this, screenX, screenY, width, height);
+			
+			if (getDefaultLock() != false) {
+				setItemFrameLock(getDefaultLock());
+			}
 		}
 		
 		private void init(Input input) {
@@ -226,6 +242,12 @@ public class ItemStorage {
 		
 		@Override
 		public void mouseMoved(int x, int y) {}
+		
+		public void setItemFrameLock(boolean itemFrameLock) {
+			for (int i = 0; i < itemFrames.length; i++) {
+				itemFrames[i].setLocked(itemFrameLock);
+			}
+		}
 	}
 	
 }

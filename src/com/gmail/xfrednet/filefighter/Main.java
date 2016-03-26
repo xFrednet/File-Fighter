@@ -33,7 +33,7 @@ public class Main extends Canvas implements Runnable {
     public static final int HEIGHT = WIDTH * 9 / 16;
     public static final int scale = 2;
     public static final int UPS = 30;
-    public static final String LEVEL_LOCATION = (System.getProperty("user.home").endsWith("xFrednset")) ? "C:\\Users\\xFrednet\\IdeaProjects\\File-Fighter\\level" : System.clearProperty("user.home") + "\\Desktop";
+    public static final String LEVEL_LOCATION = (System.getProperty("user.home").endsWith("xFrsdnet")) ? "C:\\Users\\xFrednet\\IdeaProjects\\File-Fighter\\level" : System.clearProperty("user.home") + "\\Desktop";
     /*"Alter ich Psycholog(y)ier dich gleich mal"*/
 	
 	public static final Font gameFont = new Font("Lucida Console", Font.PLAIN, 16);
@@ -73,6 +73,7 @@ public class Main extends Canvas implements Runnable {
         addKeyListener(input);
         addMouseListener(input);
         addMouseMotionListener(input);
+        addMouseWheelListener(input);
         
         guiManager = new GUIManager(getWidth(), getHeight());
 	    hud = new GameHud(guiManager);
@@ -97,7 +98,7 @@ public class Main extends Canvas implements Runnable {
         input.setDefaultCursor();
     
         jframe.setLocationRelativeTo(null);
-        jframe.show();
+        jframe.setVisible(true);
     
         main.start();
     }

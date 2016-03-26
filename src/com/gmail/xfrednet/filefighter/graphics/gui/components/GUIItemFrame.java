@@ -41,6 +41,7 @@ public class GUIItemFrame extends GUIComponent implements MouseInteraction {
 	ItemStorage storage;
 	int slot;
 	boolean hasStorage = false;
+	private boolean locked = false;
 	
 	/*
 	* Constructor
@@ -111,7 +112,7 @@ public class GUIItemFrame extends GUIComponent implements MouseInteraction {
 	
 	@Override
 	public void mousePressed(int x, int y, int button) {
-		if (parent.getVisibility() && hasStorage) {
+		if (parent.getVisibility() && hasStorage && !locked) {
 			storage.mouseInteraction(slot, this);
 		}
 	}
@@ -124,5 +125,9 @@ public class GUIItemFrame extends GUIComponent implements MouseInteraction {
 	
 	@Override
 	public void mouseMoved(int x, int y) {}
+	
+	public void setLocked(boolean locked) {
+		this.locked = locked;
+	}
 }
 

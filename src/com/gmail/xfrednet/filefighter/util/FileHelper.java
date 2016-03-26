@@ -4,6 +4,7 @@ import com.gmail.xfrednet.filefighter.entity.Entity;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.Dummy;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.TestEntity;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.FileEntity;
+import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.FirefoxEntity;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.JPGFileEntity;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.TextFileEntity;
 import com.gmail.xfrednet.filefighter.graphics.Screen;
@@ -58,26 +59,28 @@ public class FileHelper {
 			case "lnk": return getEntityByName(level, x, y, fileName); 
 			
 			//text files
-			case "txt": return new TextFileEntity(x, y, level, fileName);
+			case "txt": return new TextFileEntity(x, y, level, getFileName(fileName));
 			
 			//JGP
-			case "jpg": return new JPGFileEntity(x, y, level, level.getPlayer(), fileName);
-			case "jpeg": return new JPGFileEntity(x, y, level, level.getPlayer(), fileName);
-			case "jpe": return new JPGFileEntity(x, y, level, level.getPlayer(), fileName);
+			case "jpg": return new JPGFileEntity(x, y, level, level.getPlayer(), getFileName(fileName));
+			case "jpeg": return new JPGFileEntity(x, y, level, level.getPlayer(), getFileName(fileName));
+			case "jpe": return new JPGFileEntity(x, y, level, level.getPlayer(), getFileName(fileName));
 			
 			//Test code
 			case "dummy": return new Dummy(250, 250, level, "dummy");
 			
 			//default
-			default: return new FileEntity(x, y, level, fileName);
+			default: return new FileEntity(x, y, level, getFileName(fileName));
 		}
 	}
 	public static Entity getEntityByName(@NonNull Level level, double x, double y, String fileName) {
 		
-		if (fileName.contains("mozilla firefox")) {
-			return new FileEntity(x, y, level, "Mozilla Firefox");
+		fileName = fileName.toLowerCase();
+		
+		if (fileName.contains("firefox")) {
+			return new FirefoxEntity(x, y, level, getFileName(fileName));
 		}
-		return new FileEntity(x, y, level, fileName);
+		return new FileEntity(x, y, level, getFileName(fileName));
 	}
 	
 	/*
@@ -96,6 +99,20 @@ public class FileHelper {
 			return fileName.substring(i + 1).toLowerCase();
 		} else {
 			return UNKNOWN_FILE;
+		}
+	}
+	public static String getFileName(File file) {
+		if (file.isDirectory()){
+			return FOLDER;
+		}
+		return getFileName(file.getName());
+	}
+	public static String getFileName(String fileName) {
+		int pos = fileName.lastIndexOf(".");
+		if (pos > 0) {
+			return fileName.substring(0, pos);
+		} else {
+			return "ERROR";
 		}
 	}
 	

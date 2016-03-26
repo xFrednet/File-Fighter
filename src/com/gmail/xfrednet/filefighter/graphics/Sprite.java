@@ -33,6 +33,7 @@ public class Sprite {
 	* */
 	public static class Projectiles {
 		public static Sprite paper_projectile = new Sprite(0, 0, SpriteSheet.projectiles, PROJECTILE_SPRITE_SIZE);
+		public static Sprite fire_ball = new Sprite(PROJECTILE_SPRITE_SIZE, 0, SpriteSheet.projectiles, PROJECTILE_SPRITE_SIZE);
 	}
 	/*
 	* GUIComponents
@@ -44,7 +45,11 @@ public class Sprite {
 	* */
 	public static class Particles {
 		public static Sprite[] smoke_particles = loadSplitSprite(new Sprite(0, 0, SpriteSheet.particles, 16), 3);
+		/*
+		* Projectiles particles
+		* */
 		public static Sprite[] paper_projectile_particles = loadParticlesFromSprites(Projectiles.paper_projectile);
+		public static Sprite[] fire_ball_particles = loadParticlesFromSprites(Projectiles.fire_ball);
 	}
 	
 	/*
@@ -69,7 +74,11 @@ public class Sprite {
 	* Items
 	* */
 	public static class Item {
+		/*
+		* Weapons
+		* */
 		public static Sprite paperGun = new Sprite(0, 0, SpriteSheet.items, ITEM_SPRITE_SIZE);
+		public static Sprite fireFoxFlameThrower = new Sprite(ITEM_SPRITE_SIZE, 0, SpriteSheet.items, ITEM_SPRITE_SIZE);
 		
 		/*
 		* Armor
