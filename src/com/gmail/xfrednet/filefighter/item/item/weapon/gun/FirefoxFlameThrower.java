@@ -3,8 +3,8 @@ package com.gmail.xfrednet.filefighter.item.item.weapon.gun;
 import com.gmail.xfrednet.filefighter.Main;
 import com.gmail.xfrednet.filefighter.entity.LivingEntity;
 import com.gmail.xfrednet.filefighter.entity.projectiles.FireProjectile;
-import com.gmail.xfrednet.filefighter.entity.projectiles.PaperProjectile;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
+import com.gmail.xfrednet.filefighter.item.Item;
 import com.gmail.xfrednet.filefighter.item.item.Damage;
 import com.gmail.xfrednet.filefighter.item.item.weapon.ShootingWeapon;
 import com.gmail.xfrednet.filefighter.level.Level;
@@ -35,8 +35,9 @@ public class FirefoxFlameThrower extends ShootingWeapon {
 		return false;
 	}
 	
-	public boolean isUsable(LivingEntity executingEntity) {
-		return executingEntity.hasEnoughStamina(getStaminaUsage());
+	@Override
+	public Item clone() {
+		return new FirefoxFlameThrower().setCount(count);
 	}
 	
 	/*
@@ -48,7 +49,7 @@ public class FirefoxFlameThrower extends ShootingWeapon {
 	}
 	@Override
 	public Sprite getItemSprite() {
-		return Sprite.Item.fireFoxFlameThrower;
+		return Sprite.Item.firefox_flamethrower;
 	}
 	
 	//weapon
@@ -57,14 +58,14 @@ public class FirefoxFlameThrower extends ShootingWeapon {
 		return Damage.MENTAL_DAMAGE;
 	}
 	
-	//shootingWeapon 
+	//shootingWeapon
 	@Override
 	public double getDamageAmount() {
-		return 2;
+		return 1;
 	}
 	
 	@Override
-	public double getShootSpeed() {
+	public int getShootSpeed() {
 		return 0;
 	}
 	
@@ -85,6 +86,6 @@ public class FirefoxFlameThrower extends ShootingWeapon {
 	
 	@Override
 	public double getStaminaUsage() {
-		return 2;
+		return 1;
 	}
 }

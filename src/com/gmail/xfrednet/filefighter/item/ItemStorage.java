@@ -8,6 +8,7 @@ import com.gmail.xfrednet.filefighter.graphics.gui.components.GUIBackground;
 import com.gmail.xfrednet.filefighter.graphics.gui.components.GUIItemFrame;
 import com.gmail.xfrednet.filefighter.graphics.gui.components.GUITitle;
 import com.gmail.xfrednet.filefighter.graphics.gui.groups.GUIItemInfoFrame;
+import com.gmail.xfrednet.filefighter.level.Level;
 import com.gmail.xfrednet.filefighter.util.Input;
 import com.gmail.xfrednet.filefighter.util.MouseInteraction;
 
@@ -21,6 +22,7 @@ public class ItemStorage {
 	
 	public static final int STORAGE_FULL = -1;
 	public static final String NO_NAME = "NO_NAME";
+	public static final int NOT_PRESENT = -1;
 	
 	protected ItemContainer[] items;
 	protected int width;
@@ -54,6 +56,12 @@ public class ItemStorage {
 	/*
 	* Util
 	* */
+	public void update(Level level) {
+		for (int i = 0; i < items.length; i++) {
+			items[i].update(level);
+		}
+	}
+	
 	public void mouseInteraction(int slot, GUIItemFrame itemFrame) {
 		if (player == null) {
 			System.out.println("Player = null");
@@ -88,6 +96,47 @@ public class ItemStorage {
 	public void setItem(Entity entity, Item item, int slot) {
 		switchItem(entity, item, slot);
 	}
+	public Item addIfPresentItem(Item item) {
+		if (item == null) return null;
+		if (item.getMaxStackSize() > 1) {
+			int index;
+			if ((index = isItemPresent(item)) != NOT_PRESENT) {
+				item = items[index].switchItem(item);
+				
+				if (item != null) {
+					return addIfPresentItem(item);
+				} else {
+					return null;
+				}
+				
+			}
+		}
+		return item;		
+	}
+	public Item addItem(Entity entity, Item item) {
+		if (item == null) return null;
+		if (item.getMaxStackSize() > 1) {
+			int index;
+			if ((index = isItemPresent(item)) != NOT_PRESENT) {
+				item = items[index].switchItem(item);
+				
+				if (item != null) {
+					return addItem(entity, item);
+				} else {
+					return null;
+				}
+				
+			}
+		} 
+		if (!isStorageFull()) {
+			switchItem(entity, item);
+			return null;
+		} else {
+			return item;
+		}
+		
+	}
+	
 	public Item switchItem(Entity entity, Item item) {
 		return switchItem(entity, item, getFirstFreeSlot(item));
 	}
@@ -122,9 +171,17 @@ public class ItemStorage {
 		}
 		return true;
 	}
+	private int isItemPresent(Item item) {
+		for (int i = 0; i < items.length; i++) {
+			if (items[i].isAddPossible(item)) {
+				return i;
+			}
+		}
+		return NOT_PRESENT;
+	}
 	public int getFirstFreeSlot(Item item) {
 		for (int i = 0; i < items.length; i++) {
-			if (items[i].isEmpty() && items[i].isSwitchPossible(item)) return i;
+			if ((items[i].isEmpty() && items[i].isSwitchPossible(item)) || items[i].isAddPossible(item)) return i;
 		} 
 		return STORAGE_FULL;
 	}
@@ -133,6 +190,14 @@ public class ItemStorage {
 		return false;
 	}
 	
+	public Item hasItemClass(Class itemClass) {
+		for (int i = 0; i < items.length; i++) {
+			if (items[i].hasItemClass(itemClass)) {
+				return items[i].getItem();
+			}
+		}
+		return null;
+	}
 	
 	/*
 	* Util class
@@ -150,7 +215,7 @@ public class ItemStorage {
 			init(input);
 			input.addMouseInteraction(this, screenX, screenY, width, height);
 			
-			if (getDefaultLock() != false) {
+			if (getDefaultLock()) {
 				setItemFrameLock(getDefaultLock());
 			}
 		}
@@ -217,6 +282,15 @@ public class ItemStorage {
 				itemInfo = item.getGUIItemInfoFrame(this, width, 0);
 			} else {
 				itemInfo = null;
+			}
+		}
+		
+		public void selectedItemFrame(int selectedSlot) {
+			for (int i = 0; i < itemFrames.length; i++) {
+				itemFrames[i].setSelected(false);
+			}
+			if (!(selectedSlot < 0 || selectedSlot >= itemFrames.length)) {
+				itemFrames[selectedSlot].setSelected(true);
 			}
 		}
 		

@@ -1,6 +1,8 @@
 package com.gmail.xfrednet.filefighter.item.item.weapon;
 
+import com.gmail.xfrednet.filefighter.Main;
 import com.gmail.xfrednet.filefighter.entity.Entity;
+import com.gmail.xfrednet.filefighter.entity.LivingEntity;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponentGroup;
 import com.gmail.xfrednet.filefighter.graphics.gui.groups.GUIItemInfoFrame;
 import com.gmail.xfrednet.filefighter.item.item.Damage;
@@ -33,7 +35,11 @@ public abstract class ShootingWeapon extends Weapon {
 		GUIItemInfoFrame info = super.getGUIItemInfoFrame(parent, x, y);
 		
 		info.addItemInfo(new GUIItemInfoFrame.GUItemNumberInfo(info, "Damage", getDamageAmount()));
-		info.addItemInfo(new GUIItemInfoFrame.GUItemNumberInfo(info, "Shoot speed", getShootSpeed()));
+		if (getShootSpeed() == 0) {
+			info.addItemInfo(new GUIItemInfoFrame.GUItemNumberInfo(info, "Shoot speed", Main.UPS));
+		} else {
+			info.addItemInfo(new GUIItemInfoFrame.GUItemNumberInfo(info, "Shoot speed", Main.UPS / getShootSpeed()));
+		}
 		info.addItemInfo(new GUIItemInfoFrame.GUItemNumberInfo(info, "Range", getRange() / 10));
 		info.addItemInfo(new GUIItemInfoFrame.GUItemNumberInfo(info, "Accuracy", getAccuracy()));
 		info.addItemInfo(new GUIItemInfoFrame.GUItemNumberInfo(info, "Stamina usage", getStaminaUsage()));
@@ -41,14 +47,24 @@ public abstract class ShootingWeapon extends Weapon {
 		return info;
 	}
 	
+	public boolean isUsable(LivingEntity executingEntity) {
+		return executingEntity.hasEnoughStamina(getStaminaUsage());
+	}
+	
+	
 	/*
 	* abstract getters
 	* */
 	abstract public double getDamageAmount();
-	abstract public double getShootSpeed();
+	abstract public int getShootSpeed();
 	abstract public double getRange();
 	abstract public double getAccuracy();
 	abstract public double getProjectileSpeed();
 	abstract public double getStaminaUsage();
+	
+	@Override
+	public int getUseDelay() {
+		return getShootSpeed();
+	}
 	
 }

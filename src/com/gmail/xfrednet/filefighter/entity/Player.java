@@ -1,7 +1,6 @@
 package com.gmail.xfrednet.filefighter.entity;
 
 import com.gmail.xfrednet.filefighter.Main;
-import com.gmail.xfrednet.filefighter.entity.livingentitys.TestEntity;
 import com.gmail.xfrednet.filefighter.graphics.Camera;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponent;
@@ -21,6 +20,8 @@ import com.gmail.xfrednet.filefighter.item.item.equipment.armor.boots.LeatherBoo
 import com.gmail.xfrednet.filefighter.item.item.equipment.armor.chestplates.LeatherChestplate;
 import com.gmail.xfrednet.filefighter.item.item.equipment.armor.helmets.LeatherHelmet;
 import com.gmail.xfrednet.filefighter.item.item.equipment.armor.pents.LeatherPents;
+import com.gmail.xfrednet.filefighter.item.item.potion.HealthPotion;
+import com.gmail.xfrednet.filefighter.item.item.potion.StaminaPotion;
 import com.gmail.xfrednet.filefighter.item.item.weapon.gun.FirefoxFlameThrower;
 import com.gmail.xfrednet.filefighter.item.item.weapon.gun.PaperGun;
 import com.gmail.xfrednet.filefighter.item.itemstorage.Backpack;
@@ -38,7 +39,7 @@ public class Player extends LivingEntity {
 	
 	public static final int ANIMATION_SPRITES = 8;
 	public static final int ANIMATION_SPEED = ((int) (Main.UPS * 0.1) == 0) ? 1 : (int) (Main.UPS * 0.1);
-	//movement
+	//input Keys
 	private static final int MOVEMENT_UP_KEY = KeyEvent.VK_W;
 	private static final int MOVEMENT_DOWN_KEY = KeyEvent.VK_S;
 	private static final int MOVEMENT_LEFT_KEY = KeyEvent.VK_A;
@@ -46,13 +47,17 @@ public class Player extends LivingEntity {
 	private static final int MOVEMENT_SPEED_KEY = KeyEvent.VK_SHIFT;
 	private static final int MOVEMENT_SLOW_KEY = KeyEvent.VK_CONTROL;
 	private static final int DISCONNECT_CAMERA = KeyEvent.VK_NUMPAD0;
+	private static final int USE_HEALTH_POTION = KeyEvent.VK_H;
+	private static final int USE_STAMINA_POTION = KeyEvent.VK_F;
 	//GUI
 	private static final int TOGGLE_EQUIPMENT_GUI = KeyEvent.VK_C;
 	private static final int TOGGLE_BACKPACK_GUI = KeyEvent.VK_E;
 	
+	//puckUp
 	public static final int PICKUP_WAIT_TIME = Main.UPS / 4;
 	public static final int PICKUP_KEY = KeyEvent.VK_R;
 	
+	//mouse buttons
 	private static final int MOUSE_PRIMARY_ACTION_BUTTON = Input.LEFT_MOUSE_BUTTON;
 	private static final int MOUSE_SECONDARY_ACTION_BUTTON = Input.RIGHT_MOUSE_BUTTON;
 	
@@ -71,11 +76,15 @@ public class Player extends LivingEntity {
 	Item currentPickupItem = null;
 	double itemPickupRange = 30;
 	
+	//"static" cool downs 
+	int healthPotionDelayTimer = 0;
+	int staminaPotionDelayTimer = 0;
+	
 	//ItemStorage
 	Backpack backpack;
 	ToolBar toolbar;
 	Item inHandItem = null;
-	boolean test = false;
+
 	
 	/*
 	* constructor
@@ -95,7 +104,8 @@ public class Player extends LivingEntity {
 		
 		toolbar.switchItem(this, new FirefoxFlameThrower());
 		toolbar.switchItem(this, new PaperGun());
-		
+		toolbar.switchItem(this, HealthPotion.newSmallHealthPotion(10));
+		toolbar.switchItem(this, StaminaPotion.newSmallStaminaPotion(10));
 		/*
 		* Testing
 		* */
@@ -108,32 +118,14 @@ public class Player extends LivingEntity {
 		backpack.setItem(this, new BronzeRing(), 5);
 		backpack.setItem(this, SilverDiamondRing.newSpeedRing(), 9);
 		backpack.setItem(this, new GoldBracelet(), 13);
+		backpack.switchItem(this, HealthPotion.newSmallHealthPotion(5), 2);
+		backpack.switchItem(this, HealthPotion.newSmallHealthPotion(11), 6);
+		backpack.switchItem(this, HealthPotion.newSmallHealthPotion(10), 7);
 		
 		//accessories.switchItem(this, SilverDiamondRing.newSpeedRing(), 2);
 		
 		parent.addComponent(playerHud = new PlayerHud(parent));
 		updateAttributes();
-	}
-	
-	protected void updateCurrentSprite() {
-		int spriteIndex;
-		if (isStanding) {
-			spriteIndex = STILL_STANDING_SPRITE_INDEX;
-		} else {
-			spriteIndex = (direction * ANIMATION_SPRITES) + ((animation / ANIMATION_SPEED) % ANIMATION_SPRITES);
-		}
-		
-		sprite = new Sprite(Sprite.player_entity_sprites[spriteIndex]);
-		for (int i = 0; i < EQUIPMENT_COUNT; i++) {
-			if (getEquipment(i) != null && getEquipment(i) instanceof Armor) {
-				sprite.add(((Armor) getEquipment(i)).getAnimatedSprite(spriteIndex));
-			}
-		}
-		
-	}
-	
-	public void setCamera(Camera camera) {
-		this.camera = camera;
 	}
 	
 	@Override
@@ -144,63 +136,78 @@ public class Player extends LivingEntity {
 	/*
 	* Util
 	* */
-	protected void updateAnimation() {
-		animation++;
-		if (animation > MAX_ANIMATION_VALUE) {
-			animation = animation % MAX_ANIMATION_VALUE;
-		}
+	public Item pickup(Item item) {
+		item = toolbar.addIfPresentItem(item);
+		item = backpack.addIfPresentItem(item);
+		
+		if (item == null) return null; 
+		item = toolbar.addItem(this, item);
+		if (item == null) return null;
+		item = backpack.addItem(this, item);
+		return item;
 	}
 	
 	/*
 	* Update & Update Util
 	* */
+	@Override
 	public void update(Level level) {
 		super.update(level);
-		toolbar.update(level);
-		toolBarUse(level);
-		movement(level);
-		showGUI();
+		updateEntityCoolDownTimers();
+		updateItemShortages(level);
+		updateInput(level);
+		updateMovement(level);
+		updateItemPickup(level);
+		updateGUI();
 		updateAnimation();
 		updateCurrentSprite();
 		
-		if (input.isKeyDown(KeyEvent.VK_F)) {
-			level.spawnParticles(getInfo().getCenterX(), getInfo().getCenterY(), 10, Sprite.Particles.smoke_particles);
-		}
-		if (input.isKeyDown(KeyEvent.VK_V) != test) {
-			test = input.isKeyDown(KeyEvent.VK_V);
-			if (test) {
-				level.spawn(new TestEntity(info.getCenterX(), info.getCenterY(), level, "Test"));
-			}
-		}
-		
-		itemPickup(level);
-		
 	}
-	
-	private void showGUI() {
-		if (input.isKeyDown(TOGGLE_EQUIPMENT_GUI) != equipmentButtonPressed) {
-			equipmentButtonPressed = input.isKeyDown(TOGGLE_EQUIPMENT_GUI);
-			
-			if (equipmentButtonPressed) {
-				playerHud.toggleEquipmentGUI();
-			}
+	private void updateEntityCoolDownTimers() {
+		if (healthPotionDelayTimer > 0) {
+			healthPotionDelayTimer--;
 		}
-		
-		if (input.isKeyDown(TOGGLE_BACKPACK_GUI) != backpackButtonPressed) {
-			backpackButtonPressed = input.isKeyDown(TOGGLE_BACKPACK_GUI);
-			
-			if (backpackButtonPressed) {
-				playerHud.toggleBackpackGUI();
-			}
+		if (staminaPotionDelayTimer > 0) {
+			staminaPotionDelayTimer--;
 		}
-		
-		if (input.isKeyDown(KeyEvent.VK_P)) {
-			playerHud.addComponent(new GUILivingEntityAttributes(playerHud, 0, 100, this));
-		}
-		
 	}
-	
-	private void movement(Level level) {
+	private void updateItemShortages(Level level) {
+		toolbar.update(level);
+		backpack.update(level);
+		if (input.isMouseButtonDown(MOUSE_PRIMARY_ACTION_BUTTON)) {
+			level.clicked(input.getMouseX(), input.getMouseY(), MOUSE_PRIMARY_ACTION_BUTTON, this);
+			toolbar.useItemPrimaryAction(level, this, getAngleTo(input.getMouseLevelX(level), input.getMouseLevelY(level)));
+		}
+		if (input.isMouseButtonDown(MOUSE_SECONDARY_ACTION_BUTTON)) {
+			level.clicked(input.getMouseX(), input.getMouseY(), MOUSE_SECONDARY_ACTION_BUTTON, this);
+			toolbar.useItemSecondaryAction(level, this, getAngleTo(input.getMouseLevelX(level), input.getMouseLevelY(level)));
+		}
+	}
+	private void updateInput(Level level) {
+		//health potion
+		if (input.isKeyDown(USE_HEALTH_POTION)) {
+			Item item;
+			if ((item = toolbar.hasItemClass(HealthPotion.class)) != null) {
+				//executes if a health potion is present in the toolbar
+				item.usePrimaryAction(level, this, 0);
+			} else if ((item = backpack.hasItemClass(HealthPotion.class)) != null) {
+				//executes if a health potion is present in the backpack
+				item.usePrimaryAction(level, this, 0);
+			}
+		}
+		//stamina potion 
+		if (input.isKeyDown(USE_STAMINA_POTION)) {
+			Item item;
+			if ((item = toolbar.hasItemClass(StaminaPotion.class)) != null) {
+				//executes if a stamina potion is present in the toolbar
+				item.usePrimaryAction(level, this, 0);
+			} else if ((item = backpack.hasItemClass(StaminaPotion.class)) != null) {
+				//executes if a stamina potion is present in the backpack
+				item.usePrimaryAction(level, this, 0);
+			}
+		}
+	}
+	private void updateMovement(Level level) {
 		int xm = 0;
 		int ym = 0;
 		
@@ -230,17 +237,7 @@ public class Player extends LivingEntity {
 			isStanding = true;
 		}
 	}
-	private void toolBarUse(Level level) {
-		if (input.isMouseButtonDown(MOUSE_PRIMARY_ACTION_BUTTON)) {
-			level.clicked(input.getMouseX(), input.getMouseY(), MOUSE_PRIMARY_ACTION_BUTTON, this);
-			toolbar.useItemPrimaryAction(level, this, getAngleTo(input.getMouseLevelX(level), input.getMouseLevelY(level)));
-		}
-		if (input.isMouseButtonDown(MOUSE_SECONDARY_ACTION_BUTTON)) {
-			level.clicked(input.getMouseX(), input.getMouseY(), MOUSE_SECONDARY_ACTION_BUTTON, this);
-			toolbar.useItemSecondaryAction(level, this, getAngleTo(input.getMouseLevelX(level), input.getMouseLevelY(level)));
-		}
-	}
-	private void itemPickup(Level level) {
+	private void updateItemPickup(Level level) {
 		ItemEntity itemEntity = (ItemEntity) getClosestEntity(level.getItemEntities(info.getCenterX(), info.getCenterY(), itemPickupRange));
 		Item item;
 		if (itemEntity == null || (item = itemEntity.getItem()) == null) {
@@ -261,9 +258,53 @@ public class Player extends LivingEntity {
 			}
 		}
 		
-		if (pickupTimer <= 0 && !backpack.isStorageFull()) {
-			if (backpack.switchItem(this, item) == null) {
+		if (pickupTimer <= 0) {
+			if (pickup(currentPickupItem) == null) {
 				itemEntity.remove();
+			}
+		}
+		
+	}
+	private void updateGUI() {
+		if (input.isKeyDown(TOGGLE_EQUIPMENT_GUI) != equipmentButtonPressed) {
+			equipmentButtonPressed = input.isKeyDown(TOGGLE_EQUIPMENT_GUI);
+			
+			if (equipmentButtonPressed) {
+				playerHud.toggleEquipmentGUI();
+			}
+		}
+		
+		if (input.isKeyDown(TOGGLE_BACKPACK_GUI) != backpackButtonPressed) {
+			backpackButtonPressed = input.isKeyDown(TOGGLE_BACKPACK_GUI);
+			
+			if (backpackButtonPressed) {
+				playerHud.toggleBackpackGUI();
+			}
+		}
+		
+		if (input.isKeyDown(KeyEvent.VK_P)) {
+			playerHud.addComponent(new GUILivingEntityAttributes(playerHud, 0, 100, this));
+		}
+		
+	}
+	private void updateAnimation() {
+		animation++;
+		if (animation > MAX_ANIMATION_VALUE) {
+			animation = animation % MAX_ANIMATION_VALUE;
+		}
+	}
+	private void updateCurrentSprite() {
+		int spriteIndex;
+		if (isStanding) {
+			spriteIndex = STILL_STANDING_SPRITE_INDEX;
+		} else {
+			spriteIndex = (direction * ANIMATION_SPRITES) + ((animation / ANIMATION_SPEED) % ANIMATION_SPRITES);
+		}
+		
+		sprite = new Sprite(Sprite.player_entity_sprites[spriteIndex]);
+		for (int i = 0; i < EQUIPMENT_COUNT; i++) {
+			if (getEquipment(i) != null && getEquipment(i) instanceof Armor) {
+				sprite.add(((Armor) getEquipment(i)).getAnimatedSprite(spriteIndex));
 			}
 		}
 		
@@ -278,15 +319,31 @@ public class Player extends LivingEntity {
 	public Item getInHandItem() {
 		return inHandItem;
 	}
-	
+	public int getHealthPotionDelayTimer() {
+		return healthPotionDelayTimer;
+	}
+	public int getStaminaPotionDelayTimer() {
+		return staminaPotionDelayTimer;
+	}
 	/*
 	* setter
 	* */
+	public void setCamera(Camera camera) {
+		this.camera = camera;
+	}
+	
 	public void setInHandItem(Item inHandItem) {
 		this.inHandItem = inHandItem;
 	}
 	public void addStorageGUI(ItemStorage storage) {
 		playerHud.addExtraStorageGUI(storage);
+	}
+	
+	public void setHealthPotionDelayTimer(int healthPotionCoolDownTimer) {
+		this.healthPotionDelayTimer = healthPotionCoolDownTimer;
+	}
+	public void setStaminaPotionDelayTimer(int staminaPotionDelayTimer) {
+		this.staminaPotionDelayTimer = staminaPotionDelayTimer;
 	}
 	
 	/*

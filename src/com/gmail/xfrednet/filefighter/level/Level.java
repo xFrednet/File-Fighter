@@ -47,7 +47,7 @@ public abstract class Level {
 		//player
 		this.player = player;
 		player.setCamera(camera);
-		player.setPosition(160, 160);
+		player.setPosition(2 * 32, 2 * 32);
 		levelGUI = new GUIComponentGroup(guiManager, 0, 0);
 		guiManager.addComponent(levelGUI);
 		

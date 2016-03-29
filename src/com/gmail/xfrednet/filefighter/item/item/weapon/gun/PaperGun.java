@@ -4,6 +4,7 @@ import com.gmail.xfrednet.filefighter.Main;
 import com.gmail.xfrednet.filefighter.entity.LivingEntity;
 import com.gmail.xfrednet.filefighter.entity.projectiles.PaperProjectile;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
+import com.gmail.xfrednet.filefighter.item.Item;
 import com.gmail.xfrednet.filefighter.item.item.Damage;
 import com.gmail.xfrednet.filefighter.item.item.weapon.ShootingWeapon;
 import com.gmail.xfrednet.filefighter.level.Level;
@@ -30,8 +31,9 @@ public class PaperGun extends ShootingWeapon {
 		return false;		
 	}
 	
-	public boolean isUsable(LivingEntity executingEntity) {
-		return executingEntity.hasEnoughStamina(getStaminaUsage());
+	@Override
+	public Item clone() {
+		return new PaperGun().setCount(count);
 	}
 	
 	/*
@@ -43,7 +45,7 @@ public class PaperGun extends ShootingWeapon {
 	}
 	@Override
 	public Sprite getItemSprite() {
-		return Sprite.Item.paperGun;
+		return Sprite.Item.paper_gun;
 	} 
 	
 	//weapon
@@ -59,8 +61,8 @@ public class PaperGun extends ShootingWeapon {
 	}
 	
 	@Override
-	public double getShootSpeed() {
-		return (Main.UPS * 0.5);
+	public int getShootSpeed() {
+		return (int) (Main.UPS * 0.5);
 	}
 	
 	@Override
@@ -82,4 +84,5 @@ public class PaperGun extends ShootingWeapon {
 	public double getStaminaUsage() {
 		return 4;
 	}
+	
 }

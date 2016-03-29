@@ -38,7 +38,10 @@ public class Sprite {
 	/*
 	* GUIComponents
 	* */
-	public static Sprite[] itemFrame = loadItemFrames();
+	public static class GUI {
+		public static Sprite selected_item_frame = new Sprite(GUIItemFrame.SPRITE_SIZE * GUIItemFrame.TYPE_COUNT, 0, SpriteSheet.guiComponents, GUIItemFrame.SPRITE_SIZE);
+		public static Sprite[] itemFrame = loadItemFrames();
+	}
 	
 	/*
 	* Particles
@@ -77,9 +80,13 @@ public class Sprite {
 		/*
 		* Weapons
 		* */
-		public static Sprite paperGun = new Sprite(0, 0, SpriteSheet.items, ITEM_SPRITE_SIZE);
-		public static Sprite fireFoxFlameThrower = new Sprite(ITEM_SPRITE_SIZE, 0, SpriteSheet.items, ITEM_SPRITE_SIZE);
-		
+		public static Sprite paper_gun = new Sprite(0, 0, SpriteSheet.items, ITEM_SPRITE_SIZE);
+		public static Sprite firefox_flamethrower = new Sprite(ITEM_SPRITE_SIZE, 0, SpriteSheet.items, ITEM_SPRITE_SIZE);
+		/*
+		* Potions
+		* */
+		public static Sprite health_potion = new Sprite(0, ITEM_SPRITE_SIZE * 4, SpriteSheet.items, ITEM_SPRITE_SIZE);
+		public static Sprite stamina_potion = new Sprite(ITEM_SPRITE_SIZE, ITEM_SPRITE_SIZE * 4, SpriteSheet.items, ITEM_SPRITE_SIZE);
 		/*
 		* Armor
 		* */
@@ -107,8 +114,6 @@ public class Sprite {
 	}
 	/*
 	* Class
-	* */
-	
 	
 	/*
 	* Values
@@ -185,11 +190,8 @@ public class Sprite {
 			ya = yp + yOffset;
 			for (int xp = 0; xp < WIDTH; xp++) {
 				xa = xp + xOffset;
-				color = spriteSheet.pixels[xa + ya * spriteSheet.WIDTH];
 				
-				if (color == SPRITE_INVISIBLE_COLOR_1) color = Screen.INVISIBLE_COLOR;
-				if (color == SPRITE_INVISIBLE_COLOR_2) color = Screen.INVISIBLE_COLOR;
-				pixels[xp + yp * WIDTH] = color;
+				pixels[xp + yp * WIDTH] = spriteSheet.pixels[xa + ya * spriteSheet.WIDTH];
 			}
 		}
 	}

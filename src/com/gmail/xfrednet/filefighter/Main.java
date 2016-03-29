@@ -173,6 +173,7 @@ public class Main extends Canvas implements Runnable {
         level =  level.update();
         guiManager.update();
         debugUpdate();
+        input.endUpdate();
         
         //if (input.isKeyDown(KeyEvent.VK_ESCAPE)) {
          //   running = false;

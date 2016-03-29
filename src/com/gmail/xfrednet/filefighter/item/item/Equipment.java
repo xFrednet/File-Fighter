@@ -1,5 +1,6 @@
 package com.gmail.xfrednet.filefighter.item.item;
 
+import com.gmail.xfrednet.filefighter.Main;
 import com.gmail.xfrednet.filefighter.item.Item;
 
 /**
@@ -36,5 +37,10 @@ public abstract class Equipment extends Item {
 	public double getAttributeModifier(int attribute) {
 		if (modifiers == null) return 0;
 		return modifiers.getAttributeModifier(attribute);
+	}
+	
+	@Override
+	public int getUseDelay() {
+		return 0;
 	}
 }

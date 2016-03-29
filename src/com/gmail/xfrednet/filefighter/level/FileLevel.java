@@ -11,6 +11,7 @@ import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.TextFileEntity;
 import com.gmail.xfrednet.filefighter.graphics.GUIManager;
 import com.gmail.xfrednet.filefighter.graphics.Screen;
 import com.gmail.xfrednet.filefighter.item.Item;
+import com.gmail.xfrednet.filefighter.item.item.potion.HealthPotion;
 import com.gmail.xfrednet.filefighter.item.item.weapon.gun.FirefoxFlameThrower;
 import com.gmail.xfrednet.filefighter.item.item.weapon.gun.PaperGun;
 import com.gmail.xfrednet.filefighter.level.path.Path;
@@ -74,12 +75,9 @@ public class FileLevel extends Level {
 		spawnFileEntities();
 		spawnFolderTileEntities();
 		
-		ItemEntity e = new PaperGun().getItemEntity(this);
-		e.setPosition(1 * 32, 1 * 32);
-		spawn(e);
-		e = new FirefoxFlameThrower().getItemEntity(this);
-		e.setPosition(1 * 32, 2 * 32);
-		spawn(e);
+		spawn(new PaperGun().getItemEntity(this, 32 + 16, 32 + 16));
+		spawn(new FirefoxFlameThrower().getItemEntity(this, 64 + 16, 32 + 16));
+		spawn(HealthPotion.newSmallHealthPotion(50).getItemEntity(this, 3 * 32 + 16, 3 * 32 + 16));
 	}
 	
 	/*

@@ -1,6 +1,7 @@
 package com.gmail.xfrednet.filefighter.item.item.equipment.armor.chestplates;
 
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
+import com.gmail.xfrednet.filefighter.item.Item;
 import com.gmail.xfrednet.filefighter.item.item.equipment.Armor;
 import com.gmail.xfrednet.filefighter.item.item.equipment.armor.Chestplate;
 
@@ -10,6 +11,11 @@ import com.gmail.xfrednet.filefighter.item.item.equipment.armor.Chestplate;
 public class LeatherChestplate extends Chestplate {
 	public LeatherChestplate() {
 		super(new ArmorStats(1.0, 0.2));
+	}
+	
+	@Override
+	public Item clone() {
+		return new LeatherChestplate().setCount(count);
 	}
 	
 	@Override
