@@ -1,6 +1,7 @@
 package com.gmail.xfrednet.filefighter.graphics.gui.groups;
 
 import com.gmail.xfrednet.filefighter.entity.LivingEntity;
+import com.gmail.xfrednet.filefighter.entity.Player;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponent;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponentGroup;
 import com.gmail.xfrednet.filefighter.graphics.gui.components.GUIBackground;
@@ -14,22 +15,15 @@ import java.awt.*;
  */
 public class GUILivingEntityStatusBar extends GUIComponentGroup {
 	
-	public static final int DEFAULT_GUI_WIDTH = 250;
-	public static final int DEFAULT_GUI_HEIGHT = 52;
-	
 	private static final int PADDING = 3;
-
+	
+	public static final int DEFAULT_GUI_WIDTH = 250;
+	public static final int DEFAULT_GUI_HEIGHT = 49;
+	
+	private static final int POTION_INFO_X_OFFSET = DEFAULT_GUI_WIDTH;
+	private static final int POTION_INFO_Y_OFFSET = 0;
+	
 	private static final Color BACKGROUND_COLOR = new Color(0xcc757575, true);
-	
-	LivingEntity entity;
-	
-	//GUIComponents
-	GUIBackground background;
-	GUIHealthBar healthBar;
-	GUIStaminaBar staminaBar;
-	
-	int componentWidth;
-	int componentsHeight;
 	
 	public GUILivingEntityStatusBar(GUIComponent parent, int x, int y, LivingEntity entity) {
 		this(parent, x, y, DEFAULT_GUI_WIDTH, DEFAULT_GUI_HEIGHT, entity);
@@ -37,17 +31,17 @@ public class GUILivingEntityStatusBar extends GUIComponentGroup {
 	public GUILivingEntityStatusBar(GUIComponent parent, int x, int y, int width, int height, LivingEntity entity) {
 		super(parent, x, y, width, height);
 		
-		this.entity = entity;
-		componentWidth = width - PADDING * 2;
-		componentsHeight = (height - PADDING * 3) / 2;
+		int componentWidth = width - PADDING * 2;
+		int componentsHeight = (height - PADDING * 3) / 2;
 		
-		background = new GUIBackground(this, 0, 0, MATCH_PARENT, MATCH_PARENT, BACKGROUND_COLOR);
-		addComponent(background);
+		addComponent(new GUIBackground(this, 0, 0, DEFAULT_GUI_WIDTH, DEFAULT_GUI_HEIGHT, BACKGROUND_COLOR));
+
+		addComponent(new GUIHealthBar(this, PADDING, PADDING, componentWidth, componentsHeight, entity, 2));
+
+		addComponent(new GUIStaminaBar(this, PADDING, PADDING * 2 + componentsHeight, componentWidth, componentsHeight, entity, 2));
 		
-		healthBar = new GUIHealthBar(this, PADDING, PADDING, componentWidth, componentsHeight, entity, 2);
-		addComponent(healthBar);
-		
-		staminaBar = new GUIStaminaBar(this, PADDING, PADDING * 2 + componentsHeight, componentWidth, componentsHeight, entity, 2);
-		addComponent(staminaBar);
+		if (entity instanceof Player) {
+			addComponent(new GUIPotionInfo(this, POTION_INFO_X_OFFSET, POTION_INFO_Y_OFFSET, (Player) entity));
+		}
 	}
 }

@@ -5,10 +5,7 @@ import com.gmail.xfrednet.filefighter.graphics.Camera;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponent;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponentGroup;
-import com.gmail.xfrednet.filefighter.graphics.gui.groups.GUIItemInfoFrame;
-import com.gmail.xfrednet.filefighter.graphics.gui.groups.GUILivingEntityAttributes;
-import com.gmail.xfrednet.filefighter.graphics.gui.groups.GUILivingEntityEquipment;
-import com.gmail.xfrednet.filefighter.graphics.gui.groups.GUILivingEntityStatusBar;
+import com.gmail.xfrednet.filefighter.graphics.gui.groups.*;
 import com.gmail.xfrednet.filefighter.item.Item;
 import com.gmail.xfrednet.filefighter.item.ItemStorage;
 import com.gmail.xfrednet.filefighter.item.item.equipment.Armor;
@@ -163,6 +160,7 @@ public class Player extends LivingEntity {
 		updateCurrentSprite();
 		
 	}
+	
 	private void updateEntityCoolDownTimers() {
 		if (healthPotionDelayTimer > 0) {
 			healthPotionDelayTimer--;
@@ -324,6 +322,9 @@ public class Player extends LivingEntity {
 	}
 	public int getStaminaPotionDelayTimer() {
 		return staminaPotionDelayTimer;
+	}
+	public int getItemCount(Class itemClass) {
+		return toolbar.getItemCount(itemClass) + backpack.getItemCount(itemClass);
 	}
 	/*
 	* setter

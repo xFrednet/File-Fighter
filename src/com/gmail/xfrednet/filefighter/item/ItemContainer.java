@@ -153,4 +153,11 @@ public class ItemContainer {
 	public boolean hasItemClass(Class itemClass) {
 		return (item != null) && (item.equals(itemClass));
 	}
+	
+	public int getItemCount(Class itemClass) {
+		if (hasItemClass(itemClass)) {
+			return item.getCount();
+		}
+		return 0;
+	}
 }

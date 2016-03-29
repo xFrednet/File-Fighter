@@ -94,6 +94,7 @@ public abstract class Item {
 		}
 		return new ItemEntity(x, y, level, this);
 	}
+	
 	public GUIItemInfoFrame getGUIItemInfoFrame(GUIComponentGroup parent, int x, int y) {
 		return new GUIItemInfoFrame(parent, x, y, this);
 	}
@@ -101,6 +102,9 @@ public abstract class Item {
 		return count;
 	}
 	
+	public int getUseTimer() {
+		return useTimer;
+	}
 	/*
 	* setters
 	* */

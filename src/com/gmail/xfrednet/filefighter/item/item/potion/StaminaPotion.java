@@ -104,5 +104,7 @@ public class StaminaPotion extends Item {
 	public int getUseDelay() {
 		return Main.UPS * 10;
 	}
-	
+	public static int GetUseDelay() {
+		return Main.UPS * 10;
+	}
 }

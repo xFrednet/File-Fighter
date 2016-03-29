@@ -36,18 +36,19 @@ public class GUIItemFrame extends GUIComponent implements MouseInteraction {
 	public static final int TYPE_RING = 6;
 	public static final int TYPE_BRACELET = 7;
 	
-	Item item;
-	Sprite itemSprite;
-
-	int type;
+	private Item item;
+	private Sprite itemSprite;
+	private Sprite delaySprite;
 	
-	boolean containsMouse = false;
+	private int type;
+	
+	private boolean containsMouse = false;
 	//itemStorage
-	ItemStorage storage;
-	int slot;
-	boolean hasStorage = false;
-	boolean locked = false;
-	boolean selected = false;
+	private ItemStorage storage;
+	private int slot;
+	private boolean hasStorage = false;
+	private boolean locked = false;
+	private boolean selected = false;
 	
 	/*
 	* Constructor
@@ -82,6 +83,9 @@ public class GUIItemFrame extends GUIComponent implements MouseInteraction {
 				g.setFont(INFO_FONT);
 				g.drawString(item.getCount() + " ", screenX + COUNT_X, screenY + COUNT_Y);
 			}
+			if (delaySprite != null) {
+				g.drawImage(delaySprite.getImage(), screenX, screenY, screenX + width, screenY + height, delaySprite.getImageX(), delaySprite.getImageY(), delaySprite.getImageMaxX(), delaySprite.getImageMaxY(), null);
+			}
 		} else {
 			g.drawImage(Sprite.GUI.itemFrame[type].getImage(), screenX, screenY, screenX + width, screenY + height, Sprite.GUI.itemFrame[type].getImageX(), Sprite.GUI.itemFrame[type].getImageY(), Sprite.GUI.itemFrame[type].getImageMaxX(), Sprite.GUI.itemFrame[type].getImageMaxY(), null);
 		}
@@ -93,8 +97,18 @@ public class GUIItemFrame extends GUIComponent implements MouseInteraction {
 	}
 	@Override
 	public void update() {
-		if (item != null && item.getCount() <= 0) {
-			setItem(null);
+		if (item != null) {
+			
+			if (item.getUseTimer() > 0) {
+				int delaySpriteIndex = (int) ((item.getUseTimer() /(double) item.getUseDelay()) * 10);
+				delaySprite = Sprite.GUI.itemDelay[delaySpriteIndex];
+			} else if (delaySprite != null) {
+				delaySprite = null;
+			}
+			
+			if (item.getCount() <= 0) {
+				setItem(null);
+			}
 		}
 	}
 	
@@ -112,6 +126,8 @@ public class GUIItemFrame extends GUIComponent implements MouseInteraction {
 				((ItemStorage.GUIItemStorage) parent).setItemInfo(item);
 			}
 		}
+		
+		delaySprite = null;
 		
 	}
 	

@@ -39,8 +39,11 @@ public class Sprite {
 	* GUIComponents
 	* */
 	public static class GUI {
+		//itemFrames
 		public static Sprite selected_item_frame = new Sprite(GUIItemFrame.SPRITE_SIZE * GUIItemFrame.TYPE_COUNT, 0, SpriteSheet.guiComponents, GUIItemFrame.SPRITE_SIZE);
 		public static Sprite[] itemFrame = loadItemFrames();
+		public static Sprite[] itemDelay = loadItemFrames(0, GUIItemFrame.SPRITE_SIZE, 11);
+		public static Sprite[] potion_delay = loadPotionDelay(0, GUIItemFrame.SPRITE_SIZE * 2, 11);
 	}
 	
 	/*
@@ -339,16 +342,28 @@ public class Sprite {
 	}
 	
 	private static Sprite[] loadItemFrames() {
-		Sprite[] itemFrames = new Sprite[GUIItemFrame.TYPE_COUNT];
+		return loadItemFrames(0, 0, GUIItemFrame.TYPE_COUNT);
+	}
+	private static Sprite[] loadItemFrames(int x, int y, int count) {
+		Sprite[] itemFrames = new Sprite[count];
 		
-		int x = 0;
-		int y = 0;
-		for (int i = 0; i < GUIItemFrame.TYPE_COUNT; i++) {
+		for (int i = 0; i < count; i++) {
 			itemFrames[i] = new Sprite(x, y, SpriteSheet.guiComponents, GUIItemFrame.SPRITE_SIZE);
 			x += GUIItemFrame.SPRITE_SIZE;
 		}
 		
 		return itemFrames;
+	}
+	
+	private static Sprite[] loadPotionDelay(int x, int y, int count) {
+		Sprite[] sprites = new Sprite[count];
+		
+		for (int i = 0; i < count; i++) {
+			sprites[i] = new Sprite(x, y, SpriteSheet.guiComponents, ITEM_SPRITE_SIZE);
+			x += ITEM_SPRITE_SIZE;
+		}
+		
+		return sprites;
 	}
 	
 }

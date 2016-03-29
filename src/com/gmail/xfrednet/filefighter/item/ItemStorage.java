@@ -199,6 +199,14 @@ public class ItemStorage {
 		return null;
 	}
 	
+	public int getItemCount(Class itemClass) {
+		int count = 0;
+		for (int i = 0; i < items.length; i++) {
+			count += items[i].getItemCount(itemClass);
+		}
+		return count;
+	}
+	
 	/*
 	* Util class
 	* */
