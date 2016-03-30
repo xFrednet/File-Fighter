@@ -81,6 +81,9 @@ public abstract class Level {
 	public void spawn(Entity entity) {
 		spawn(entity, true);
 	}
+	public void spawn(AreaEffect entity) {
+		spawn(entity, false);
+	}
 	public void spawn(ItemEntity entity) {
 		spawn(entity, false);
 	}
@@ -314,6 +317,25 @@ public abstract class Level {
 		}
 		
 		return collidingEntities;
+	}
+	public List<LivingEntity> getEnemies(Entity searchingEntity, double range) {
+		List<LivingEntity> enemies = new ArrayList<>();
+		
+		int team = searchingEntity.getTeam();
+		double searchX = searchingEntity.getInfo().getCenterX();
+		double searchY = searchingEntity.getInfo().getCenterY();
+		
+		if (player.getTeam() != team && player.getDistance(searchX, searchY) < range) {
+			enemies.add(player);
+		}
+		
+		for (Entity entity : entityList) {
+			if (entity instanceof LivingEntity && entity.getTeam() != team && entity.getDistance(searchX, searchY) < range) {
+				enemies.add((LivingEntity) entity);
+			}
+		}
+		
+		return enemies;
 	}
 	
 	//else

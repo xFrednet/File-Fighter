@@ -51,6 +51,7 @@ public class Sprite {
 	* */
 	public static class Particles {
 		public static Sprite[] smoke_particles = loadSplitSprite(new Sprite(0, 0, SpriteSheet.particles, 16), 3);
+		public static Sprite[] electric_particles = loadSplitSprite(new Sprite(16, 0, SpriteSheet.particles, 16), 3);
 		/*
 		* Projectiles particles
 		* */
@@ -85,6 +86,7 @@ public class Sprite {
 		* */
 		public static Sprite paper_gun = new Sprite(0, 0, SpriteSheet.items, ITEM_SPRITE_SIZE);
 		public static Sprite firefox_flamethrower = new Sprite(ITEM_SPRITE_SIZE, 0, SpriteSheet.items, ITEM_SPRITE_SIZE);
+		public static Sprite mp3_player = new Sprite(ITEM_SPRITE_SIZE * 2, 0, SpriteSheet.items, ITEM_SPRITE_SIZE);
 		/*
 		* Potions
 		* */

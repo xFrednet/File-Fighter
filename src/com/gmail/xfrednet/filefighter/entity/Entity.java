@@ -60,6 +60,14 @@ public abstract class Entity {
 		info = new EntityInfo(x, y, width, height, spriteXOffset, spriteYOffset);
 	}
 	
+	public Entity setTeam(LivingEntity entity) {
+		return setTeam(entity.getTeam());
+	}
+	public Entity setTeam(int team) {
+		this.team = team;
+		return this;
+	}
+	
 	/*
 	* Abstract Methods
 	* */
@@ -138,6 +146,9 @@ public abstract class Entity {
 		
 		return closestEntity;
 	}
+	protected double getRandomAngle() {
+		return ((Math.PI * 2) * random.nextDouble()) - Math.PI;
+	}
 	/*
 	* getters
 	* */
@@ -153,6 +164,9 @@ public abstract class Entity {
 	/*
 	* Setters
 	* */
+	public void setPosition(Entity entity) {
+		setPosition((int)entity.getInfo().getCenterX(), (int)entity.getInfo().getCenterY());
+	}
 	public void setPosition(int x, int y) {
 		info.x = x;
 		info.y = y;

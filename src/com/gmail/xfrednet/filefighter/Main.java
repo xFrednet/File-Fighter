@@ -175,9 +175,9 @@ public class Main extends Canvas implements Runnable {
         debugUpdate();
         input.endUpdate();
         
-        //if (input.isKeyDown(KeyEvent.VK_ESCAPE)) {
-         //   running = false;
-        //}
+        if (input.isKeyDown(KeyEvent.VK_ESCAPE)) {
+            running = false;
+        }
         
     }
     private void debugUpdate() {
@@ -198,12 +198,9 @@ public class Main extends Canvas implements Runnable {
         
         Graphics g = bs.getDrawGraphics();
         guiManager.render(screen);
+    
+        System.arraycopy(screen.pixels, 0, pixels, 0, screen.pixels.length);
         
-	    for (int i = 0; i < screen.pixels.length; i++) {
-		    pixels[i] = screen.pixels[i];
-	    }
-	
-	    
 	    g.setColor(Color.RED);
 	    g.setFont(gameFont);
 	    g.fillRect(0, 0, getWidth(), getHeight());
@@ -221,7 +218,6 @@ public class Main extends Canvas implements Runnable {
         * GUIComponents
         * */
         public GUIText FPSInfo;
-		
         
         /*
         * Constructor

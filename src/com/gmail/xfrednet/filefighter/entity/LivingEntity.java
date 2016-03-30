@@ -14,8 +14,6 @@ import com.gmail.xfrednet.filefighter.level.Level;
  */
 public abstract class LivingEntity extends Entity {
 	
-	public static final int MAX_ANIMATION_VALUE = 10000;
-	public static final int STILL_STANDING_SPRITE_INDEX = 0;
 	public static final double XP_LEVEL_INCREASE = 1.1;
 	private static final double PLAYER_DAMAGE_REDUCTION = 0.1;
 	
@@ -490,9 +488,6 @@ public abstract class LivingEntity extends Entity {
 		}
 		
 		move(behaviorDirection, level, getAttribute(ATTRIBUTE_SPEED) / 2);
-	}
-	protected double getRandomAngle() {
-		return ((Math.PI * 2) * random.nextDouble()) - Math.PI;
 	}
 	/*
 	* getters

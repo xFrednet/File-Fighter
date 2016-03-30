@@ -4,6 +4,7 @@ import com.gmail.xfrednet.filefighter.entity.Entity;
 import com.gmail.xfrednet.filefighter.entity.ItemEntity;
 import com.gmail.xfrednet.filefighter.entity.LivingEntity;
 import com.gmail.xfrednet.filefighter.entity.Player;
+import com.gmail.xfrednet.filefighter.entity.areaeffects.ElectricArea;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.Dummy;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.TestEntity;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.JPGFileEntity;
@@ -78,6 +79,7 @@ public class FileLevel extends Level {
 		spawn(new PaperGun().getItemEntity(this, 32 + 16, 32 + 16));
 		spawn(new FirefoxFlameThrower().getItemEntity(this, 64 + 16, 32 + 16));
 		spawn(HealthPotion.newSmallHealthPotion(50).getItemEntity(this, 3 * 32 + 16, 3 * 32 + 16));
+		spawn(new ElectricArea(this, 5 * 32 + 16, 2 * 32 + 16, 32 * 4));
 	}
 	
 	/*

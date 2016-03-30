@@ -2,6 +2,7 @@ package com.gmail.xfrednet.filefighter.entity;
 
 import com.gmail.xfrednet.filefighter.Main;
 import com.gmail.xfrednet.filefighter.graphics.Camera;
+import com.gmail.xfrednet.filefighter.graphics.GUIManager;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponent;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponentGroup;
@@ -19,6 +20,7 @@ import com.gmail.xfrednet.filefighter.item.item.equipment.armor.helmets.LeatherH
 import com.gmail.xfrednet.filefighter.item.item.equipment.armor.pents.LeatherPents;
 import com.gmail.xfrednet.filefighter.item.item.potion.HealthPotion;
 import com.gmail.xfrednet.filefighter.item.item.potion.StaminaPotion;
+import com.gmail.xfrednet.filefighter.item.item.weapon.areaweapon.MP3Player;
 import com.gmail.xfrednet.filefighter.item.item.weapon.gun.FirefoxFlameThrower;
 import com.gmail.xfrednet.filefighter.item.item.weapon.gun.PaperGun;
 import com.gmail.xfrednet.filefighter.item.itemstorage.Backpack;
@@ -34,6 +36,9 @@ import java.awt.*;
  */
 public class Player extends LivingEntity {
 	
+	//animation
+	public static final int MAX_ANIMATION_VALUE = 10000;
+	public static final int STILL_STANDING_SPRITE_INDEX = 0;
 	public static final int ANIMATION_SPRITES = 8;
 	public static final int ANIMATION_SPEED = ((int) (Main.UPS * 0.1) == 0) ? 1 : (int) (Main.UPS * 0.1);
 	//input Keys
@@ -86,7 +91,7 @@ public class Player extends LivingEntity {
 	/*
 	* constructor
 	* */
-	public Player(int x, int y, Input input, String name, GUIComponentGroup parent) {
+	public Player(int x, int y, Input input, String name, GUIManager guiManager) {
 		super(null, name, 0);
 		//setInfo(x, y);
 		setInfo(x, y, 18, 32, 7, 0);
@@ -101,7 +106,7 @@ public class Player extends LivingEntity {
 		
 		toolbar.switchItem(this, new FirefoxFlameThrower());
 		toolbar.switchItem(this, new PaperGun());
-		toolbar.switchItem(this, HealthPotion.newSmallHealthPotion(10));
+		toolbar.switchItem(this, new MP3Player());
 		toolbar.switchItem(this, StaminaPotion.newSmallStaminaPotion(10));
 		/*
 		* Testing
@@ -121,7 +126,7 @@ public class Player extends LivingEntity {
 		
 		//accessories.switchItem(this, SilverDiamondRing.newSpeedRing(), 2);
 		
-		parent.addComponent(playerHud = new PlayerHud(parent));
+		guiManager.addPlayerGUI(playerHud = new PlayerHud(guiManager));
 		updateAttributes();
 	}
 	
@@ -326,6 +331,7 @@ public class Player extends LivingEntity {
 	public int getItemCount(Class itemClass) {
 		return toolbar.getItemCount(itemClass) + backpack.getItemCount(itemClass);
 	}
+	
 	/*
 	* setter
 	* */

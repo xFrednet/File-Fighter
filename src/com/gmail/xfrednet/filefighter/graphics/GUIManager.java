@@ -15,7 +15,7 @@ public class GUIManager extends GUIComponentGroup {
 	private int canvasWidth;
 	private int canvasHeight;
 	
-	protected List<GUIComponent> components;
+	private GUIComponent playerGUI = null;
 	
 	public GUIManager(int canvasWidth, int canvasHeight) {
 		super(canvasWidth, canvasHeight);
@@ -24,6 +24,31 @@ public class GUIManager extends GUIComponentGroup {
 			components = new ArrayList<>();
 		}
 		
+	}
+	
+	public void addPlayerGUI(GUIComponent playerGUI) {
+		this.playerGUI = playerGUI;
+	}
+	
+	@Override
+	public void render(Graphics g) {
+		super.render(g);
+		
+		playerGUI.render(g);
+	}
+	
+	@Override
+	public void render(Screen screen) {
+		super.render(screen);
+		
+		playerGUI.render(screen);
+	}
+	
+	@Override 
+	public void update() {
+		super.update();
+		
+		playerGUI.update();
 	}
 	
 	/*
@@ -50,13 +75,6 @@ public class GUIManager extends GUIComponentGroup {
 			
 		}
 		
-	}
-	
-	/*
-	* Util
-	* */
-	public void setBounds(int width, int height) {
-		setBounds(0, 0, width, height);
 	}
 
 }
