@@ -228,7 +228,7 @@ public abstract class LivingEntity extends Entity {
 	private void move(double xm, double ym, Level level) {
 		if (ym < 0) direction = 1;
 		else if (ym > 0) direction = 0;
-
+		
 		if (!levelCollision(xm, 0, level)) {
 			info.x += xm;
 		}

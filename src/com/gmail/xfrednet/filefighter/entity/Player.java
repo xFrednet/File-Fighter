@@ -26,6 +26,7 @@ import com.gmail.xfrednet.filefighter.item.item.weapon.gun.PaperGun;
 import com.gmail.xfrednet.filefighter.item.itemstorage.Backpack;
 import com.gmail.xfrednet.filefighter.item.itemstorage.ToolBar;
 import com.gmail.xfrednet.filefighter.level.Level;
+import com.gmail.xfrednet.filefighter.level.path.Node;
 import com.gmail.xfrednet.filefighter.util.Input;
 import com.sun.glass.events.KeyEvent;
 
@@ -163,6 +164,9 @@ public class Player extends LivingEntity {
 		updateGUI();
 		updateAnimation();
 		updateCurrentSprite();
+		
+		//Node node = new Node(this);
+		//System.out.println(level.isSolid(node.getX(), node.getY()));
 		
 	}
 	

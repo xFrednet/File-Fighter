@@ -161,8 +161,8 @@ public class Screen {
 	}
 	public void drawLine(Line line, int color, boolean fixed) {
 		
-		double xm = Math.cos(line.getAngle());
-		double ym = Math.sin(line.getAngle());
+		double xm = line.getXM();
+		double ym = line.getYM();
 		double x = line.getX0();
 		double y = line.getY0();
 		

@@ -6,6 +6,7 @@ import com.gmail.xfrednet.filefighter.graphics.Line;
 import com.gmail.xfrednet.filefighter.graphics.Screen;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
 import com.gmail.xfrednet.filefighter.level.Level;
+import com.gmail.xfrednet.filefighter.level.path.Node;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
  */
 public class ElectricArea extends AreaEffect {
 	
-	List<Line> lines = new ArrayList<>();
+	private List<Line> lines = new ArrayList<>();
 	
 	public ElectricArea(Level level, double x, double y, double range) {
 		super(level, x, y, range, Sprite.Particles.electric_particles);
@@ -28,13 +29,15 @@ public class ElectricArea extends AreaEffect {
 		
 		List<LivingEntity> targets = level.getEnemies(this, getRange());
 		
+		Node thisNode = getThisNode();
+		Node node;
 		for (int i = 0; i < targets.size(); i++) {
-			lines.add(new Line(this, targets.get(i)));
+			node = new Node(targets.get(i));
+			if (thisNode.clearPath(node, level)) {
+				lines.add(new Line(this, targets.get(i)));
+			}
 		}
 		
-		//for (int i = 0; i < targets.size(); i++) {
-		//	targets.get(i).damage(level, executingEntity, getDamage());
-		//}
 	}
 	
 	@Override
