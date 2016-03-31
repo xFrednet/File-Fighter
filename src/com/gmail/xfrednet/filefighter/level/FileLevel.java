@@ -79,7 +79,7 @@ public class FileLevel extends Level {
 		spawn(new PaperGun().getItemEntity(this, 32 + 16, 32 + 16));
 		spawn(new FirefoxFlameThrower().getItemEntity(this, 64 + 16, 32 + 16));
 		spawn(HealthPotion.newSmallHealthPotion(50).getItemEntity(this, 3 * 32 + 16, 3 * 32 + 16));
-		spawn(new ElectricArea(this, 10 * 32 + 16, 10 * 32 + 16, 32 * 10));
+		//spawn(new ElectricArea(this, 10 * 32 + 16, 10 * 32 + 16, 32 * 10));
 	}
 	
 	/*

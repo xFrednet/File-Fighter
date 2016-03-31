@@ -284,10 +284,10 @@ public abstract class LivingEntity extends Entity {
 			resultingDamage -= getAttribute(ATTRIBUTE_MENTAL_DEFENCE);
 		}
 		if (this instanceof Player) {
-			if (resultingDamage >= 0) {
+			if (resultingDamage >= 1) {
 				return resultingDamage * PLAYER_DAMAGE_REDUCTION;
 			} else {
-				return 0.5 * PLAYER_DAMAGE_REDUCTION;
+				return 1 * PLAYER_DAMAGE_REDUCTION;
 			}
 		} else {
 			if (resultingDamage >= 0) {

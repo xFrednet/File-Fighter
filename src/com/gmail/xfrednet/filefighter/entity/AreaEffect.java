@@ -13,7 +13,7 @@ import java.util.List;
  */
 public abstract class AreaEffect extends Entity {
 	
-	List<Node> tiles = new ArrayList<Node>();
+	protected List<Node> tiles = new ArrayList<Node>();
 	
 	protected int range;
 	//particles
@@ -36,6 +36,14 @@ public abstract class AreaEffect extends Entity {
 	/*
 	* Util
 	* */
+	//position
+	public void setPosition(Level level, Entity entity) {
+		setPosition(level, (int) entity.getInfo().getCenterX(), (int)entity.getInfo().getCenterY());
+	}
+	public void setPosition(Level level, int x, int y) {
+		super.setPosition(x, y);
+		updatesTiles(level);
+	}
 	private void updatesTiles(Level level) {
 		tiles.clear();
 		
@@ -61,8 +69,14 @@ public abstract class AreaEffect extends Entity {
 			}
 		}
 		
+		sizeChanged();
+		
+	}
+	protected void sizeChanged() {
+		configureParticles(null, tiles.size(), particlesTime);
 	}
 	
+	//particles
 	public void configureParticles(Sprite[] particles, int particlesCount, int particlesTime) {
 		if (particles != null) {
 			this.particles = particles;
@@ -70,11 +84,17 @@ public abstract class AreaEffect extends Entity {
 		this.particlesCount = particlesCount;
 		this.particlesTime = particlesTime;
 	}
-	
 	protected void spawnParticles(Level level) {
-		if (particles == null || tiles.size() <= 0) return;
+		if (particles == null || tiles.size() <= 0 || particlesCount <= 0) return;
 		
 		int count = (int)(particlesCount * random.nextDouble());
+		if (count <= 0) {
+			if (random.nextInt(3) == 0) {
+				count = 1;
+			} else {
+				return;
+			}
+		}
 		
 		int tileX;
 		int tileY;
@@ -94,6 +114,14 @@ public abstract class AreaEffect extends Entity {
 		}
 	}
 	
+	//else
+	protected boolean isInArea(Entity entity) {
+		return tiles.contains(new Node(entity));
+	}
+	
+	/*
+	* getters
+	* */
 	public int getRange() {
 		return range;
 	}

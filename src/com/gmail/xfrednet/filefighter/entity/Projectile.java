@@ -37,6 +37,10 @@ public abstract class Projectile extends Entity {
 		this.sprite = getSprite();
 	}
 	
+	protected void setInfo(Entity entity, int width, int height, int spriteXOffset, int spriteYOffset) {
+		setInfo(entity.getInfo().getCenterX(), entity.getInfo().getCenterY(), width, height, spriteXOffset, spriteYOffset);
+	}
+	
 	/*
 	* Util
 	* */
@@ -67,26 +71,34 @@ public abstract class Projectile extends Entity {
 		range += speed;
 	}
 	private boolean move(double xm, double ym, Level level) {
-		LivingEntity collidingEntities = null;
-		if (!levelCollision(xm, ym, level) && (collidingEntities = entityCollision(xm, ym, level)) == null && range < maxRange) {
+		LivingEntity collidingEntity = null;
+		if (!levelCollision(xm, ym, level) && ((collidingEntity = entityCollision(xm, ym, level)) == null || !hasEntityCollision()) && range < maxRange) {
 			info.x += xm;
 			info.y += ym;
 			return true;
 		} else {
 			destroy(level);
 			
-			if (collidingEntities != null) {
-				Entity damageSource;
-				
-				if ((damageSource = level.getEntity(shootingEntityID)) == null)
-					damageSource = this;
-				
-				collidingEntities.damage(level, damageSource, damage);
+			if (collidingEntity != null && hasEntityCollision()) {
+				entityCollided(level, collidingEntity);
 			}
 			
 			return false;
 		}
 	}
+	protected boolean hasEntityCollision() {
+		return true;
+	}
+	
+	protected void entityCollided(Level level, LivingEntity entity) {
+		Entity damageSource;
+		
+		if ((damageSource = level.getEntity(shootingEntityID)) == null)
+			damageSource = this;
+		
+		entity.damage(level, damageSource, damage);
+	}
+	
 	
 	protected void projectileMoved(Level level) {}
 	

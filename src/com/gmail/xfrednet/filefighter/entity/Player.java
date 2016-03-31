@@ -1,6 +1,7 @@
 package com.gmail.xfrednet.filefighter.entity;
 
 import com.gmail.xfrednet.filefighter.Main;
+import com.gmail.xfrednet.filefighter.entity.areaeffects.ElectricArea;
 import com.gmail.xfrednet.filefighter.graphics.Camera;
 import com.gmail.xfrednet.filefighter.graphics.GUIManager;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
@@ -20,13 +21,12 @@ import com.gmail.xfrednet.filefighter.item.item.equipment.armor.helmets.LeatherH
 import com.gmail.xfrednet.filefighter.item.item.equipment.armor.pents.LeatherPents;
 import com.gmail.xfrednet.filefighter.item.item.potion.HealthPotion;
 import com.gmail.xfrednet.filefighter.item.item.potion.StaminaPotion;
-import com.gmail.xfrednet.filefighter.item.item.weapon.areaweapon.MP3Player;
 import com.gmail.xfrednet.filefighter.item.item.weapon.gun.FirefoxFlameThrower;
+import com.gmail.xfrednet.filefighter.item.item.weapon.gun.MP3Player;
 import com.gmail.xfrednet.filefighter.item.item.weapon.gun.PaperGun;
 import com.gmail.xfrednet.filefighter.item.itemstorage.Backpack;
 import com.gmail.xfrednet.filefighter.item.itemstorage.ToolBar;
 import com.gmail.xfrednet.filefighter.level.Level;
-import com.gmail.xfrednet.filefighter.level.path.Node;
 import com.gmail.xfrednet.filefighter.util.Input;
 import com.sun.glass.events.KeyEvent;
 
@@ -164,9 +164,6 @@ public class Player extends LivingEntity {
 		updateGUI();
 		updateAnimation();
 		updateCurrentSprite();
-		
-		//Node node = new Node(this);
-		//System.out.println(level.isSolid(node.getX(), node.getY()));
 		
 	}
 	

@@ -34,6 +34,7 @@ public class Sprite {
 	public static class Projectiles {
 		public static Sprite paper_projectile = new Sprite(0, 0, SpriteSheet.projectiles, PROJECTILE_SPRITE_SIZE);
 		public static Sprite fire_ball = new Sprite(PROJECTILE_SPRITE_SIZE, 0, SpriteSheet.projectiles, PROJECTILE_SPRITE_SIZE);
+		public static Sprite cd_projectile = new Sprite(PROJECTILE_SPRITE_SIZE * 2, 0, SpriteSheet.projectiles, PROJECTILE_SPRITE_SIZE);
 	}
 	/*
 	* GUIComponents
@@ -52,11 +53,41 @@ public class Sprite {
 	public static class Particles {
 		public static Sprite[] smoke_particles = loadSplitSprite(new Sprite(0, 0, SpriteSheet.particles, 16), 3);
 		public static Sprite[] electric_particles = loadSplitSprite(new Sprite(16, 0, SpriteSheet.particles, 16), 3);
+		public static Sprite[] music_particles = loadMusicParticles(32, 0, SpriteSheet.particles);
+		
+		
 		/*
 		* Projectiles particles
 		* */
 		public static Sprite[] paper_projectile_particles = loadParticlesFromSprites(Projectiles.paper_projectile);
 		public static Sprite[] fire_ball_particles = loadParticlesFromSprites(Projectiles.fire_ball);
+		public static Sprite[] cd_projectile_particles = loadParticlesFromSprites(Projectiles.cd_projectile);
+		
+		/*
+		* loader Methods
+		* */
+		private static Sprite[] loadMusicParticles(int xOffset, int yOffset, SpriteSheet spriteSheet) {
+			Sprite[] sprites = new Sprite[12];
+			
+			int index = 0;
+			
+			sprites[index++] = new Sprite(xOffset, yOffset, spriteSheet, 3, 4);
+			sprites[index++] = new Sprite(xOffset + 3, yOffset, spriteSheet, 3, 4);
+			sprites[index++] = new Sprite(xOffset + 6, yOffset, spriteSheet, 3, 4);
+			sprites[index++] = new Sprite(xOffset + 9, yOffset, spriteSheet, 3, 4);
+			sprites[index++] = new Sprite(xOffset, yOffset + 4, spriteSheet, 5, 4);
+			sprites[index++] = new Sprite(xOffset + 5, yOffset + 4, spriteSheet, 5, 4);
+			sprites[index++] = new Sprite(xOffset + 10, yOffset + 4, spriteSheet, 5, 4);
+			sprites[index++] = new Sprite(xOffset, yOffset + 8, spriteSheet, 5, 4);
+			sprites[index++] = new Sprite(xOffset + 5, yOffset + 8, spriteSheet, 5, 4);
+			sprites[index++] = new Sprite(xOffset + 10, yOffset + 8, spriteSheet, 5, 4);
+			sprites[index++] = new Sprite(xOffset, yOffset + 12, spriteSheet, 8, 4);
+			sprites[index] = new Sprite(8 + xOffset, yOffset + 12, spriteSheet, 8, 4);
+			
+			
+			return sprites;
+		}
+		
 	}
 	
 	/*

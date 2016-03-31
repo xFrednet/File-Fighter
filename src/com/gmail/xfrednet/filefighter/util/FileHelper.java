@@ -3,10 +3,7 @@ package com.gmail.xfrednet.filefighter.util;
 import com.gmail.xfrednet.filefighter.entity.Entity;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.Dummy;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.TestEntity;
-import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.FileEntity;
-import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.FirefoxEntity;
-import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.JPGFileEntity;
-import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.TextFileEntity;
+import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.*;
 import com.gmail.xfrednet.filefighter.graphics.Screen;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
 import com.gmail.xfrednet.filefighter.graphics.SpriteSheet;
@@ -66,6 +63,8 @@ public class FileHelper {
 			case "jpeg": return new JPGFileEntity(x, y, level, level.getPlayer(), getFileName(fileName));
 			case "jpe": return new JPGFileEntity(x, y, level, level.getPlayer(), getFileName(fileName));
 			
+			//music
+			case "mp3": return new MP3File(level, x, y, getFileName(fileName));
 			//Test code
 			case "dummy": return new Dummy(250, 250, level, "dummy");
 			
