@@ -3,7 +3,7 @@ package com.gmail.xfrednet.filefighter.level.path;
 import com.gmail.xfrednet.filefighter.entity.Entity;
 import com.gmail.xfrednet.filefighter.entity.LivingEntity;
 import com.gmail.xfrednet.filefighter.level.Level;
-import com.sun.javafx.beans.annotations.NonNull;
+
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,15 +14,26 @@ import java.util.List;
  */
 public class Path {
 	
+	public static final int FOLLOW_ALL_NODES = -1;
+	
 	List<Node> nodes;
 	Node cNode;
 	int index;
+	int count = FOLLOW_ALL_NODES;
 	
 	/*
 	* Constructors
 	* */
+	public Path(Level level, Entity entity, Entity target, int count) {
+		this(level, entity, new Node(target), count);
+		this.count = count;
+	}
 	public Path(Level level, Entity entity, Entity target) {
 		this(level, entity, new Node(target));
+	}
+	public Path(Level level, Entity entity, Node goal, int count) {
+		this(level, new Node(entity), goal);
+		this.count = count;
 	}
 	public Path(Level level, Entity entity, Node goal) {
 		this(level, new Node(entity), goal);
@@ -35,6 +46,7 @@ public class Path {
 		index = -1;
 		newCNode();
 	}
+	public Path() {}
 	
 	/*
 	* Util
@@ -62,6 +74,10 @@ public class Path {
 	
 	private void newCNode() {
 		index++;
+		if (count != -1 && index >= count) {
+			cNode = null;
+			return;
+		}
 		if (index >= nodes.size()) {
 			cNode = null;
 			return;
@@ -72,7 +88,7 @@ public class Path {
 	/*
 	* Pathfinder 
 	* */
-	public static List<Node> getPath(@NonNull Level level, @NonNull Node start, @NonNull Node goal) {
+	public static List<Node> getPath( Level level, Node start, Node goal) {
 		
 		List<Node> openList = new ArrayList<>();
 		List<Node> closedList = new ArrayList<>();
@@ -161,7 +177,10 @@ public class Path {
 	* getters
 	* */
 	public boolean hasFinished() {
-		return (index >= nodes.size() || cNode == null);
+		return (nodes == null || index >= nodes.size() || cNode == null);
 	}
 	
+	public static boolean isPossible(Level level, int x, int y, int x1, int y1) {
+		return (getPath(level, new Node(x, y), new Node(x1, y1)) != null);
+	}
 }

@@ -1,6 +1,7 @@
 package com.gmail.xfrednet.filefighter.item.item.equipment.armor.boots;
 
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
+import com.gmail.xfrednet.filefighter.item.Item;
 import com.gmail.xfrednet.filefighter.item.item.EquipmentAttributeModifiers;
 import com.gmail.xfrednet.filefighter.item.item.equipment.armor.Shoes;
 
@@ -10,6 +11,11 @@ import com.gmail.xfrednet.filefighter.item.item.equipment.armor.Shoes;
 public class LeatherBoots extends Shoes {
 	public LeatherBoots() {
 		super(new ArmorStats(1.0, 0.2));
+	}
+	
+	@Override
+	public Item clone() {
+		return new LeatherBoots().setCount(count);
 	}
 	
 	@Override

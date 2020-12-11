@@ -25,7 +25,7 @@ public abstract class Projectile extends Entity {
 	/*
 	* Constructor
 	* */
-	protected Projectile(Level level, String name, double direction, double speed, double maxRange, Damage damage, Entity shootingEntity, Sprite sprite) {
+	protected Projectile(Level level, String name, double direction, double speed, double maxRange, Damage damage, Entity shootingEntity) {
 		super(level, name, false);
 		this.direction = direction;
 		this.speed = speed;
@@ -34,7 +34,11 @@ public abstract class Projectile extends Entity {
 		this.shootingEntityID = shootingEntity.getID();
 		team = shootingEntity.getTeam();
 		
-		this.sprite = sprite;
+		this.sprite = getSprite();
+	}
+	
+	protected void setInfo(Entity entity, int width, int height, int spriteXOffset, int spriteYOffset) {
+		setInfo(entity.getInfo().getCenterX(), entity.getInfo().getCenterY(), width, height, spriteXOffset, spriteYOffset);
 	}
 	
 	/*
@@ -67,26 +71,34 @@ public abstract class Projectile extends Entity {
 		range += speed;
 	}
 	private boolean move(double xm, double ym, Level level) {
-		LivingEntity collidingEntities = null;
-		if (!levelCollision(xm, ym, level) && (collidingEntities = entityCollision(xm, ym, level)) == null && range < maxRange) {
+		LivingEntity collidingEntity = null;
+		if (!levelCollision(xm, ym, level) && ((collidingEntity = entityCollision(xm, ym, level)) == null || !hasEntityCollision()) && range < maxRange) {
 			info.x += xm;
 			info.y += ym;
 			return true;
 		} else {
 			destroy(level);
 			
-			if (collidingEntities != null) {
-				Entity damageSource;
-				
-				if ((damageSource = level.getEntity(shootingEntityID)) == null)
-					damageSource = this;
-				
-				collidingEntities.damage(damageSource, damage);
+			if (collidingEntity != null && hasEntityCollision()) {
+				entityCollided(level, collidingEntity);
 			}
 			
 			return false;
 		}
 	}
+	protected boolean hasEntityCollision() {
+		return true;
+	}
+	
+	protected void entityCollided(Level level, LivingEntity entity) {
+		Entity damageSource;
+		
+		if ((damageSource = level.getEntity(shootingEntityID)) == null)
+			damageSource = this;
+		
+		entity.damage(level, damageSource, damage);
+	}
+	
 	
 	protected void projectileMoved(Level level) {}
 	
@@ -105,7 +117,7 @@ public abstract class Projectile extends Entity {
 	//destroy
 	public void destroy(Level level) {
 		removed = true;
-		level.spawnParticles(info.getCenterX(), info.getCenterY(), PARTICLES_ON_DESTROY, getParticleSprites());
+		level.spawnParticles(info.getCenterX(), info.getCenterY(), getParticlesOnDestroy(), getParticleSprites());
 	}
 	
 	/*
@@ -113,4 +125,8 @@ public abstract class Projectile extends Entity {
 	* */
 	abstract protected Sprite[] getParticleSprites();
 	abstract public Sprite getSprite();
+	
+	protected int getParticlesOnDestroy() {
+		return PARTICLES_ON_DESTROY;
+	}
 }

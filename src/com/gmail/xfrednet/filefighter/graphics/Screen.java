@@ -156,7 +156,32 @@ public class Screen {
 			}
 		}
 	}
-	
+	public void drawLine(int x0, int y0, int x1, int y1, int color, boolean fixed) {
+		drawLine(new Line(x0, y0, x1, y1), color, fixed);
+	}
+	public void drawLine(Line line, int color, boolean fixed) {
+		
+		double xm = line.getXM();
+		double ym = line.getYM();
+		double x = line.getX0();
+		double y = line.getY0();
+		
+		if (!fixed) {
+			x -= xOffset;
+			y -= yOffset;
+		}
+		
+		for (int i = 0; i < line.getDistance(); i++) {	
+			x += xm;
+			y += ym;
+			
+			if (x < 0 || x >= WIDTH || y < 0 || y >= HEIGHT) continue;
+			
+			pixels[(int)x + (int)y * WIDTH] = color;
+			
+		}
+		
+	}
 	//shapes
 	public void drawRectangle(int x, int y, int width, int height, int color, boolean fixed) {
 		if (!fixed) {
@@ -317,6 +342,7 @@ public class Screen {
 			}
 		}
 	}
+	
 	
 	
 }

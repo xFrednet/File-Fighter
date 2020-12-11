@@ -1,6 +1,7 @@
 package com.gmail.xfrednet.filefighter.item.item.equipment.accessory.necklace;
 
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
+import com.gmail.xfrednet.filefighter.item.Item;
 import com.gmail.xfrednet.filefighter.item.item.equipment.accessory.Necklace;
 
 /**
@@ -19,5 +20,10 @@ public class GoldDiamondNecklace extends Necklace {
 	@Override
 	public String getName() {
 		return "Gold Diamond Necklace";
+	}
+	
+	@Override
+	public Item clone() {
+		return new GoldDiamondNecklace().setCount(count);
 	}
 }

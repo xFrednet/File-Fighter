@@ -9,6 +9,8 @@ import com.gmail.xfrednet.filefighter.item.item.equipment.armor.Shoes;
 import com.gmail.xfrednet.filefighter.item.item.equipment.armor.Chestplate;
 import com.gmail.xfrednet.filefighter.item.item.equipment.armor.Helmet;
 import com.gmail.xfrednet.filefighter.item.item.equipment.armor.Pents;
+import com.gmail.xfrednet.filefighter.level.Level;
+import com.sun.istack.internal.Nullable;
 
 /**
  * Created by xFrednet on 10.03.2016.
@@ -52,10 +54,38 @@ public class ItemContainer {
 	public Item switchItem(Item item) {
 		if (!isSwitchPossible(item)) return item;
 		
-		Item returnItem = this.item;
-		this.item = item;
+		Item returnItem;
 		
+		if (isAddPossible(item)) {
+			returnItem = addItem(item);
+		} else {
+			returnItem = this.item;
+			this.item = item;
+		}
 		return returnItem;
+	}
+	
+	private Item addItem(@Nullable Item item) {
+		if ((this.item.getCount() + item.getCount()) <= item.getMaxStackSize()) {
+			this.item.addToCount(item.getCount());
+			return null;
+		} else {
+			int leftOver = (this.item.getCount() + item.getCount()) - item.getMaxStackSize();
+			this.item.addToCount(item.getCount() - leftOver);
+			item.setCount(leftOver);
+			return item;
+		}
+	}
+	
+	public void update(Level level) {
+		if (item != null) {
+			
+			item.update(level);
+			
+			if (item.getCount() <= 0) {
+				item = null;
+			}
+		}
 	}
 	
 	/*
@@ -84,16 +114,20 @@ public class ItemContainer {
 			default: return false;
 		}
 	}
-	
-	public Item getItem() {
-		return item;
+	public boolean isAddPossible(Item item) {
+		if (this.item != null) {
+			return (this.item.equals(item) && this.item.getCount() < this.item.getMaxStackSize());
+		} else {
+			return false;
+		}
 	}
-	
 	public boolean isEmpty() {
 		return item == null;
 	}
 	
-	
+	public Item getItem() {
+		return item;
+	}
 	
 	public int getItemFrameType() {
 		switch (itemType) {
@@ -115,4 +149,15 @@ public class ItemContainer {
 				return GUIItemFrame.TYPE_ITEM;
 		}
 	}
+	
+	public int getItemCount(Class itemClass) {
+		if (hasItemClass(itemClass)) {
+			return item.getCount();
+		}
+		return 0;
+	}
+	public boolean hasItemClass(Class itemClass) {
+		return (item != null) && (item.equals(itemClass));
+	}
+	
 }

@@ -2,6 +2,7 @@ package com.gmail.xfrednet.filefighter.item.item.weapon.gun;
 
 import com.gmail.xfrednet.filefighter.Main;
 import com.gmail.xfrednet.filefighter.entity.LivingEntity;
+import com.gmail.xfrednet.filefighter.entity.projectiles.CDProjectile;
 import com.gmail.xfrednet.filefighter.entity.projectiles.PaperProjectile;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
 import com.gmail.xfrednet.filefighter.item.Item;
@@ -10,79 +11,78 @@ import com.gmail.xfrednet.filefighter.item.item.weapon.ShootingWeapon;
 import com.gmail.xfrednet.filefighter.level.Level;
 
 /**
- * Created by xFrednet on 14.02.2016.
+ * Created by xFrednet on 31.03.2016.
  */
-public class PaperGun extends ShootingWeapon {
-	
-	public PaperGun() {
-		super();
-	}
-	
+public class MP3Player extends ShootingWeapon {
 	@Override
 	public boolean attack(Level level, LivingEntity executingEntity, double angle) {
 		if (useTimer > 0) return false;
 		
 		if (executingEntity.useStamina(getStaminaUsage())) {
-			level.spawn(new PaperProjectile(level, getModifiedAngle(angle), getProjectileSpeed(), getRange(), getDamage(executingEntity), executingEntity));
+			level.spawn(new CDProjectile(level, getModifiedAngle(angle), getProjectileSpeed(), getRange(), getDamage(executingEntity), executingEntity));
 			useTimer += getShootSpeed();
 			return true;
 		}
 		
-		return false;		
+		return false;
 	}
 	
 	@Override
 	public Item clone() {
-		return new PaperGun().setCount(count);
+		return new MP3Player();
+	}
+	
+	@Override
+	public String getName() {
+		return "MP3 Player";
+	}
+	
+	@Override
+	public Sprite getItemSprite() {
+		return Sprite.Item.mp3_player;
 	}
 	
 	/*
-	* abstract getters
+	* else
 	* */
 	@Override
-	public String getName() {
-		return "Paper Gun";
-	}
-	@Override
-	public Sprite getItemSprite() {
-		return Sprite.Item.paper_gun;
-	} 
-	
-	//weapon
-	@Override
-	public int getDamageType() {
-		return Damage.PHYSICAL_DAMAGE;
-	}
-	
-	//shootingWeapon 
-	@Override
-	public double getDamageAmount() {
-		return 20;
-	}
-	
-	@Override
-	public int getShootSpeed() {
-		return (int) (Main.UPS * 0.5);
-	}
-	
-	@Override
-	public double getRange() {
-		return 250;
-	}
-	
-	@Override
 	public double getAccuracy() {
-		return 60d;
+		return 60;
 	}
-	
-	@Override
-	public double getProjectileSpeed() {
-		return 7.5;
-	}
-	
 	@Override
 	public double getStaminaUsage() {
+		return 30;
+	}
+	
+	/*
+	* Damage
+	* */
+	@Override
+	public double getDamageAmount() {
 		return 4;
 	}
+	@Override
+	public int getDamageType() {
+		return Damage.MENTAL_DAMAGE;
+	}
+	
+	/*
+	* projectile
+	* */
+	@Override
+	public int getShootSpeed() {
+		return Main.UPS * 5;
+	}
+	@Override
+	public double getProjectileSpeed() {
+		return 4;
+	}
+	@Override
+	public double getRange() {
+		return 500;
+	}
+	
+	
+	
 	
 }

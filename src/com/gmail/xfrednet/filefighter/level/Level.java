@@ -2,19 +2,14 @@ package com.gmail.xfrednet.filefighter.level;
 
 import com.gmail.xfrednet.filefighter.Main;
 import com.gmail.xfrednet.filefighter.entity.*;
-import com.gmail.xfrednet.filefighter.entity.livingentitys.TestEntity;
 import com.gmail.xfrednet.filefighter.graphics.*;
 import com.gmail.xfrednet.filefighter.graphics.cameras.ControllableCamera;
-import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponent;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponentGroup;
+import com.gmail.xfrednet.filefighter.graphics.gui.components.GUILevelClearedMessage;
 import com.gmail.xfrednet.filefighter.graphics.gui.components.GUIProgressBar;
-import com.gmail.xfrednet.filefighter.util.Input;
-import com.gmail.xfrednet.filefighter.level.path.Node;
-import com.sun.javafx.beans.annotations.NonNull;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -46,7 +41,7 @@ public abstract class Level {
 		//player
 		this.player = player;
 		player.setCamera(camera);
-		player.setPosition(160, 160);
+		player.setPosition(2 * 32, 2 * 32);
 		levelGUI = new GUIComponentGroup(guiManager, 0, 0);
 		guiManager.addComponent(levelGUI);
 		
@@ -79,6 +74,9 @@ public abstract class Level {
 	* */
 	public void spawn(Entity entity) {
 		spawn(entity, true);
+	}
+	public void spawn(AreaEffect entity) {
+		spawn(entity, false);
 	}
 	public void spawn(ItemEntity entity) {
 		spawn(entity, false);
@@ -127,6 +125,9 @@ public abstract class Level {
 		for (int i = 0; i < tileEntities.size(); i++) {
 			tileEntities.get(i).levelCleared(this, player);
 		}
+		
+		levelGUI.addComponent(new GUILevelClearedMessage(levelGUI));
+		
 	}
 	/*
 	* Game loop util 
@@ -310,6 +311,25 @@ public abstract class Level {
 		}
 		
 		return collidingEntities;
+	}
+	public List<LivingEntity> getEnemies(Entity searchingEntity, double range) {
+		List<LivingEntity> enemies = new ArrayList<>();
+		
+		int team = searchingEntity.getTeam();
+		double searchX = searchingEntity.getInfo().getCenterX();
+		double searchY = searchingEntity.getInfo().getCenterY();
+		
+		if (player.getTeam() != team && player.getDistance(searchX, searchY) < range) {
+			enemies.add(player);
+		}
+		
+		for (Entity entity : entityList) {
+			if (entity instanceof LivingEntity && entity.getTeam() != team && entity.getDistance(searchX, searchY) < range) {
+				enemies.add((LivingEntity) entity);
+			}
+		}
+		
+		return enemies;
 	}
 	
 	//else

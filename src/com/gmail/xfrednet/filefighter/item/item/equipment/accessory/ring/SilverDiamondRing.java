@@ -1,6 +1,7 @@
 package com.gmail.xfrednet.filefighter.item.item.equipment.accessory.ring;
 
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
+import com.gmail.xfrednet.filefighter.item.Item;
 import com.gmail.xfrednet.filefighter.item.item.EquipmentAttributeModifiers;
 import com.gmail.xfrednet.filefighter.item.item.equipment.accessory.Ring;
 
@@ -21,6 +22,11 @@ public class SilverDiamondRing extends Ring {
 	
 	public static SilverDiamondRing newSpeedRing() {
 		return new SilverDiamondRing(new EquipmentAttributeModifiers().setSpeed(10));
+	}
+	
+	@Override
+	public Item clone() {
+		return new SilverDiamondRing().setCount(count);
 	}
 	
 	/*

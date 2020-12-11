@@ -33,18 +33,61 @@ public class Sprite {
 	* */
 	public static class Projectiles {
 		public static Sprite paper_projectile = new Sprite(0, 0, SpriteSheet.projectiles, PROJECTILE_SPRITE_SIZE);
+		public static Sprite fire_ball = new Sprite(PROJECTILE_SPRITE_SIZE, 0, SpriteSheet.projectiles, PROJECTILE_SPRITE_SIZE);
+		public static Sprite cd_projectile = new Sprite(PROJECTILE_SPRITE_SIZE * 2, 0, SpriteSheet.projectiles, PROJECTILE_SPRITE_SIZE);
 	}
 	/*
 	* GUIComponents
 	* */
-	public static Sprite[] itemFrame = loadItemFrames();
+	public static class GUI {
+		//itemFrames
+		public static Sprite selected_item_frame = new Sprite(GUIItemFrame.SPRITE_SIZE * GUIItemFrame.TYPE_COUNT, 0, SpriteSheet.guiComponents, GUIItemFrame.SPRITE_SIZE);
+		public static Sprite[] itemFrame = loadItemFrames();
+		public static Sprite[] itemDelay = loadItemFrames(0, GUIItemFrame.SPRITE_SIZE, 11);
+		public static Sprite[] potion_delay = loadPotionDelay(0, GUIItemFrame.SPRITE_SIZE * 2, 11);
+	}
 	
 	/*
 	* Particles
 	* */
 	public static class Particles {
 		public static Sprite[] smoke_particles = loadSplitSprite(new Sprite(0, 0, SpriteSheet.particles, 16), 3);
+		public static Sprite[] electric_particles = loadSplitSprite(new Sprite(16, 0, SpriteSheet.particles, 16), 3);
+		public static Sprite[] music_particles = loadMusicParticles(32, 0, SpriteSheet.particles);
+		
+		
+		/*
+		* Projectiles particles
+		* */
 		public static Sprite[] paper_projectile_particles = loadParticlesFromSprites(Projectiles.paper_projectile);
+		public static Sprite[] fire_ball_particles = loadParticlesFromSprites(Projectiles.fire_ball);
+		public static Sprite[] cd_projectile_particles = loadParticlesFromSprites(Projectiles.cd_projectile);
+		
+		/*
+		* loader Methods
+		* */
+		private static Sprite[] loadMusicParticles(int xOffset, int yOffset, SpriteSheet spriteSheet) {
+			Sprite[] sprites = new Sprite[12];
+			
+			int index = 0;
+			
+			sprites[index++] = new Sprite(xOffset, yOffset, spriteSheet, 3, 4);
+			sprites[index++] = new Sprite(xOffset + 3, yOffset, spriteSheet, 3, 4);
+			sprites[index++] = new Sprite(xOffset + 6, yOffset, spriteSheet, 3, 4);
+			sprites[index++] = new Sprite(xOffset + 9, yOffset, spriteSheet, 3, 4);
+			sprites[index++] = new Sprite(xOffset, yOffset + 4, spriteSheet, 5, 4);
+			sprites[index++] = new Sprite(xOffset + 5, yOffset + 4, spriteSheet, 5, 4);
+			sprites[index++] = new Sprite(xOffset + 10, yOffset + 4, spriteSheet, 5, 4);
+			sprites[index++] = new Sprite(xOffset, yOffset + 8, spriteSheet, 5, 4);
+			sprites[index++] = new Sprite(xOffset + 5, yOffset + 8, spriteSheet, 5, 4);
+			sprites[index++] = new Sprite(xOffset + 10, yOffset + 8, spriteSheet, 5, 4);
+			sprites[index++] = new Sprite(xOffset, yOffset + 12, spriteSheet, 8, 4);
+			sprites[index] = new Sprite(8 + xOffset, yOffset + 12, spriteSheet, 8, 4);
+			
+			
+			return sprites;
+		}
+		
 	}
 	
 	/*
@@ -69,8 +112,17 @@ public class Sprite {
 	* Items
 	* */
 	public static class Item {
-		public static Sprite paperGun = new Sprite(0, 0, SpriteSheet.items, ITEM_SPRITE_SIZE);
-		
+		/*
+		* Weapons
+		* */
+		public static Sprite paper_gun = new Sprite(0, 0, SpriteSheet.items, ITEM_SPRITE_SIZE);
+		public static Sprite firefox_flamethrower = new Sprite(ITEM_SPRITE_SIZE, 0, SpriteSheet.items, ITEM_SPRITE_SIZE);
+		public static Sprite mp3_player = new Sprite(ITEM_SPRITE_SIZE * 2, 0, SpriteSheet.items, ITEM_SPRITE_SIZE);
+		/*
+		* Potions
+		* */
+		public static Sprite health_potion = new Sprite(0, ITEM_SPRITE_SIZE * 4, SpriteSheet.items, ITEM_SPRITE_SIZE);
+		public static Sprite stamina_potion = new Sprite(ITEM_SPRITE_SIZE, ITEM_SPRITE_SIZE * 4, SpriteSheet.items, ITEM_SPRITE_SIZE);
 		/*
 		* Armor
 		* */
@@ -98,8 +150,6 @@ public class Sprite {
 	}
 	/*
 	* Class
-	* */
-	
 	
 	/*
 	* Values
@@ -176,11 +226,8 @@ public class Sprite {
 			ya = yp + yOffset;
 			for (int xp = 0; xp < WIDTH; xp++) {
 				xa = xp + xOffset;
-				color = spriteSheet.pixels[xa + ya * spriteSheet.WIDTH];
 				
-				if (color == SPRITE_INVISIBLE_COLOR_1) color = Screen.INVISIBLE_COLOR;
-				if (color == SPRITE_INVISIBLE_COLOR_2) color = Screen.INVISIBLE_COLOR;
-				pixels[xp + yp * WIDTH] = color;
+				pixels[xp + yp * WIDTH] = spriteSheet.pixels[xa + ya * spriteSheet.WIDTH];
 			}
 		}
 	}
@@ -328,16 +375,28 @@ public class Sprite {
 	}
 	
 	private static Sprite[] loadItemFrames() {
-		Sprite[] itemFrames = new Sprite[GUIItemFrame.TYPE_COUNT];
+		return loadItemFrames(0, 0, GUIItemFrame.TYPE_COUNT);
+	}
+	private static Sprite[] loadItemFrames(int x, int y, int count) {
+		Sprite[] itemFrames = new Sprite[count];
 		
-		int x = 0;
-		int y = 0;
-		for (int i = 0; i < GUIItemFrame.TYPE_COUNT; i++) {
+		for (int i = 0; i < count; i++) {
 			itemFrames[i] = new Sprite(x, y, SpriteSheet.guiComponents, GUIItemFrame.SPRITE_SIZE);
 			x += GUIItemFrame.SPRITE_SIZE;
 		}
 		
 		return itemFrames;
+	}
+	
+	private static Sprite[] loadPotionDelay(int x, int y, int count) {
+		Sprite[] sprites = new Sprite[count];
+		
+		for (int i = 0; i < count; i++) {
+			sprites[i] = new Sprite(x, y, SpriteSheet.guiComponents, ITEM_SPRITE_SIZE);
+			x += ITEM_SPRITE_SIZE;
+		}
+		
+		return sprites;
 	}
 	
 }

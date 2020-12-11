@@ -3,15 +3,13 @@ package com.gmail.xfrednet.filefighter.util;
 import com.gmail.xfrednet.filefighter.entity.Entity;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.Dummy;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.TestEntity;
-import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.FileEntity;
-import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.JPGFileEntity;
-import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.TextFileEntity;
+import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.*;
 import com.gmail.xfrednet.filefighter.graphics.Screen;
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
 import com.gmail.xfrednet.filefighter.graphics.SpriteSheet;
 import com.gmail.xfrednet.filefighter.level.Level;
 import com.sun.istack.internal.Nullable;
-import com.sun.javafx.beans.annotations.NonNull;
+
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -40,7 +38,7 @@ public class FileHelper {
 	/*
 	* File Entities
 	* */
-	public static Entity getFileEntity(@NonNull Level level, @Nullable File file, int x, int y) {
+	public static Entity getFileEntity(Level level, @Nullable File file, int x, int y) {
 		if (file != null) {
 			Entity fileEntity = getBlankFileEntity(level, file, x, y);
 			fileEntity.setSprite(getFileSprite(file));
@@ -58,26 +56,30 @@ public class FileHelper {
 			case "lnk": return getEntityByName(level, x, y, fileName); 
 			
 			//text files
-			case "txt": return new TextFileEntity(x, y, level, fileName);
+			case "txt": return new TextFileEntity(x, y, level, getFileName(fileName));
 			
 			//JGP
-			case "jpg": return new JPGFileEntity(x, y, level, level.getPlayer(), fileName);
-			case "jpeg": return new JPGFileEntity(x, y, level, level.getPlayer(), fileName);
-			case "jpe": return new JPGFileEntity(x, y, level, level.getPlayer(), fileName);
+			case "jpg": return new JPGFileEntity(x, y, level, level.getPlayer(), getFileName(fileName));
+			case "jpeg": return new JPGFileEntity(x, y, level, level.getPlayer(), getFileName(fileName));
+			case "jpe": return new JPGFileEntity(x, y, level, level.getPlayer(), getFileName(fileName));
 			
+			//music
+			case "mp3": return new MP3File(level, x, y, getFileName(fileName));
 			//Test code
 			case "dummy": return new Dummy(250, 250, level, "dummy");
 			
 			//default
-			default: return new FileEntity(x, y, level, fileName);
+			default: return new FileEntity(x, y, level, getFileName(fileName));
 		}
 	}
-	public static Entity getEntityByName(@NonNull Level level, double x, double y, String fileName) {
+	public static Entity getEntityByName(Level level, double x, double y, String fileName) {
 		
-		if (fileName.contains("mozilla firefox")) {
-			return new FileEntity(x, y, level, "Mozilla Firefox");
+		fileName = fileName.toLowerCase();
+		
+		if (fileName.contains("firefox")) {
+			return new FirefoxEntity(x, y, level, getFileName(fileName));
 		}
-		return new FileEntity(x, y, level, fileName);
+		return new FileEntity(x, y, level, getFileName(fileName));
 	}
 	
 	/*
@@ -96,6 +98,20 @@ public class FileHelper {
 			return fileName.substring(i + 1).toLowerCase();
 		} else {
 			return UNKNOWN_FILE;
+		}
+	}
+	public static String getFileName(File file) {
+		if (file.isDirectory()){
+			return FOLDER;
+		}
+		return getFileName(file.getName());
+	}
+	public static String getFileName(String fileName) {
+		int pos = fileName.lastIndexOf(".");
+		if (pos > 0) {
+			return fileName.substring(0, pos);
+		} else {
+			return "ERROR";
 		}
 	}
 	
@@ -150,7 +166,7 @@ public class FileHelper {
 		
 		return new Sprite(pixels, SPRITE_SIZE, SPRITE_SIZE);
 	}
-	public static BufferedImage loadFileImage(@NonNull File file, int width, int height) {
+	public static BufferedImage loadFileImage(File file, int width, int height) {
 		try {
 			//loading the Image
 			Image image = getShellFolder(file).getIcon(true);

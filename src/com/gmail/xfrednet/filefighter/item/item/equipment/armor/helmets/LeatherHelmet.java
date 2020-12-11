@@ -1,6 +1,7 @@
 package com.gmail.xfrednet.filefighter.item.item.equipment.armor.helmets;
 
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
+import com.gmail.xfrednet.filefighter.item.Item;
 import com.gmail.xfrednet.filefighter.item.item.equipment.Armor;
 import com.gmail.xfrednet.filefighter.item.item.equipment.armor.Helmet;
 
@@ -11,6 +12,11 @@ public class LeatherHelmet extends Helmet {
 	
 	public LeatherHelmet() {
 		super(new ArmorStats(1.0, 0.2));
+	}
+	
+	@Override
+	public Item clone() {
+		return new LeatherHelmet().setCount(count);
 	}
 	
 	@Override

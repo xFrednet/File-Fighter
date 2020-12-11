@@ -16,7 +16,7 @@ import com.gmail.xfrednet.filefighter.level.ImageLevel;
 import com.gmail.xfrednet.filefighter.level.Level;
 import com.gmail.xfrednet.filefighter.util.FileHelper;
 import com.gmail.xfrednet.filefighter.util.Input;
-import com.sun.glass.events.KeyEvent;
+import java.awt.event.KeyEvent;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,7 +33,7 @@ public class Main extends Canvas implements Runnable {
     public static final int HEIGHT = WIDTH * 9 / 16;
     public static final int scale = 2;
     public static final int UPS = 30;
-    public static final String LEVEL_LOCATION = (System.getProperty("user.home").endsWith("xFrednset")) ? "C:\\Users\\xFrednet\\IdeaProjects\\File-Fighter\\level" : System.clearProperty("user.home") + "\\Desktop";
+    public static final String LEVEL_LOCATION = (System.getProperty("user.home").endsWith("xFrednet")) ? "C:\\Users\\xFrednet\\IdeaProjects\\File-Fighter\\level" : System.clearProperty("user.home") + "\\Desktop";
     /*"Alter ich Psycholog(y)ier dich gleich mal"*/
 	
 	public static final Font gameFont = new Font("Lucida Console", Font.PLAIN, 16);
@@ -73,6 +73,7 @@ public class Main extends Canvas implements Runnable {
         addKeyListener(input);
         addMouseListener(input);
         addMouseMotionListener(input);
+        addMouseWheelListener(input);
         
         guiManager = new GUIManager(getWidth(), getHeight());
 	    hud = new GameHud(guiManager);
@@ -97,7 +98,7 @@ public class Main extends Canvas implements Runnable {
         input.setDefaultCursor();
     
         jframe.setLocationRelativeTo(null);
-        jframe.show();
+        jframe.setVisible(true);
     
         main.start();
     }
@@ -172,10 +173,11 @@ public class Main extends Canvas implements Runnable {
         level =  level.update();
         guiManager.update();
         debugUpdate();
+        input.endUpdate();
         
-        //if (input.isKeyDown(KeyEvent.VK_ESCAPE)) {
-         //   running = false;
-        //}
+        if (input.isKeyDown(KeyEvent.VK_ESCAPE)) {
+            running = false;
+        }
         
     }
     private void debugUpdate() {
@@ -196,12 +198,9 @@ public class Main extends Canvas implements Runnable {
         
         Graphics g = bs.getDrawGraphics();
         guiManager.render(screen);
+    
+        System.arraycopy(screen.pixels, 0, pixels, 0, screen.pixels.length);
         
-	    for (int i = 0; i < screen.pixels.length; i++) {
-		    pixels[i] = screen.pixels[i];
-	    }
-	
-	    
 	    g.setColor(Color.RED);
 	    g.setFont(gameFont);
 	    g.fillRect(0, 0, getWidth(), getHeight());
@@ -219,7 +218,6 @@ public class Main extends Canvas implements Runnable {
         * GUIComponents
         * */
         public GUIText FPSInfo;
-		
         
         /*
         * Constructor

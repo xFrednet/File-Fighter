@@ -1,6 +1,7 @@
 package com.gmail.xfrednet.filefighter.item.item.equipment.armor.pents;
 
 import com.gmail.xfrednet.filefighter.graphics.Sprite;
+import com.gmail.xfrednet.filefighter.item.Item;
 import com.gmail.xfrednet.filefighter.item.item.equipment.Armor;
 import com.gmail.xfrednet.filefighter.item.item.equipment.armor.Pents;
 
@@ -11,6 +12,11 @@ public class LeatherPents extends Pents {
 	
 	public LeatherPents() {
 		super(new ArmorStats(1.0, 0.2));
+	}
+	
+	@Override
+	public Item clone() {
+		return new LeatherPents().setCount(count);
 	}
 	
 	@Override

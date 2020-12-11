@@ -28,6 +28,11 @@ public class Chest extends TileEntity {
 	}
 	
 	@Override
+	public void update(Level level) {
+		storage.update(level);
+	}
+	
+	@Override
 	public void mouseInteraction(int x, int y, int button, Level level, Player player) {
 		if (button != MAIN_INTERACTION_BUTTON) return;
 		

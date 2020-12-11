@@ -8,6 +8,7 @@ import com.gmail.xfrednet.filefighter.graphics.gui.components.GUIBackground;
 import com.gmail.xfrednet.filefighter.graphics.gui.components.GUIItemFrame;
 import com.gmail.xfrednet.filefighter.graphics.gui.components.GUITitle;
 import com.gmail.xfrednet.filefighter.graphics.gui.groups.GUIItemInfoFrame;
+import com.gmail.xfrednet.filefighter.level.Level;
 import com.gmail.xfrednet.filefighter.util.Input;
 import com.gmail.xfrednet.filefighter.util.MouseInteraction;
 
@@ -21,6 +22,7 @@ public class ItemStorage {
 	
 	public static final int STORAGE_FULL = -1;
 	public static final String NO_NAME = "NO_NAME";
+	public static final int NOT_PRESENT = -1;
 	
 	protected ItemContainer[] items;
 	protected int width;
@@ -54,6 +56,12 @@ public class ItemStorage {
 	/*
 	* Util
 	* */
+	public void update(Level level) {
+		for (int i = 0; i < items.length; i++) {
+			items[i].update(level);
+		}
+	}
+	
 	public void mouseInteraction(int slot, GUIItemFrame itemFrame) {
 		if (player == null) {
 			System.out.println("Player = null");
@@ -64,11 +72,71 @@ public class ItemStorage {
 	}
 	
 	/*
+	* GUI
+	* */
+	public GUIItemStorage getGUI(GUIComponent parent, int x, int y, Player player) {
+		if (gui == null) {
+			this.player = player;
+			gui = new GUIItemStorage(parent, x, y, player.getInput());
+		} else {
+			gui.updateItemFrames();
+		}
+		
+		return gui;
+	}
+	public void setItemFrameLock(boolean locked) {
+		if (gui != null) {
+			gui.setItemFrameLock(locked);
+		}
+	}
+	
+	/*
 	* setters
 	* */
 	public void setItem(Entity entity, Item item, int slot) {
 		switchItem(entity, item, slot);
 	}
+	public Item addIfPresentItem(Item item) {
+		if (item == null) return null;
+		if (item.getMaxStackSize() > 1) {
+			int index;
+			if ((index = isItemPresent(item)) != NOT_PRESENT) {
+				item = items[index].switchItem(item);
+				
+				if (item != null) {
+					return addIfPresentItem(item);
+				} else {
+					return null;
+				}
+				
+			}
+		}
+		return item;		
+	}
+	public Item addItem(Entity entity, Item item) {
+		if (item == null) return null;
+		if (item.getMaxStackSize() > 1) {
+			int index;
+			if ((index = isItemPresent(item)) != NOT_PRESENT) {
+				item = items[index].switchItem(item);
+				
+				if (item != null) {
+					return addItem(entity, item);
+				} else {
+					return null;
+				}
+				
+			}
+		} 
+		if (!isStorageFull()) {
+			switchItem(entity, item);
+			return null;
+		} else {
+			return item;
+		}
+		
+	}
+	
 	public Item switchItem(Entity entity, Item item) {
 		return switchItem(entity, item, getFirstFreeSlot(item));
 	}
@@ -92,7 +160,6 @@ public class ItemStorage {
 		if (slot < 0 || slot >= items.length) return null;
 		return items[slot].getItem();
 	}
-	
 	private int getItemFrameType(int slot) {
 		if (slot < 0 || slot >= items.length) return 0;
 		return items[slot].getItemFrameType();
@@ -104,22 +171,40 @@ public class ItemStorage {
 		}
 		return true;
 	}
+	private int isItemPresent(Item item) {
+		for (int i = 0; i < items.length; i++) {
+			if (items[i].isAddPossible(item)) {
+				return i;
+			}
+		}
+		return NOT_PRESENT;
+	}
 	public int getFirstFreeSlot(Item item) {
 		for (int i = 0; i < items.length; i++) {
-			if (items[i].isEmpty() && items[i].isSwitchPossible(item)) return i;
+			if ((items[i].isEmpty() && items[i].isSwitchPossible(item)) || items[i].isAddPossible(item)) return i;
 		} 
 		return STORAGE_FULL;
 	}
 	
-	public GUIItemStorage getGUI(GUIComponent parent, int x, int y, Player player) {
-		if (gui == null) {
-			this.player = player;
-			gui = new GUIItemStorage(parent, x, y, player.getInput());
-		} else {
-			gui.updateItemFrames();
+	protected boolean getDefaultLock() {
+		return false;
+	}
+	
+	public Item hasItemClass(Class itemClass) {
+		for (int i = 0; i < items.length; i++) {
+			if (items[i].hasItemClass(itemClass)) {
+				return items[i].getItem();
+			}
 		}
-		
-		return gui;
+		return null;
+	}
+	
+	public int getItemCount(Class itemClass) {
+		int count = 0;
+		for (int i = 0; i < items.length; i++) {
+			count += items[i].getItemCount(itemClass);
+		}
+		return count;
 	}
 	
 	/*
@@ -133,10 +218,14 @@ public class ItemStorage {
 		GUIItemInfoFrame itemInfo;
 		
 		public GUIItemStorage(GUIComponent parent, int x, int y, Input input) {
-			super(parent, x, y, GUIItemFrame.SIZE * ItemStorage.this.width + PADDING * 2, (name != NO_NAME) ? GUIItemFrame.SIZE * ItemStorage.this.height + PADDING + GUITitle.HEIGHT : GUIItemFrame.SIZE * ItemStorage.this.height + PADDING * 2, PADDING);
+			super(parent, x, y, GUIItemFrame.SIZE * ItemStorage.this.width + PADDING * 2, (!Objects.equals(name, NO_NAME)) ? GUIItemFrame.SIZE * ItemStorage.this.height + PADDING + GUITitle.HEIGHT : GUIItemFrame.SIZE * ItemStorage.this.height + PADDING * 2, PADDING);
 			
 			init(input);
 			input.addMouseInteraction(this, screenX, screenY, width, height);
+			
+			if (getDefaultLock()) {
+				setItemFrameLock(getDefaultLock());
+			}
 		}
 		
 		private void init(Input input) {
@@ -204,6 +293,15 @@ public class ItemStorage {
 			}
 		}
 		
+		public void selectedItemFrame(int selectedSlot) {
+			for (int i = 0; i < itemFrames.length; i++) {
+				itemFrames[i].setSelected(false);
+			}
+			if (!(selectedSlot < 0 || selectedSlot >= itemFrames.length)) {
+				itemFrames[selectedSlot].setSelected(true);
+			}
+		}
+		
 		/*
 		* Mouse Interaction
 		* */
@@ -226,6 +324,12 @@ public class ItemStorage {
 		
 		@Override
 		public void mouseMoved(int x, int y) {}
+		
+		public void setItemFrameLock(boolean itemFrameLock) {
+			for (int i = 0; i < itemFrames.length; i++) {
+				itemFrames[i].setLocked(itemFrameLock);
+			}
+		}
 	}
 	
 }

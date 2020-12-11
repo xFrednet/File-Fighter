@@ -4,12 +4,18 @@ import com.gmail.xfrednet.filefighter.entity.Entity;
 import com.gmail.xfrednet.filefighter.entity.ItemEntity;
 import com.gmail.xfrednet.filefighter.entity.LivingEntity;
 import com.gmail.xfrednet.filefighter.entity.Player;
+import com.gmail.xfrednet.filefighter.entity.areaeffects.ElectricArea;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.Dummy;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.TestEntity;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.JPGFileEntity;
 import com.gmail.xfrednet.filefighter.entity.livingentitys.enemy.TextFileEntity;
 import com.gmail.xfrednet.filefighter.graphics.GUIManager;
 import com.gmail.xfrednet.filefighter.graphics.Screen;
+import com.gmail.xfrednet.filefighter.item.Item;
+import com.gmail.xfrednet.filefighter.item.item.potion.HealthPotion;
+import com.gmail.xfrednet.filefighter.item.item.weapon.gun.FirefoxFlameThrower;
+import com.gmail.xfrednet.filefighter.item.item.weapon.gun.PaperGun;
+import com.gmail.xfrednet.filefighter.level.path.Path;
 import com.gmail.xfrednet.filefighter.level.tile.WallTile;
 import com.gmail.xfrednet.filefighter.level.tileentity.Chest;
 import com.gmail.xfrednet.filefighter.level.tileentity.FolderTileEntity;
@@ -69,6 +75,11 @@ public class FileLevel extends Level {
 		generateMaze();
 		spawnFileEntities();
 		spawnFolderTileEntities();
+		
+		spawn(new PaperGun().getItemEntity(this, 32 + 16, 32 + 16));
+		spawn(new FirefoxFlameThrower().getItemEntity(this, 64 + 16, 32 + 16));
+		spawn(HealthPotion.newSmallHealthPotion(50).getItemEntity(this, 3 * 32 + 16, 3 * 32 + 16));
+		//spawn(new ElectricArea(this, 10 * 32 + 16, 10 * 32 + 16, 32 * 10));
 	}
 	
 	/*
@@ -89,11 +100,17 @@ public class FileLevel extends Level {
 			}
 		});
 		
+		Node testPos = new Node(WIDTH / 2, HEIGHT / 2);
+		if (isSolid(testPos.getX(), testPos.getY())) {
+			testPos = new Node(WIDTH / 2 + 1, HEIGHT / 2 + 1);
+		}
+		
 		Node spawnLocation;
+		
 		int x;
 		int y;
 		for (int i = 0; i < files.length; i++) {
-			spawnLocation = getValidSpawnLocation(random);
+			spawnLocation = getValidSpawnLocation(random, testPos);
 			x = spawnLocation.getMapX() + TILE_SIZE / 2;
 			y = spawnLocation.getMapY() + TILE_SIZE / 2;
 			
@@ -101,14 +118,14 @@ public class FileLevel extends Level {
 		}
 		
 	}
-	private Node getValidSpawnLocation(Random random) {
-		Node location = new Node();
+	private Node getValidSpawnLocation(Random random, Node testPos) {
+		Node pos = new Node();
 		do {
-			location.setX(random.nextInt(WIDTH));
-			location.setY(random.nextInt(HEIGHT));
-		} while (isSolid(location.getX(), location.getY()));
+			pos.setX(random.nextInt(WIDTH));
+			pos.setY(random.nextInt(HEIGHT));
+		} while (isSolid(pos.getX(), pos.getY()) || !Path.isPossible(this, pos.getX(), pos.getY(), testPos.getX(), testPos.getY()));
 		
-		return location;
+		return pos;
 	}
 	
 	/*

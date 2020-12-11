@@ -4,7 +4,7 @@ import com.gmail.xfrednet.filefighter.graphics.Camera;
 import com.gmail.xfrednet.filefighter.graphics.Screen;
 import com.gmail.xfrednet.filefighter.level.Level;
 import com.gmail.xfrednet.filefighter.util.Input;
-import com.sun.glass.events.KeyEvent;
+import java.awt.event.KeyEvent;
 
 /**
  * Created by xFrednet on 06.02.2016.

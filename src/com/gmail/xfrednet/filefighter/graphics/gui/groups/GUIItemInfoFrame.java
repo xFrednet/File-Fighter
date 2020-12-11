@@ -133,6 +133,12 @@ public class GUIItemInfoFrame extends GUIComponentGroup {
 			this.number = String.valueOf(number);
 			this.number = this.number.substring(0, this.number.indexOf(".") + 2);
 		}
+		public GUItemNumberInfo(GUIItemInfoFrame parent, String name, String value) {
+			super(parent, HEIGHT);
+			this.name = name;
+			this.number = String.valueOf(value);
+			this.number = this.number.substring(0, this.number.indexOf(".") + 2);
+		}
 		
 		@Override
 		public void render(Graphics g) {

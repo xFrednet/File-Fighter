@@ -16,18 +16,23 @@ import java.util.List;
 /**
  * Created by xFrednet on 06.02.2016.
  */
-public class Input implements KeyListener, MouseMotionListener, MouseListener {
+public class Input implements KeyListener, MouseMotionListener, MouseListener, MouseWheelListener {
 	
 	public static final int LEFT_MOUSE_BUTTON = 0;
+	public static final int RIGHT_MOUSE_BUTTON = 1;
 	
 	public static final int DEFAULT_CURSOR = 0;
 	public static final int CURSOR_2 = 1;
 	public static final int CURSOR_3 = 2;
 	
+	public static final int SCROLL_DIRECTION_UP = -1;
+	public static final int SCROLL_DIRECTION_DOWN = 1;
+	
 	private boolean[] keyDown = new boolean[256];
 	private boolean[] mouseButtonsDown = new boolean[5];
 	private int mouseX = 0;
 	private int mouseY = 0;
+	private int scrollDirection = 0;
 	
 	//wait function
 	private int mouseLastUpdateX = 0;
@@ -99,6 +104,14 @@ public class Input implements KeyListener, MouseMotionListener, MouseListener {
 		Cursor c = toolkit.createCustomCursor(image, point, "img");
 		Main.jframe.setCursor(c);
 		
+	}
+	
+	public int getScrollDirection() {
+		return scrollDirection;
+	}
+	
+	public void endUpdate() {
+		scrollDirection = 0;
 	}
 	
 	/*
@@ -193,8 +206,6 @@ public class Input implements KeyListener, MouseMotionListener, MouseListener {
 		return level.getCamera().getYOffset() + mouseY / Main.scale;
 	}
 	
-	
-	
 	/*
 	* KeyListener Methods
 	* */
@@ -224,6 +235,8 @@ public class Input implements KeyListener, MouseMotionListener, MouseListener {
 	public void mousePressed(MouseEvent e) {
 		if (e.getButton() == MouseEvent.BUTTON1) 
 			mouseButtonsDown[LEFT_MOUSE_BUTTON] = true;
+		if (e.getButton() == MouseEvent.BUTTON3)
+			mouseButtonsDown[RIGHT_MOUSE_BUTTON] = true;
 		
 		for (int i = 0 ; i < mouseInteractions.size(); i++) {
 			mouseInteractions.get(i).mousePressed(e.getButton());
@@ -267,7 +280,18 @@ public class Input implements KeyListener, MouseMotionListener, MouseListener {
 		}
 	}
 	
-	
+	/*
+	* MouseWheelListener
+	* */
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		if (e.getPreciseWheelRotation() > 0) {
+			scrollDirection = SCROLL_DIRECTION_UP;
+		} else {
+			scrollDirection = SCROLL_DIRECTION_DOWN;
+		}
+		//System.out.println(e.getPreciseWheelRotation() + " " + e.getScrollAmount() + " " + e.getScrollType());
+	}
 	
 }
 

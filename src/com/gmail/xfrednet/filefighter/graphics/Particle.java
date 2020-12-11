@@ -22,7 +22,7 @@ public class Particle {
 	public static final double DEFAULT_SPEED = 0.5;
 	public static final double MINIMUM_LIVE_TIME_PERCENTAGE = 0.5;
 	public static final Random random = new Random();
-	private static final double PI = 3.141592653589793;
+	private static final double PI = Math.PI;
 	
 	final int WIDTH;
 	final int HEIGHT;
