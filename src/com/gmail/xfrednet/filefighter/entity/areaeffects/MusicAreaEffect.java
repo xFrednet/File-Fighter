@@ -9,7 +9,7 @@ import com.gmail.xfrednet.filefighter.graphics.Sprite;
 import com.gmail.xfrednet.filefighter.item.item.Damage;
 import com.gmail.xfrednet.filefighter.level.Level;
 import com.sun.istack.internal.Nullable;
-import com.sun.javafx.beans.annotations.NonNull;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ public class MusicAreaEffect extends AreaEffect {
 	private List<Line> lines = new ArrayList<>();
 	private Damage damage;
 	
-	public MusicAreaEffect(Level level, double range, @NonNull Entity spawningEntity, Damage damage) {
+	public MusicAreaEffect(Level level, double range, Entity spawningEntity, Damage damage) {
 		super(level, spawningEntity.getInfo().getCenterX(), spawningEntity.getInfo().getCenterY(), range, Sprite.Particles.music_particles);
 		this.damage = damage;
 		

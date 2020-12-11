@@ -2,20 +2,14 @@ package com.gmail.xfrednet.filefighter.level;
 
 import com.gmail.xfrednet.filefighter.Main;
 import com.gmail.xfrednet.filefighter.entity.*;
-import com.gmail.xfrednet.filefighter.entity.livingentitys.TestEntity;
 import com.gmail.xfrednet.filefighter.graphics.*;
 import com.gmail.xfrednet.filefighter.graphics.cameras.ControllableCamera;
-import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponent;
 import com.gmail.xfrednet.filefighter.graphics.gui.GUIComponentGroup;
 import com.gmail.xfrednet.filefighter.graphics.gui.components.GUILevelClearedMessage;
 import com.gmail.xfrednet.filefighter.graphics.gui.components.GUIProgressBar;
-import com.gmail.xfrednet.filefighter.util.Input;
-import com.gmail.xfrednet.filefighter.level.path.Node;
-import com.sun.javafx.beans.annotations.NonNull;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

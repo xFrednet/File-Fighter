@@ -28,9 +28,10 @@ import com.gmail.xfrednet.filefighter.item.itemstorage.Backpack;
 import com.gmail.xfrednet.filefighter.item.itemstorage.ToolBar;
 import com.gmail.xfrednet.filefighter.level.Level;
 import com.gmail.xfrednet.filefighter.util.Input;
-import com.sun.glass.events.KeyEvent;
+
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 
 /**
  * Created by xFrednet on 07.02.2016.

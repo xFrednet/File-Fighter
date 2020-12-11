@@ -3,7 +3,7 @@ package com.gmail.xfrednet.filefighter.level.path;
 import com.gmail.xfrednet.filefighter.entity.Entity;
 import com.gmail.xfrednet.filefighter.entity.LivingEntity;
 import com.gmail.xfrednet.filefighter.level.Level;
-import com.sun.javafx.beans.annotations.NonNull;
+
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -88,7 +88,7 @@ public class Path {
 	/*
 	* Pathfinder 
 	* */
-	public static List<Node> getPath(@NonNull Level level, @NonNull Node start, @NonNull Node goal) {
+	public static List<Node> getPath( Level level, Node start, Node goal) {
 		
 		List<Node> openList = new ArrayList<>();
 		List<Node> closedList = new ArrayList<>();

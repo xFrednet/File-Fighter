@@ -16,7 +16,7 @@ import com.gmail.xfrednet.filefighter.level.ImageLevel;
 import com.gmail.xfrednet.filefighter.level.Level;
 import com.gmail.xfrednet.filefighter.util.FileHelper;
 import com.gmail.xfrednet.filefighter.util.Input;
-import com.sun.glass.events.KeyEvent;
+import java.awt.event.KeyEvent;
 
 import javax.swing.*;
 import java.awt.*;

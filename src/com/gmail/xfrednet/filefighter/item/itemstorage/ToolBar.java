@@ -8,7 +8,7 @@ import com.gmail.xfrednet.filefighter.item.Item;
 import com.gmail.xfrednet.filefighter.item.ItemStorage;
 import com.gmail.xfrednet.filefighter.level.Level;
 import com.gmail.xfrednet.filefighter.util.Input;
-import com.sun.glass.events.KeyEvent;
+import java.awt.event.KeyEvent;
 
 /**
  * Created by xFrednet on 26.03.2016 at 19:14.
